@@ -2,6 +2,8 @@ package wr1ttenyu.f1nal.study.juc;
 
 public class TestVolatile {
 
+    // TODO 看下里面的各种锁 https://www.cnblogs.com/yangfeiORfeiyang/p/9694383.html
+
     public static void main(String[] args) {
         ThreadDemo threadDemo = new ThreadDemo();
         new Thread(threadDemo).start();
