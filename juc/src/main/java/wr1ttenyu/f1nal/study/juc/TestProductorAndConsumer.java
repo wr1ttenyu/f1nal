@@ -19,6 +19,7 @@ public class TestProductorAndConsumer {
 
 }
 
+// TODO 完成 ClerkWithLock
 class ClerkWithLock implements Clerk {
 
     private int commodityNum = 0;
@@ -32,7 +33,7 @@ class ClerkWithLock implements Clerk {
     public void get() {
         try {
             lock.lock();
-            while(commodityNum < 10) {
+            while (commodityNum < 10) {
                 System.out.println("进货，商品当前数量:" + ++commodityNum);
             }
         } finally {
@@ -41,7 +42,7 @@ class ClerkWithLock implements Clerk {
     }
 
     public void sale() {
-        while(commodityNum > 0) {
+        while (commodityNum > 0) {
             System.out.println("出售，商品当前数量:" + ++commodityNum);
         }
     }
@@ -54,21 +55,21 @@ class ClerkWithSynchronize implements Clerk {
 
     public void get() {
         synchronized (this) {
-            /* while(true) {*/
-            if(commodityNum < 1) {
-                System.out.println("进货，商品当前数量:" + ++commodityNum);
-                this.notifyAll();
-            } else {
-                System.out.println("货满，不能进货，商品当前数量:" + commodityNum);
-                try {
-                    this.wait();
-                    // TODO InterruptedException 弄清下
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            while (true) {
+                if (commodityNum < 1) {
+                    System.out.println("进货，商品当前数量:" + ++commodityNum);
+                    this.notifyAll();
+                } else {
+                    System.out.println("货满，不能进货，商品当前数量:" + commodityNum);
+                    try {
+                        this.wait();
+                        // TODO InterruptedException 弄清下
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            /*}*/
+            }
 
         }
 
@@ -76,19 +77,19 @@ class ClerkWithSynchronize implements Clerk {
 
     public void sale() {
         synchronized (this) {
-            /* while (true) {*/
-            if(commodityNum > 0) {
-                System.out.println("出售，商品当前数量:" + --commodityNum);
-                this.notifyAll();
-            } else {
-                System.out.println("缺货，不能出售，商品当前数量:" + commodityNum);
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            while (true) {
+                if (commodityNum > 0) {
+                    System.out.println("出售，商品当前数量:" + --commodityNum);
+                    this.notifyAll();
+                } else {
+                    System.out.println("缺货，不能出售，商品当前数量:" + commodityNum);
+                    try {
+                        this.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            /*}*/
         }
     }
 }
