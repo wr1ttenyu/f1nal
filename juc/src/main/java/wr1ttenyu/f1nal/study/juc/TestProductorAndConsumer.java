@@ -55,6 +55,7 @@ class ClerkWithSynchronize implements Clerk {
 
     public void get() {
         synchronized (this) {
+            // TODO 这里去掉 while 跑起来 会导致最后有一个线程没有结束  如何解决
             while (true) {
                 if (commodityNum < 1) {
                     System.out.println("进货，商品当前数量:" + ++commodityNum);
