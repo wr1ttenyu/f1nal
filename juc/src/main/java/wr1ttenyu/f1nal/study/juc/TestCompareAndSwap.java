@@ -7,18 +7,15 @@ public class TestCompareAndSwap {
     public static void main(String[] args) {
         CompareAndSwap cas = new CompareAndSwap();
         for (int i = 0; i < 20; i++) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    int expectedValue = cas.get();
-                    boolean b = cas.compareAndSet(expectedValue, new Random().nextInt(10));
-                    System.out.println(b);
+            new Thread(() -> {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                int expectedValue = cas.get();
+                boolean b = cas.compareAndSet(expectedValue, new Random().nextInt(10));
+                System.out.println(b);
             }).start();
         }
     }
