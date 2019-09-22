@@ -31,6 +31,7 @@
     <modules>
         <module>juc</module>
         <module>dubbo</module>
+        <module>nio-and-netty</module>
     </modules>
 
 </project>
