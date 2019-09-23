@@ -1,11 +1,10 @@
 package wr1ttenyu.f1nal.study.nio;
 
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 public class TestBuffer {
 
-    public static void main(String[] args) {
+    public void testBufferKeyFieldAndMethod() {
 
         /**
          * A container for data of a specific primitive type except boolean
@@ -58,7 +57,12 @@ public class TestBuffer {
         System.out.println("-------- buffer reset  --------");
         byte[] res3 = new byte[3];
         buffer.get(res3);
+        System.out.println("-------- buffer reset 1 --------");
+        System.out.println("capacity:" + buffer.capacity());
+        System.out.println("limit:" + buffer.limit());
+        System.out.println("position:" + buffer.position());
         buffer.reset();
+        System.out.println("-------- buffer reset 2 --------");
         System.out.println("capacity:" + buffer.capacity());
         System.out.println("limit:" + buffer.limit());
         System.out.println("position:" + buffer.position());
