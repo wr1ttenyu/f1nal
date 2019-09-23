@@ -4,6 +4,19 @@ import java.nio.ByteBuffer;
 
 public class TestBuffer {
 
+    public static void main(String[] args) {
+
+    }
+
+    public void testAllocate() {
+        // transfer data from hard disk to work thread memory:
+        // hard disk ---> os memery ---> work thread memory ---> program
+        // driect memory avoid copy data from os memory to work thread memory:
+        // hard disk ---> driect memory ---> program
+        ByteBuffer.allocateDirect(1024);
+        ByteBuffer.allocate(1024);
+    }
+
     public void testBufferKeyFieldAndMethod() {
 
         /**
