@@ -1,11 +1,28 @@
 package wr1ttenyu.f1nal.study.nio;
 
+import org.junit.jupiter.api.Test;
+
 import java.nio.ByteBuffer;
 
 public class TestBuffer {
 
     public static void main(String[] args) {
 
+    }
+
+    @Test
+    public void testByteBufferPosition() {
+        ByteBuffer allocate = ByteBuffer.allocate(9);
+        String str = "wr1ttenyu";
+        byte[] bytes = new byte[9];
+        allocate.put(str.getBytes());
+        allocate.flip();
+        allocate.get(bytes);
+        System.out.println("position:" + allocate.position());
+        System.out.println("limit:" + allocate.limit());
+        allocate.clear();
+        System.out.println("position:" + allocate.position());
+        System.out.println("limit:" + allocate.limit());
     }
 
     public void testAllocate() {
