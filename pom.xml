@@ -32,6 +32,7 @@
         <module>juc</module>
         <module>dubbo</module>
         <module>nio-and-netty</module>
+		<module>javase</module>
     </modules>
 
     <properties>

@@ -1,4 +1,4 @@
-package wr1ttenyu.f1nal.study.juc;
+package wr1ttenyu.f1nal.study.java8;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

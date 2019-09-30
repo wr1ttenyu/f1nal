@@ -7,7 +7,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
@@ -46,8 +50,29 @@ import java.nio.file.StandardOpenOption;
  * Scatter and Gather
  *      Scatter Reads : put data in channel to more than one buffer
  *      Gather Writes : get date from more than one buffer to one channel
+ *
+ * Encoder and Decoder
  */
 public class TestChannel {
+
+    @Test
+    public void testDecoderAndEncoder() throws IOException {
+        Charset charsetGBK = Charset.forName("GBK");
+        CharsetDecoder charsetDecoder = charsetGBK.newDecoder();
+        CharsetEncoder charsetEncoder = charsetGBK.newEncoder();
+
+        CharBuffer charBuffer = CharBuffer.allocate(12);
+        charBuffer.put("温柔狗宇！~");
+        charBuffer.flip();
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate(12);
+        byteBuffer.put(charsetEncoder.encode(charBuffer));
+        System.out.println(byteBuffer);
+
+        byteBuffer.flip();
+        CharBuffer charBufferOut = charsetDecoder.decode(byteBuffer);
+        System.out.println(charBufferOut);
+    }
 
     @Test
     public void testScatterAndGather() throws Exception {
