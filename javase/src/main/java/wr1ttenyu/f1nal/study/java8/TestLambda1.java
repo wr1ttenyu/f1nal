@@ -26,7 +26,5 @@ public class TestLambda1 {
         // Lambda 表达式的参数列表的数据类型可以省略不写，因为JVM编译器通过上下文推断出，数据类型，即“类型推断”
         Function<String, String> function = (x) ->  x;
 
-
     }
-
 }
