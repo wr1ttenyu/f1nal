@@ -31,13 +31,16 @@ public class TestStreamAPIOfMiddleOperate {
         personList.stream().map(person -> {
             person.setName(person.getName() + "1");
             return person;
-        });
+        }).forEach(System.out::println);
 
         String[] strs = {"aaa", "bbb", "ccc", "ddd"};
-        Arrays.stream(strs).map(TestStreamAPIOfMiddleOperate::seprateStringToCS);
-        // TODO continue
+        Stream<Stream<Character>> charStream = Arrays.stream(strs).map(TestStreamAPIOfMiddleOperate::seprateStringToCS);
+        charStream.forEach(cs -> {
+            cs.forEach( System.out::println);
+        });
 
-        Arrays.stream(strs).flatMap(TestStreamAPIOfMiddleOperate::seprateStringToCS);
+        Stream<Character> characterStream = Arrays.stream(strs).flatMap(TestStreamAPIOfMiddleOperate::seprateStringToCS);
+        characterStream.forEach(System.out::println);
     }
 
     @Test

@@ -1,10 +1,10 @@
 package wr1ttenyu.f1nal.study.java8;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 /**
@@ -28,53 +28,49 @@ public class TestStreamAPIOfTerminalOperate {
         personList.add(new Person("money", 2, UserState.VOCATION));
     }
 
+    /*
+        find and mathch
+        allMatch --- predicate whether all element match the condition
+        anyMatch --- predicate whether to contain at least one element match the condition
+        noneMatch --- predicate whether no element match the condition
+        findFirst --- return the first element
+        findAny --- return any element
+        count --- count all element
+        max --- find max element match the condition
+        min --- find min element match the condition
+    */
     @Test
-    public void testMiddleOperateMap() {
-        personList.stream().map(person -> {
-            person.setName(person.getName() + "1");
-            return person;
-        });
-
-        String[] strs = {"aaa", "bbb", "ccc", "ddd"};
-        Arrays.stream(strs).map(TestStreamAPIOfTerminalOperate::seprateStringToCS);
-        // TODO continue
-
-        Arrays.stream(strs).flatMap(TestStreamAPIOfTerminalOperate::seprateStringToCS);
+    public void testStreamMatch() {
+        boolean b1 = personList.stream().allMatch(person -> person.getState().equals(UserState.BUSY));
+        Assertions.assertFalse(b1);
+        boolean b2 = personList.stream().anyMatch(person -> person.getState().equals(UserState.FREE));
+        Assertions.assertTrue(b2);
+        boolean b3 = personList.stream().noneMatch(person -> person.getState().equals(UserState.VOCATION));
+        Assertions.assertFalse(b3);
     }
 
     @Test
-    public void testStreamSort() {
-        List<String> list = new ArrayList<>();
-        list.add("bbb");
-        list.add("aaa");
-        list.add("ddd");
-        list.add("ccc");
-        list.stream().sorted().forEach(System.out::println);
-        for (String s : list) {
-            System.out.println(s);
-        }
+    public void testStreamFind() {
+        Optional<Person> first = personList.stream().sorted(Comparator.comparingInt(Person::getAge)).findFirst();
+        System.out.println(first.get());
 
-        personList.stream().sorted((p1, p2) -> {
-            int ageRes = p1.getAge().compareTo(p2.getAge());
-            if(ageRes == 0) {
-                return p1.getName().compareTo(p2.getName());
-            } else {
-                return ageRes;
-            }
-        }).forEach(System.out::println);
-
-        for (Person person : personList) {
-            System.out.println(person);
-        }
+        Optional<Person> any = personList.parallelStream().sorted(Comparator.comparingInt(Person::getAge)).findAny();
+        System.out.println(any.get());
     }
 
-    private static Stream<Character> seprateStringToCS(String str) {
-        List<Character> characters = new ArrayList<>();
-        char[] chars = str.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            characters.add(chars[i]);
-        }
-        return characters.stream();
+    @Test
+    public void testStreamSummaryOperation() {
+        long count = personList.stream().filter(person -> person.getState().equals(UserState.BUSY)).count();
+        System.out.println(count);
+
+        Optional<Person> max = personList.stream().max(Comparator.comparingInt(Person::getAge));
+        System.out.println(max.get());
+
+        Optional<Person> min = personList.stream().min(Comparator.comparingInt(Person::getAge));
+        System.out.println(min.get());
+
+        LongStream.rangeClosed(0,111111111).parallel().sum();
     }
+
 }
 
