@@ -22,11 +22,11 @@ public class TestStreamAPIOfCreateStream {
 
     static {
         personList = new ArrayList<>();
-        personList.add(new Person("wr1ttenyu"));
-        personList.add(new Person("licongrong"));
-        personList.add(new Person("zhaowanli"));
-        personList.add(new Person("wwy"));
-        personList.add(new Person("money"));
+        personList.add(new Person("wr1ttenyu", 13, UserState.BUSY));
+        personList.add(new Person("licongrong", 123, UserState.FREE));
+        personList.add(new Person("zhaowanli", 45, UserState.VOCATION));
+        personList.add(new Person("wwy", 345, UserState.FREE));
+        personList.add(new Person("money", 2, UserState.VOCATION));
     }
 
     @Test
@@ -75,8 +75,14 @@ public class TestStreamAPIOfCreateStream {
 class Person {
     private String name;
 
-    public Person(String name) {
+    private Integer age;
+
+    private UserState state;
+
+    public Person(String name, Integer age, UserState state) {
         this.name = name;
+        this.age = age;
+        this.state = state;
     }
 
     public String getName() {
@@ -86,4 +92,45 @@ class Person {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public UserState getState() {
+        return state;
+    }
+
+    public void setState(UserState state) {
+        this.state = state;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", state=" + state +
+                '}';
+    }
+}
+
+enum UserState {
+
+    FREE("free"),
+
+    BUSY("busy"),
+
+    VOCATION("vocation");
+
+    private String code;
+
+    UserState(String code) {
+        this.code = code;
+    }
+
 }

@@ -2,7 +2,9 @@ package wr1ttenyu.f1nal.study.java8;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -13,7 +15,7 @@ import java.util.stream.Stream;
  * <p>
  * 3. terminal operate 终止操作
  */
-public class TestStreamAPIOfMiddleOperate {
+public class TestStreamAPIOfTerminalOperate {
 
     private static List<Person> personList;
 
@@ -34,15 +36,14 @@ public class TestStreamAPIOfMiddleOperate {
         });
 
         String[] strs = {"aaa", "bbb", "ccc", "ddd"};
-        Arrays.stream(strs).map(TestStreamAPIOfMiddleOperate::seprateStringToCS);
+        Arrays.stream(strs).map(TestStreamAPIOfTerminalOperate::seprateStringToCS);
         // TODO continue
 
-        Arrays.stream(strs).flatMap(TestStreamAPIOfMiddleOperate::seprateStringToCS);
+        Arrays.stream(strs).flatMap(TestStreamAPIOfTerminalOperate::seprateStringToCS);
     }
 
     @Test
     public void testStreamSort() {
-        // nature sort
         List<String> list = new ArrayList<>();
         list.add("bbb");
         list.add("aaa");
@@ -52,7 +53,7 @@ public class TestStreamAPIOfMiddleOperate {
         for (String s : list) {
             System.out.println(s);
         }
-        // custom sort
+
         personList.stream().sorted((p1, p2) -> {
             int ageRes = p1.getAge().compareTo(p2.getAge());
             if(ageRes == 0) {
