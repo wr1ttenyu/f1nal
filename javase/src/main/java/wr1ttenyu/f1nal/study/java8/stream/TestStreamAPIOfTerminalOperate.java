@@ -1,9 +1,10 @@
-package wr1ttenyu.f1nal.study.java8;
+package wr1ttenyu.f1nal.study.java8.stream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
@@ -69,8 +70,50 @@ public class TestStreamAPIOfTerminalOperate {
         Optional<Person> min = personList.stream().min(Comparator.comparingInt(Person::getAge));
         System.out.println(min.get());
 
-        LongStream.rangeClosed(0,111111111).parallel().sum();
+        LongStream.rangeClosed(0, 111111111).parallel().sum();
     }
 
+    /**
+     * stream can not be used after terminal operate
+     */
+    @Test
+    public void testStreamCanRepeatUse() {
+        Stream<Person> personStream = personList.stream().filter(person -> person.getState().equals(UserState.BUSY));
+
+        long count = personStream.count();
+
+        System.out.println(count);
+
+        Optional<Person> max = personStream.max(Comparator.comparingInt(Person::getAge));
+    }
+
+    /**
+     * reduce: can combine elements in stream repeatedly to get a value
+     */
+    @Test
+    public void testReduce() {
+        Optional<Person> person = personList.stream().reduce((person1, person2) -> person1);
+        System.out.println(person.orElse(new Person("temp", 12, UserState.FREE)));
+
+        int ageSum = personList.stream().mapToInt(Person::getAge).reduce(0, Integer::sum);
+        System.out.println(ageSum);
+
+        // 这里reduce的第三个参数  是在并行下面使用的
+        // <a href="https://blog.csdn.net/icarusliu/article/details/79504602>具体可参见</a>
+        Integer reduce = personList.stream().reduce(0, (age, per) -> age + per.getAge(), Integer::sum);
+        System.out.println(reduce);
+    }
+
+    /**
+     * collect: can collect elements in stream into a collection
+     */
+    @Test
+    public void testCollect() {
+        List<String> personNames = personList.stream().map(Person::getName).collect(Collectors.toList());
+        System.out.println(personNames);
+
+        Set<String> personNames2 = personList.stream().map(Person::getName).collect(Collectors.toSet());
+        System.out.println(personNames2);
+    }
 }
 

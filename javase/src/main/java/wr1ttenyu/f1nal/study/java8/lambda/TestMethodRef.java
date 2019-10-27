@@ -1,4 +1,4 @@
-package wr1ttenyu.f1nal.study.java8;
+package wr1ttenyu.f1nal.study.java8.lambda;
 
 import org.junit.jupiter.api.Test;
 
