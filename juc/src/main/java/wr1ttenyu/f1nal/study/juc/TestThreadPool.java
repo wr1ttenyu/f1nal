@@ -1,4 +1,4 @@
-package wr1ttenyu.f1nal.study.java8;
+package wr1ttenyu.f1nal.study.juc;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.*;
