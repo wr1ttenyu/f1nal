@@ -2,6 +2,8 @@ package wr1ttenyu.f1nal.study.juc;
 
 public class XiaomaLesson {
 
+    // TODO 1. stampedLock 2. completablefuture 3. concurrentHashMap
+
     public static void main(String[] args) {
         MyTask myTask = new MyTask();
         new Thread(myTask).start();
