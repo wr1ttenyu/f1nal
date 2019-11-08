@@ -3,6 +3,8 @@ package wr1ttenyu.f1nal.study.juc;
 public class TestVolatile {
 
     // TODO 看下里面的各种锁 https://www.cnblogs.com/yangfeiORfeiyang/p/9694383.html
+    // AQS,自旋锁,偏向锁,轻量级锁,重量级锁
+    //
 
     public static void main(String[] args) {
         ThreadDemo threadDemo = new ThreadDemo();
