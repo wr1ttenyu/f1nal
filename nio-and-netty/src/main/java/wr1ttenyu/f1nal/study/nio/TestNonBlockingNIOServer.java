@@ -2,7 +2,9 @@ package wr1ttenyu.f1nal.study.nio;
 
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.Iterator;
@@ -51,6 +53,23 @@ public class TestNonBlockingNIOServer {
                         // gain channel from SelectionKey
                         SocketChannel sChannel = (SocketChannel) sk.channel();
                         ByteBuffer buf = ByteBuffer.allocate(1024);
+
+                        InetSocketAddress remoteAddress = (InetSocketAddress)sChannel.getRemoteAddress();
+
+                        /*InetAddress address = remoteAddress.getAddress();
+                        String canonicalHostName = address.getCanonicalHostName();
+                        System.out.println("canonicalHostName:" + canonicalHostName);
+                        String hostAddress = address.getHostAddress();
+                        System.out.println("hostAddress:" + hostAddress);
+                        String hostName1 = address.getHostName();
+                        System.out.println("hostName1:" + hostName1);
+
+                        String hostName = remoteAddress.getHostName();
+                        System.out.println("hostName:" + hostName);
+                        String hostString = remoteAddress.getHostString();
+                        System.out.println("hostString:" + hostString);
+                        int port = remoteAddress.getPort();
+                        System.out.println("port:" + port);*/
 
                         int length = 0;
                         while ((length = sChannel.read(buf)) > 0) {

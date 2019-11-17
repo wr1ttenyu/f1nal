@@ -36,14 +36,13 @@ public class TestNonBlockingNIOClient {
             // 4. send data to server
             Scanner scanner = new Scanner(System.in);
 
-            while (scanner.hasNext()) {
+            while (!scanner.hasNext("eof")) {
                 String str = scanner.next();
                 buf.put((new Date().toString() + "\n" + str).getBytes());
                 buf.flip();
                 socketChannel.write(buf);
                 buf.clear();
             }
-
             // 5. close channel
             socketChannel.close();
         } catch (IOException e) {
