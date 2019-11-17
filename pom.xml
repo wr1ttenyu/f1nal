@@ -33,6 +33,8 @@
         <module>dubbo</module>
         <module>nio-and-netty</module>
 		<module>javase</module>
+		<module>wr1-client</module>
+		<module>wr1-server</module>
     </modules>
 
     <properties>
