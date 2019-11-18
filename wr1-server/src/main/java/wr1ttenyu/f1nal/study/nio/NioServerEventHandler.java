@@ -33,15 +33,16 @@ public class NioServerEventHandler implements NioEventHandler {
 
     @Override
     public void handleRead(SelectionKey sk) {
+        SocketChannel sChannel = (SocketChannel) sk.channel();
+        String hostAddress = "@hostAddress@";
+        Integer port = 0;
         try {
             // process read event
             // gain channel from SelectionKey
-            SocketChannel sChannel = (SocketChannel) sk.channel();
             InetSocketAddress remoteAddress = (InetSocketAddress) sChannel.getRemoteAddress();
-            String hostAddress = remoteAddress.getAddress().getHostAddress();
-            int port = remoteAddress.getPort();
+            hostAddress = remoteAddress.getAddress().getHostAddress();
+            port = remoteAddress.getPort();
             log.info("from {}:{} read event", hostAddress, port);
-
             ByteBuffer buf = ByteBuffer.allocate(1024);
             int length;
             while ((length = sChannel.read(buf)) > 0) {
@@ -50,10 +51,23 @@ public class NioServerEventHandler implements NioEventHandler {
                 buf.clear();
             }
 
-            // 读完之后注册写事件 准备给客户端回话
-            sk.interestOps(SelectionKey.OP_WRITE | SelectionKey.OP_READ);
+            // 断开连接后,会产生OP_READ事件,length 小于0则关闭channel
+            if (length < 0) {
+                sChannel.close();
+                sk.cancel();
+                log.info("connect close from {}:{}", hostAddress, port);
+            } else {
+                // 读完之后注册写事件 准备给客户端回话
+                sk.interestOps(SelectionKey.OP_WRITE | SelectionKey.OP_READ);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                sChannel.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            sk.cancel();
+            log.info("occur exception msg : {} \n connect close from {}:{}", e.getMessage(), hostAddress, port);
         }
     }
 

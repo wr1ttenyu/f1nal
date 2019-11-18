@@ -46,11 +46,6 @@ public class NioClientEventHandler implements NioEventHandler {
                 buf.clear();
             }
 
-            // 4. send data to server
-            Scanner scanner = new Scanner(System.in);
-            String str = scanner.next();
-            System.out.println(str);
-
             sk.interestOps(SelectionKey.OP_WRITE | SelectionKey.OP_READ);
         } catch (IOException e) {
             e.printStackTrace();
