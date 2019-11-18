@@ -12,7 +12,7 @@
 
     <artifactId>wr1-client</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>wr1-server</name>
+    <name>wr1-client</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
     <packaging>jar</packaging>

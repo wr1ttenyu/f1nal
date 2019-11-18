@@ -1,14 +1,12 @@
 package wr1ttenyu.f1nal.study.nio;
 
-
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.*;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
 import java.util.Iterator;
 
 /**
@@ -24,85 +22,63 @@ import java.util.Iterator;
 public class Wr1NonBlockingNIOServer {
 
     // todo continue https://www.oschina.net/question/2618986_2149914 看看这个代码行不行
+    // 在代码实践过程中发现的  一直处于写就绪的情况  跟nio底层的 epoll 有关系
+    // epoll 是 实现I/O多路复用的一种方法
+    // epoll 分为 水平触发 和 边缘触发
+    // 水平触发(level-triggered，也被称为条件触发)LT: 只要满足条件，就触发一个事件(只要有数据没有被获取，内核就不断通知你)
+    // 边缘触发(edge-triggered)ET: 每当状态变化时，触发一个事件。
+    // 在 java 的实现中  是用的水平触发  这个就导致 且只要内核缓冲区还不满就会一直写就绪 读也是一样 只要缓冲区的数据没有读完 就会一直触发读就绪
+    // 所以在使用Java的NIO编程的时候，在没有数据可以往外写的时候要取消写事件，在有数据往外写的时候再注册写事件。
+    private Selector selector;
 
     public static void main(String[] args) {
-        try {
-            // 1. gain channel
-            ServerSocketChannel serverSokcetChannel = ServerSocketChannel.open();
+        try{
+            Wr1NonBlockingNIOServer server = new Wr1NonBlockingNIOServer();
+            NioServerEventHandler serverEventHandler = new NioServerEventHandler();
+            server.initServer();
+            server.listen(serverEventHandler);
 
-            // 2. switch to non blocking model
-            serverSokcetChannel.configureBlocking(false);
-
-            // 3. bind port
-            serverSokcetChannel.bind(new InetSocketAddress(9898));
-
-            // 4. gain selector
-            Selector selector = Selector.open();
-
-            // 5. register channel into selector and specify listen to accept event
-            serverSokcetChannel.register(selector, SelectionKey.OP_ACCEPT);
-
-            // 6. polled get ready events in selectors
-            while (selector.select() > 0) {
-                // 7. gain ready select key iterator
-                Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
-                while (iterator.hasNext()) {
-                    SelectionKey sk = iterator.next();
-                    // process accept event
-                    if (sk.isAcceptable()) {
-                        SocketChannel socketChannel = serverSokcetChannel.accept();
-                        socketChannel.configureBlocking(false);
-                        socketChannel.register(selector,SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-
-                        InetSocketAddress remoteAddress = (InetSocketAddress) socketChannel.getRemoteAddress();
-                        String hostAddress = remoteAddress.getAddress().getHostAddress();
-                        int port = remoteAddress.getPort();
-                        log.info("accept request from address --> {}:{}", hostAddress, port);
-                    } else if (sk.isReadable()) {
-                        // process read event
-                        // gain channel from SelectionKey
-                        SocketChannel sChannel = (SocketChannel) sk.channel();
-                        ByteBuffer buf = ByteBuffer.allocate(1024);
-
-                        InetSocketAddress remoteAddress = (InetSocketAddress) sChannel.getRemoteAddress();
-                        String hostAddress = remoteAddress.getAddress().getHostAddress();
-                        int port = remoteAddress.getPort();
-                        log.info("Read request from address --> {}:{}", hostAddress, port);
-
-                        int length;
-                        while ((length = sChannel.read(buf)) > 0) {
-                            buf.flip();
-                            System.out.println(new String(buf.array(), 0, length));
-                            buf.clear();
-                        }
-
-                        String msg = "啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦 wr1-server say hello to address --> " + hostAddress + ":" + port + "\n";
-                        ByteBuffer wrap = ByteBuffer.wrap(msg.getBytes());
-                        wrap.flip();
-                        sChannel.write(wrap);
-
-                        sk.interestOps(SelectionKey.OP_WRITE);
-                    } else if(sk.isWritable()) {
-                        SocketChannel sChannel = (SocketChannel) sk.channel();
-                        InetSocketAddress remoteAddress = (InetSocketAddress) sChannel.getRemoteAddress();
-                        String hostAddress = remoteAddress.getAddress().getHostAddress();
-                        int port = remoteAddress.getPort();
-                        log.info("wr1-server say hello to address --> {}:{}", hostAddress, port);
-
-                        String msg = "啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦 wr1-server say hello to address --> " + hostAddress + ":" + port + "\n";
-                        ByteBuffer wrap = ByteBuffer.wrap(msg.getBytes());
-                        wrap.flip();
-                        sChannel.write(wrap);
-                        // 取消写就绪，否则会一直触发写就绪（写就绪为代码触发）
-                        sk.interestOps(SelectionKey.OP_READ);
-                    }
-                    // remove select key has been processed
-                    iterator.remove();
-                }
-            }
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void initServer() throws IOException {
+        // 1. gain channel
+        ServerSocketChannel serverSokcetChannel = ServerSocketChannel.open();
+
+        // 2. switch to non blocking model
+        serverSokcetChannel.configureBlocking(false);
+
+        // 3. bind port
+        serverSokcetChannel.bind(new InetSocketAddress(9898));
+
+        // 4. gain selector
+        selector = Selector.open();
+
+        // 5. register channel into selector and specify listen to accept event
+        serverSokcetChannel.register(selector, SelectionKey.OP_ACCEPT);
+    }
+
+    private void listen(NioServerEventHandler serverEventHandler) throws IOException {
+        // polled get ready events in selectors
+        while (selector.select() > 0) {
+            // gain ready select key iterator
+            Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+            while (iterator.hasNext()) {
+                SelectionKey sk = iterator.next();
+                // remove select key has been processed
+                iterator.remove();
+                // process accept event
+                if (sk.isAcceptable()) {
+                    serverEventHandler.handleAccept(selector, sk);
+                } else if (sk.isReadable()) {
+                    serverEventHandler.handleRead(sk);
+                } else if(sk.isWritable()) {
+                    serverEventHandler.handleWrite(sk);
+                }
+            }
         }
     }
 }
