@@ -1,4 +1,4 @@
-package wr1ttenyu.f1nal.study.java8.stream;
+package wr1ttenyu.f1nal.study.designpattern.principle.singleresponsibility.stream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

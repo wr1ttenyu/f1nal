@@ -1,4 +1,4 @@
-package wr1ttenyu.f1nal.study.java8.newdateutil;
+package wr1ttenyu.f1nal.study.designpattern.principle.singleresponsibility.newdateutil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
