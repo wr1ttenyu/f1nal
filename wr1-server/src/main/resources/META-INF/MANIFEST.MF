@@ -3,3 +3,4 @@ Built-By: wr1ttenyu
 Created-By: Apache Maven 3.6.0
 Build-Jdk: 1.8.0_201-2-redhat
 Main-Class: wr1ttenyu.f1nal.study.nio.Wr1NonBlockingNIOServer
+Class-Path: ./extjar
