@@ -255,6 +255,7 @@ import java.util.concurrent.locks.*;
  * @since 1.5
  * @author Doug Lea
  */
+// TODO AQS 的学习 要持续
 public abstract class MyAbstractQueuedSynchronizerStudy
         extends AbstractOwnableSynchronizer
         implements java.io.Serializable {

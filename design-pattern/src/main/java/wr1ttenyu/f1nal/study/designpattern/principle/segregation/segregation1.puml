@@ -1,0 +1,42 @@
+@startuml
+
+interface Interface1
+
+class A
+class B
+class C
+class D
+
+Interface1 <|-- B
+Interface1 <|-- D
+B <-- A
+D <-- C
+
+
+interface Interface1 {
+    operation1()
+    operation2()
+    operation3()
+    operation4()
+    operation5()
+}
+
+class A {
+    #depend1(Interface1 inter) {inter.operation1()}
+    #depend2(Interface1 inter) {inter.operation2()}
+    #depend3(Interface1 inter) {inter.operation3()}
+}
+
+class B {
+}
+
+class C {
+    #depend1(Interface1 inter) {inter.operation1()}
+    #depend4(Interface1 inter) {inter.operation4()}
+    #depend5(Interface1 inter) {inter.operation5()}
+}
+
+class D {
+}
+
+@enduml

@@ -57,6 +57,9 @@ public class Wr1NonBlockingNIOClient {
         }
     }
 
+    // TODO 服务端连接日志打了两次
+    // TODO nio channel 来了没有注册的事件  会怎么样
+
     private void initClient() throws IOException{
         // 1. gain channel
         SelectorProvider provider = SelectorProvider.provider();

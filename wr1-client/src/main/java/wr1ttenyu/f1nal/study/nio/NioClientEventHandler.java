@@ -59,10 +59,17 @@ public class NioClientEventHandler implements NioEventHandler {
             // gain channel from SelectionKey
             SocketChannel sc = (SocketChannel) sk.channel();
 
+            // 3. generator fixed size byte buffer
             ByteBuffer buf = ByteBuffer.allocate(1024);
-            buf.put((new Date().toString() + "\n" + "服务端 hello ~~").getBytes());
-            buf.flip();
-            sc.write(buf);
+
+            Scanner scanner = new Scanner(System.in);
+            while (!scanner.hasNext("eof")) {
+                String str = scanner.next();
+                buf.put((new Date().toString() + "\n" + str).getBytes());
+                buf.flip();
+                sc.write(buf);
+                buf.clear();
+            }
 
             InetSocketAddress remoteAddress = (InetSocketAddress) sc.getRemoteAddress();
             String hostAddress = remoteAddress.getAddress().getHostAddress();

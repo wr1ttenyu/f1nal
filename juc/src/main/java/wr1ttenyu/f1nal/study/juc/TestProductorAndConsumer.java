@@ -87,7 +87,6 @@ class ClerkWithLock implements Clerk {
     // tryLock()：尝试获得锁，如果成功，立即放回 true，反之失败返回 false。该方法不会进行等待，立即返回。
     // tryLock(long time, TimeUnit unit)：在给定的时间内尝试获得锁。
     // unLock()：释放锁。
-    // TODO 等待队列：所有没有请求到锁的线程，会进入等待队列进行等待。待有线程释放锁后，系统才能够从等待队列中唤醒一个线程，继续工作。队列同步器——AQS
     // TODO 阻塞原语 park() 和 unpark()，用来挂起和恢复线程。没有得到锁的线程将会被挂起。关于阻塞原语，详见：线程阻塞工具类——LockSupport
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
