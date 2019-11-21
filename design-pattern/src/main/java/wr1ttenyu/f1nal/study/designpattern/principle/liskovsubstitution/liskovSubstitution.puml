@@ -1,0 +1,22 @@
+@startuml
+
+interface Base
+
+class A
+class B
+
+Base <|-- A
+Base <|-- B
+
+B o-- A
+
+interface Base {
+}
+
+class A {
+}
+
+class B {
+}
+
+@enduml
