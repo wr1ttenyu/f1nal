@@ -27,7 +27,7 @@ class A1 extends Base {
 }
 
 class B1 extends Base {
-    // 这里A B使用聚合的关系（uml 聚合 部分是可以和整体分离 单独存在的 空菱形指向整体）
+    // 这里A B使用z组合的关系
     private A1 a1 = new A1();
 
     public int func1(int i, int j) {

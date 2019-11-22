@@ -1,0 +1,33 @@
+@startuml
+
+class A
+class B
+note left: <size:8>如果我们只是让B能使用A的方法,\n<size:8>而让B去继承A的话,就会让B和A的耦合性增强
+class B1
+
+B --|> A :继承
+B1 o-- A :聚合
+B2 ..> A :依赖
+B3 *-- A :组合
+
+class A {
+    #operate1();
+    #operate2();
+}
+
+class B {
+}
+
+class B1 {
+   -A a
+   #setA(A a)
+}
+
+class B2 {
+   #operate(A a)
+}
+
+class B3 {
+   -A a = new A()
+}
+@enduml

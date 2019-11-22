@@ -7,8 +7,8 @@ class B
 class C
 class D
 
-Interface1 <|-- B
-Interface1 <|-- D
+Interface1 <|.. B
+Interface1 <|.. D
 B <-- A
 D <-- C
 

@@ -5,10 +5,10 @@ interface Base
 class A
 class B
 
-Base <|-- A
-Base <|-- B
+Base <|.. A
+Base <|.. B
 
-B o-- A
+B *-- A
 
 interface Base {
 }

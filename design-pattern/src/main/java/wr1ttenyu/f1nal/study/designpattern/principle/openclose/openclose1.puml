@@ -1,0 +1,16 @@
+@startuml
+
+class GraphicEditor
+
+class Shape
+class Circle
+class Rectangle
+
+Circle --|> Shape
+Rectangle --|> Shape
+
+GraphicEditor --> Shape
+GraphicEditor --> Circle
+GraphicEditor --> Rectangle
+
+@enduml
