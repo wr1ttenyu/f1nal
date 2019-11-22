@@ -8,3 +8,14 @@ package wr1ttenyu.f1nal.study.designpattern.principle;
  */
 interface Summary {
 }
+
+/**
+ * uml 类图
+ * 类之间的六种关系：
+ * 依赖
+ * 关联
+ * 实现
+ * 继承
+ * 组合
+ * 聚合
+ */
