@@ -8,6 +8,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.util.Iterator;
+import java.util.concurrent.*;
 
 /**
  * 1. three key step use nio to finish network communication
@@ -21,7 +22,6 @@ import java.util.Iterator;
 @Slf4j
 public class Wr1NonBlockingNIOServer {
 
-    // todo continue https://www.oschina.net/question/2618986_2149914 看看这个代码行不行
     // 在代码实践过程中发现的  一直处于写就绪的情况  跟nio底层的 epoll 有关系
     // epoll 是 实现I/O多路复用的一种方法
     // epoll 分为 水平触发 和 边缘触发
@@ -31,14 +31,15 @@ public class Wr1NonBlockingNIOServer {
     // 所以在使用Java的NIO编程的时候，在没有数据可以往外写的时候要取消写事件，在有数据往外写的时候再注册写事件。
     private Selector selector;
 
+    private final ExecutorService serverWorkerPool = new ThreadPoolExecutor(1, 2, 10,
+            TimeUnit.SECONDS, new LinkedBlockingQueue<>(50), new Wr1ThreadFactory(), new Wr1RejectedExecutionHandler());
+
     public static void main(String[] args) {
-        try{
+        try {
             Wr1NonBlockingNIOServer server = new Wr1NonBlockingNIOServer();
             NioServerEventHandler serverEventHandler = new NioServerEventHandler();
             server.initServer();
             server.listen(serverEventHandler);
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,14 +71,8 @@ public class Wr1NonBlockingNIOServer {
                 SelectionKey sk = iterator.next();
                 // remove select key has been processed
                 iterator.remove();
-                // process accept event
-                if (sk.isAcceptable()) {
-                    serverEventHandler.handleAccept(selector, sk);
-                } else if (sk.isReadable()) {
-                    serverEventHandler.handleRead(sk);
-                } else if(sk.isWritable()) {
-                    serverEventHandler.handleWrite(sk);
-                }
+                // TODO 这里使用线程池之后 出现了问题 就是同一个事件被多次处理
+                serverWorkerPool.execute(new Wr1ServerTask(serverEventHandler, selector, sk));
             }
         }
     }

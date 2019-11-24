@@ -8,7 +8,7 @@ class B
 Base <|.. A
 Base <|.. B
 
-B *-- A
+B o-- A
 
 interface Base {
 }

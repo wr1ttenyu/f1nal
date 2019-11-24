@@ -20,7 +20,7 @@ public class NioClientEventHandler implements NioEventHandler {
             SocketChannel sc = (SocketChannel) sk.channel();
             sc.finishConnect(); // 完成连接
             log.info("conntection has been built");
-            sk.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+            sk.interestOps(SelectionKey.OP_WRITE);
         } catch (IOException e) {
             e.printStackTrace();
         }

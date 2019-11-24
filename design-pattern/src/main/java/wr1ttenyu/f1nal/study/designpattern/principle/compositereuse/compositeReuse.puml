@@ -19,7 +19,7 @@ class B {
 }
 
 class B1 {
-   -A a
+   -a: A
    #setA(A a)
 }
 
@@ -28,6 +28,6 @@ class B2 {
 }
 
 class B3 {
-   -A a = new A()
+   -a: A = new A()
 }
 @enduml
