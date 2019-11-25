@@ -61,15 +61,9 @@ public class NioClientEventHandler implements NioEventHandler {
 
             // 3. generator fixed size byte buffer
             ByteBuffer buf = ByteBuffer.allocate(1024);
-
-            Scanner scanner = new Scanner(System.in);
-            while (!scanner.hasNext("eof")) {
-                String str = scanner.next();
-                buf.put((new Date().toString() + "\n" + str).getBytes());
-                buf.flip();
-                sc.write(buf);
-                buf.clear();
-            }
+            buf.put((new Date().toString() + "\n" + "一定要压死你").getBytes());
+            buf.flip();
+            sc.write(buf);
 
             InetSocketAddress remoteAddress = (InetSocketAddress) sc.getRemoteAddress();
             String hostAddress = remoteAddress.getAddress().getHostAddress();

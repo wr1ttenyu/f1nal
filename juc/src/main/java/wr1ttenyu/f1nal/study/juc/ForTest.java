@@ -7,7 +7,7 @@ public class ForTest {
 
     public static void main(String[] args) {
 
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
 
         executorService.execute(() -> {
             System.out.println("123");

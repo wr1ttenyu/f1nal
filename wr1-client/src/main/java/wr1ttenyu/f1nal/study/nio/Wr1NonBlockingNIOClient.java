@@ -37,6 +37,17 @@ public class Wr1NonBlockingNIOClient {
         }
     }
 
+    public void runClient() {
+        try {
+            Wr1NonBlockingNIOClient nioClient = new Wr1NonBlockingNIOClient();
+            NioClientEventHandler clientEventHandler = new NioClientEventHandler();
+            nioClient.initClient();
+            nioClient.listen(clientEventHandler);
+        } catch (Exception e) {
+            log.info("client exception msg : {}", e.getMessage());
+        }
+    }
+
     private void listen(NioClientEventHandler clientEventHandler) throws IOException {
         // polled get ready events in selectors
         while(selector.select() > 0) {
@@ -69,8 +80,8 @@ public class Wr1NonBlockingNIOClient {
         selector = provider.openSelector();
         // 4. register channel into selector and specify listen to accept event
         SelectionKey sk = client.register(selector, SelectionKey.OP_CONNECT);
-
-        if (client.connect(new InetSocketAddress("127.0.0.1", 9898))) {
+        // 122.51.219.124
+        if (client.connect(new InetSocketAddress("122.51.219.124", 9898))) {
             System.out.println("connected...");
             sk.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE); // 监听读就绪和写就绪（准备写数据）
         } else {
