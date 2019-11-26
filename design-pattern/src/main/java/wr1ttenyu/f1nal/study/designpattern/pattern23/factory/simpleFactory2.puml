@@ -3,9 +3,14 @@
 class Pizza
 class CheesePizza
 class GreekPizza
+class SimpleFactory2
 
 CheesePizza --|> Pizza
 GreekPizza --|> Pizza
+
+OrderPizza --o SimpleFactory2
+OrderPizza1 --o SimpleFactory2
+OrderPizza2 --o SimpleFactory2
 
 class Pizza {
     #prepare():void
@@ -13,6 +18,5 @@ class Pizza {
     #cut():void
     #box():void
 }
-
 
 @enduml
