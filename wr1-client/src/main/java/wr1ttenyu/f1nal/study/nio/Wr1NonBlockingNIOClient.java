@@ -72,14 +72,14 @@ public class Wr1NonBlockingNIOClient {
     // 对于读事件 即使没有去监听 服务端发送的数据都会积累在tcp的缓冲区 等到监听读事件时  会一次性全部读出来
     private void initClient() throws IOException{
         // 1. gain channel
-        SelectorProvider provider = SelectorProvider.provider();
-        SocketChannel client =  provider.openSocketChannel();
+        SelectorProvider selectorProvider = SelectorProvider.provider();
+        SocketChannel client =  selectorProvider.openSocketChannel();
         // 2. switch to non blocking model
         client.configureBlocking(false);
         // 3. gain selector
-        selector = provider.openSelector();
+        this.selector = selectorProvider.openSelector();
         // 4. register channel into selector and specify listen to accept event
-        SelectionKey sk = client.register(selector, SelectionKey.OP_CONNECT);
+        SelectionKey sk = client.register(this.selector, SelectionKey.OP_CONNECT);
         // 122.51.219.124
         if (client.connect(new InetSocketAddress("122.51.219.124", 9898))) {
             System.out.println("connected...");

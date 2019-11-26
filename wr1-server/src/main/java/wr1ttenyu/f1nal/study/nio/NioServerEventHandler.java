@@ -15,7 +15,6 @@ public class NioServerEventHandler implements NioEventHandler {
 
     @Override
     public void handleAccept(Selector selector, SelectionKey sk) {
-        log.info("{} handle accept event", Thread.currentThread().getName());
         try {
             ServerSocketChannel serverSocketChannel = (ServerSocketChannel) sk.channel();
             SocketChannel socketChannel = serverSocketChannel.accept();
@@ -26,7 +25,7 @@ public class NioServerEventHandler implements NioEventHandler {
             int port = remoteAddress.getPort();
             log.info("accept request from {}:{} has been handled", hostAddress, port);
 
-            String msg = "hi,i am wr1ttenyu, my ip : 122.51.219.124";
+            String msg = "hi,欢迎登陆聊天室";
             ByteBuffer wrap = ByteBuffer.wrap(msg.getBytes());
             socketChannel.write(wrap);
 

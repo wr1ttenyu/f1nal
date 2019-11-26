@@ -1,0 +1,18 @@
+@startuml
+
+class Pizza
+class CheesePizza
+class GreekPizza
+
+CheesePizza --|> Pizza
+GreekPizza --|> Pizza
+
+class Pizza {
+    #prepare():void
+    #bake():void
+    #cut():void
+    #box():void
+}
+
+
+@enduml
