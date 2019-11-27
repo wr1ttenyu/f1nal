@@ -19,4 +19,8 @@ class Pizza {
     #box():void
 }
 
+class SimpleFactory2 {
+    #createPizza(String orderType):Pizza
+}
+
 @enduml

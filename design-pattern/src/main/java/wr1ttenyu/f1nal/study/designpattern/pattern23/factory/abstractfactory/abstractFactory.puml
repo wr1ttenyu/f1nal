@@ -1,0 +1,36 @@
+@startuml
+
+class Pizza
+class OrderPizze
+interface AbsPizzeFactory
+
+BJCheesePizza --|> Pizza
+BJGreekPizza --|> Pizza
+
+LDCheesePizza --|> Pizza
+LDGreekPizza --|> Pizza
+
+BJPizzeFactory ..> BJCheesePizza
+BJPizzeFactory ..> BJGreekPizza
+
+LDPizzeFactory ..> LDCheesePizza
+LDPizzeFactory ..> LDGreekPizza
+
+BJPizzeFactory ..|> AbsPizzeFactory
+LDPizzeFactory ..|> AbsPizzeFactory
+
+OrderPizze --* BJPizzeFactory
+OrderPizze --* LDPizzeFactory
+
+class Pizza {
+    #prepare():void
+    #bake():void
+    #cut():void
+    #box():void
+}
+
+interface AbsPizzeFactory {
+    #makePizza(String orderType):Pizza
+}
+
+@enduml

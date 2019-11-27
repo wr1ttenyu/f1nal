@@ -1,12 +1,14 @@
-package wr1ttenyu.f1nal.study.designpattern.pattern23.factory;
+package wr1ttenyu.f1nal.study.designpattern.pattern23.factory.simplefactory;
 
 import wr1ttenyu.f1nal.study.designpattern.utils.DesignPatterUtil;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 /**
+ * 需求：
+ * 一个披萨的项目： 要便于披萨种类的扩展， 要便于维护
+ * 1) 披萨的种类很多(比如 GreekPizz、 CheesePizz 等)
+ * 2) 披萨的制作有 prepare， bake, cut, box
+ * 3) 完成披萨店订购功能。
+ *
  * {@link OrderPizza} 的优缺点
  * 1.优点：简单 好理解 易操作
  * 2.缺点：违反了ocp原则，如果新增了一种pizza，在OrderPizza可以有多种实现时，则需要对所有创建pizza的代码进行修改

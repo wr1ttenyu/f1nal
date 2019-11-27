@@ -17,4 +17,17 @@ public interface DesignPatterUtil {
         }
         return str;
     }
+
+    static String getFactoryName() {
+        BufferedReader strIn = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("input pizza factory name:");
+        String str = null;
+        try {
+            str = strIn.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+        return str;
+    }
 }

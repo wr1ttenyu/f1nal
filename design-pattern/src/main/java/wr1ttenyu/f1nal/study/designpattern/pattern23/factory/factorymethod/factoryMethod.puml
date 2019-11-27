@@ -1,0 +1,34 @@
+@startuml
+
+class Pizza
+class OrderPizze
+class BJOrderPizze
+class LDOrderPizze
+
+BJCheesePizza --|> Pizza
+BJGreekPizza --|> Pizza
+
+LDCheesePizza --|> Pizza
+LDGreekPizza --|> Pizza
+
+BJOrderPizze --|> OrderPizze
+LDOrderPizze --|> OrderPizze
+
+BJOrderPizze ..> BJCheesePizza
+BJOrderPizze ..> BJGreekPizza
+
+LDOrderPizze ..> LDCheesePizza
+LDOrderPizze ..> LDGreekPizza
+
+class Pizza {
+    #prepare():void
+    #bake():void
+    #cut():void
+    #box():void
+}
+
+class OrderPizze {
+    #makePizza(String orderType):Pizza
+}
+
+@enduml
