@@ -1,0 +1,16 @@
+@startuml
+
+abstract class AbstractHouseBuilder
+class CommonHouse
+class HighHouse
+
+CommonHouse --|> AbstractHouseBuilder
+HighHouse --|> AbstractHouseBuilder
+
+abstract class AbstractHouseBuilder {
+    #buildBasic:void
+    #buildWalls:void
+    #buildRoof:void
+}
+
+@enduml
