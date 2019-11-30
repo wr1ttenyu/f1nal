@@ -12,7 +12,16 @@ package wr1ttenyu.f1nal.study.designpattern.pattern23.builder;
 public class Client {
 
     public static void main(String[] args) {
+        // 普通方式
+        System.out.println("----------------  普通方式  ----------------");
         AbstractHouse houseBuilder = new CommonHouse();
         houseBuilder.build();
+
+        //建造者模式
+        System.out.println("----------------  建造者模式  ----------------");
+        HighHouseBuilder highHouseBuilder = new HighHouseBuilder();
+        HouseBuilderDirector houseBuilderDirector = new HouseBuilderDirector(highHouseBuilder);
+        House highHouse = houseBuilderDirector.constructHouse();
+        System.out.println(highHouse);
     }
 }

@@ -1,6 +1,8 @@
 package wr1ttenyu.f1nal.study.designpattern.pattern23.builder;
 
-public abstract class AbstractHouse {
+public abstract class HouseBuilder {
+
+    protected House house = new House();
 
     public abstract void buildBasic();
 
@@ -8,9 +10,7 @@ public abstract class AbstractHouse {
 
     public abstract void buildRoof();
 
-    public void build() {
-        buildBasic();
-        buildWalls();
-        buildRoof();
+    public House buildHouse () {
+       return house;
     }
 }

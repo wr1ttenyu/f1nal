@@ -1,0 +1,35 @@
+@startuml
+
+class House
+note left: <size:10>产品
+abstract class HouseBuilder
+class HouseBuilderDirector
+class CommonHouse
+class HighHouse
+class Client
+
+House --* HouseBuilder
+HouseBuilder --o HouseBuilderDirector
+
+CommonHouse --|> HouseBuilder
+HighHouse --|> HouseBuilder
+
+Client ..> CommonHouse
+Client ..> HighHouse
+Client ..> HouseBuilderDirector
+
+abstract class HouseBuilder {
+    #house:House=new House
+    --
+    +buildBasic():void
+    +buildWalls():void
+    +buildRoof():void
+    ..
+    +buildHouse():House
+}
+
+class HouseBuilderDirector {
+    -houseBuilder:HouseBuilder
+}
+
+@enduml

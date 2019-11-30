@@ -1,0 +1,15 @@
+@startuml
+
+interface Appendable
+note left: 定义了多个append方法(即为抽象建造者)
+
+abstract class AbstractStringBuilder
+note left: 实现了Appendable(即为建造者，\n只是不能实例化，是一个抽象类)
+
+class StringBuilder
+note left: 实现了AbstractStringBuilder(可以看做是指挥者，\n实际的建造方法都是AbstractStringBuilder来实现的，\nStringBuilde只是简单调用)
+
+AbstractStringBuilder ..|> Appendable
+StringBuilder --|> AbstractStringBuilder
+
+@enduml

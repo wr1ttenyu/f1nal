@@ -1,0 +1,70 @@
+@startuml
+
+class Order
+interface IOrderCreate {
+    +createOrder(Order order):Order
+}
+interface IOrderCancle {
+    +cancle(Order order):Order
+}
+interface IOrderPayPrepare {
+    +payPrepare (Order order):Order
+}
+interface IOrderPaySuccess {
+    +paySuccess(Order order):Order
+}
+interface IOrderDefray {
+    +orderDefray(Order order):Order
+}
+interface IOrderPayFail {
+    +payFail(Order order):Order
+}
+interface IOrderRefund {
+    +refund(Order order):Order
+}
+
+Order --o IOrderCreate
+Order --o IOrderCancle
+Order --o IOrderPayPrepare
+Order --o IOrderPaySuccess
+Order --o IOrderDefray
+Order --o IOrderPayFail
+Order --o IOrderRefund
+
+TicketChargeOrderCreate ..|> IOrderCreate
+TicketChargeOrderCancle ..|> IOrderCancle
+TicketChargeOrderPayPrepare ..|> IOrderPayPrepare
+TicketChargeOrderPaySuccess ..|> IOrderPaySuccess
+TicketChargeOrderDefray ..|> IOrderDefray
+TicketChargeOrderPayFail ..|> IOrderPayFail
+TicketChargeOrderRefund ..|> IOrderRefund
+
+TicketChargeOrder ..> TicketChargeOrderCreate
+TicketChargeOrder ..> TicketChargeOrderCancle
+TicketChargeOrder ..> TicketChargeOrderPayPrepare
+TicketChargeOrder ..> TicketChargeOrderPaySuccess
+TicketChargeOrder ..> TicketChargeOrderDefray
+TicketChargeOrder ..> TicketChargeOrderPayFail
+TicketChargeOrder ..> TicketChargeOrderRefund
+
+class Order {
+    -orderCreateExecutor:IOrderCreate
+    -orderCancleExecutor:IOrderCancle
+    -orderPayPrepareExecutor:IOrderPayPrepare
+    -orderPaySuccessExecutor:IOrderPaySuccess
+    -orderOrderDefrayExecutor:IOrderDefray
+    -orderOrderPayFailExecutor:IOrderPayFail
+    -orderOrderRefundExecutor:IOrderRefund
+}
+
+class TicketChargeOrder {
+    -orderCreateExecutor:IOrderCreate
+    -orderCancleExecutor:IOrderCancle
+    -orderPayPrepareExecutor:IOrderPayPrepare
+    -orderPaySuccessExecutor:IOrderPaySuccess
+    -orderOrderDefrayExecutor:IOrderDefray
+    -orderOrderPayFailExecutor:IOrderPayFail
+    -orderOrderRefundExecutor:IOrderRefund
+}
+
+@enduml
