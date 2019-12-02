@@ -1,6 +1,7 @@
 @startuml
 
 class Order
+
 interface IOrderCreate {
     +createOrder(Order order):Order
 }
@@ -23,13 +24,15 @@ interface IOrderRefund {
     +refund(Order order):Order
 }
 
-Order --o IOrderCreate
-Order --o IOrderCancle
-Order --o IOrderPayPrepare
-Order --o IOrderPaySuccess
-Order --o IOrderDefray
-Order --o IOrderPayFail
-Order --o IOrderRefund
+Order ..|> IOrderCreate
+Order ..|> IOrderCancle
+Order ..|> IOrderPayPrepare
+Order ..|> IOrderPaySuccess
+Order ..|> IOrderDefray
+Order ..|> IOrderPayFail
+Order ..|> IOrderRefund
+
+TicketChargeOrder --|> Order
 
 TicketChargeOrderCreate ..|> IOrderCreate
 TicketChargeOrderCancle ..|> IOrderCancle
@@ -39,22 +42,15 @@ TicketChargeOrderDefray ..|> IOrderDefray
 TicketChargeOrderPayFail ..|> IOrderPayFail
 TicketChargeOrderRefund ..|> IOrderRefund
 
-TicketChargeOrder ..> TicketChargeOrderCreate
-TicketChargeOrder ..> TicketChargeOrderCancle
-TicketChargeOrder ..> TicketChargeOrderPayPrepare
-TicketChargeOrder ..> TicketChargeOrderPaySuccess
-TicketChargeOrder ..> TicketChargeOrderDefray
-TicketChargeOrder ..> TicketChargeOrderPayFail
-TicketChargeOrder ..> TicketChargeOrderRefund
+TicketChargeOrder o.. TicketChargeOrderCreate
+TicketChargeOrder o.. TicketChargeOrderCancle
+TicketChargeOrder o.. TicketChargeOrderPayPrepare
+TicketChargeOrder o.. TicketChargeOrderPaySuccess
+TicketChargeOrder o.. TicketChargeOrderDefray
+TicketChargeOrder o.. TicketChargeOrderPayFail
+TicketChargeOrder o.. TicketChargeOrderRefund
 
 class Order {
-    -orderCreateExecutor:IOrderCreate
-    -orderCancleExecutor:IOrderCancle
-    -orderPayPrepareExecutor:IOrderPayPrepare
-    -orderPaySuccessExecutor:IOrderPaySuccess
-    -orderOrderDefrayExecutor:IOrderDefray
-    -orderOrderPayFailExecutor:IOrderPayFail
-    -orderOrderRefundExecutor:IOrderRefund
 }
 
 class TicketChargeOrder {

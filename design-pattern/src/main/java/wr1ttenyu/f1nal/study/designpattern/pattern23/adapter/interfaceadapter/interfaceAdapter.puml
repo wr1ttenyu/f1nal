@@ -2,13 +2,18 @@
 
 class Voltage220V
 class Voltage220To5Adapter
-interface IVoltage5V
+interface IVoltage
 class Voltage5VPhone
 
 Voltage220To5Adapter --|> Voltage220V
-Voltage220To5Adapter ..|> IVoltage5V
+Voltage220To5Adapter ..|> IVoltage
 
 Voltage5VPhone ..> IVoltage5V
 Voltage5VPhone ..> Voltage220V
+
+interface IVoltage {
+    + voltage220():void
+    + voltage5():void
+}
 
 @enduml

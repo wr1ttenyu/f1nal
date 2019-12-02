@@ -1,0 +1,26 @@
+@startuml
+
+class Voltage220V
+class Voltage220To5Adapter
+interface IVoltage5V
+class Voltage5VPhone
+
+Voltage220V --o Voltage220To5Adapter
+Voltage220To5Adapter ..|> IVoltage5V
+
+Voltage5VPhone ..> IVoltage5V
+
+class Voltage5VPhone {
+    +charging(IVoltage5V voltage5V):void
+}
+
+class Voltage220To5Adapter {
+    -voltage220V:Voltage220V
+    +Voltage220To5Adapter(voltage220V:Voltage220V)
+}
+
+interface IVoltage5V {
+    +voltage5V():void
+}
+
+@enduml

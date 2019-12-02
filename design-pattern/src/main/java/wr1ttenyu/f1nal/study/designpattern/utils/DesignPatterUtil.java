@@ -8,20 +8,17 @@ public interface DesignPatterUtil {
     static String getType() {
         BufferedReader strIn = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("input pizza type:");
-        String str = null;
-        try {
-            str = strIn.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-        return str;
+        return getString(strIn);
     }
 
     static String getFactoryName() {
         BufferedReader strIn = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("input pizza factory name:");
-        String str = null;
+        return getString(strIn);
+    }
+
+    static String getString(BufferedReader strIn) {
+        String str;
         try {
             str = strIn.readLine();
         } catch (IOException e) {
