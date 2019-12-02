@@ -24,7 +24,7 @@ public class GroupChatRoom {
     public static void main(String[] args) {
         try {
             GroupChatRoom server = new GroupChatRoom();
-            NioServerEventHandler serverEventHandler = new NioServerEventHandler();
+            GroupChatRoomServerEventHandler serverEventHandler = new GroupChatRoomServerEventHandler();
             server.initServer();
             server.listen(serverEventHandler);
         } catch (IOException e) {
@@ -49,7 +49,7 @@ public class GroupChatRoom {
         serverSokcetChannel.register(selector, SelectionKey.OP_ACCEPT);
     }
 
-    private void listen(NioServerEventHandler serverEventHandler) throws IOException {
+    private void listen(NioEventHandler serverEventHandler) throws IOException {
         // polled get ready events in selectors
         while (selector.select() > 0) {
             // gain ready select key iterator
@@ -62,7 +62,7 @@ public class GroupChatRoom {
                 if (sk.isAcceptable()) {
                     serverEventHandler.handleAccept(selector, sk);
                 } else if (sk.isReadable()) {
-                    serverEventHandler.handleRead(sk);
+                    serverEventHandler.handleRead(selector, sk);
                 }
             }
         }

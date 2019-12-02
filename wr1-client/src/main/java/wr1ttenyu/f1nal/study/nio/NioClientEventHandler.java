@@ -20,7 +20,7 @@ public class NioClientEventHandler implements NioEventHandler {
             SocketChannel sc = (SocketChannel) sk.channel();
             sc.finishConnect(); // 完成连接
             log.info("conntection has been built");
-            sk.interestOps(SelectionKey.OP_WRITE);
+            sk.interestOps(SelectionKey.OP_READ);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,7 +46,7 @@ public class NioClientEventHandler implements NioEventHandler {
                 buf.clear();
             }
 
-            sk.interestOps(SelectionKey.OP_WRITE | SelectionKey.OP_READ);
+            sk.interestOps(SelectionKey.OP_READ);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,16 +61,19 @@ public class NioClientEventHandler implements NioEventHandler {
 
             // 3. generator fixed size byte buffer
             ByteBuffer buf = ByteBuffer.allocate(1024);
-            buf.put((new Date().toString() + "\n" + "一定要压死你").getBytes());
-            buf.flip();
-            sc.write(buf);
+            Scanner scanner = new Scanner(System.in);
+            while (!scanner.hasNext("eof")) {
+                String str = scanner.next();
+                buf.put((new Date().toString() + "\n" + str).getBytes());
+                buf.flip();
+                sc.write(buf);
+                buf.clear();
+            }
 
             InetSocketAddress remoteAddress = (InetSocketAddress) sc.getRemoteAddress();
             String hostAddress = remoteAddress.getAddress().getHostAddress();
             int port = remoteAddress.getPort();
             log.info("send msg to server --> {}:{}", hostAddress, port);
-
-            sk.interestOps(SelectionKey.OP_READ);
         } catch (IOException e) {
             e.printStackTrace();
         }

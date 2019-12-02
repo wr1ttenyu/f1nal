@@ -9,9 +9,10 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.Set;
 
 @Slf4j
-public class NioServerEventHandler implements NioEventHandler {
+public class GroupChatRoomServerEventHandler implements NioEventHandler {
 
     @Override
     public void handleAccept(Selector selector, SelectionKey sk) {
@@ -23,12 +24,14 @@ public class NioServerEventHandler implements NioEventHandler {
             InetSocketAddress remoteAddress = (InetSocketAddress) socketChannel.getRemoteAddress();
             String hostAddress = remoteAddress.getAddress().getHostAddress();
             int port = remoteAddress.getPort();
-            log.info("accept request from {}:{} has been handled", hostAddress, port);
+            log.info("用户：{} 已经登录了!", port);
 
-            String msg = "hi,欢迎登陆聊天室";
-            ByteBuffer wrap = ByteBuffer.wrap(msg.getBytes());
-            socketChannel.write(wrap);
+            String welcomeMsg = "hi,欢迎登陆聊天室";
+            ByteBuffer welcomeMsgBuffer = ByteBuffer.wrap(welcomeMsg.getBytes());
+            socketChannel.write(welcomeMsgBuffer);
 
+            String loginMsg = "用户：" + port + " 已经登录了!";
+            broadcastMsg(selector, sk, loginMsg);
             socketChannel.register(selector, SelectionKey.OP_READ);
         } catch (IOException e) {
             log.error("have a exception msg:{} stack-trace:{}", e.getMessage(), e.getStackTrace());
@@ -50,9 +53,11 @@ public class NioServerEventHandler implements NioEventHandler {
             log.info("from {}:{} read event", hostAddress, port);
             ByteBuffer buf = ByteBuffer.allocate(1024);
             int length;
+            String msg = "";
             while ((length = sChannel.read(buf)) > 0) {
                 buf.flip();
-                log.info("msg from {}:{} --> {}", hostAddress, port, new String(buf.array(), 0, length));
+                msg = new String(buf.array(), 0, length);
+                log.info("msg from {}:{} --> {}", hostAddress, port, msg);
                 buf.clear();
             }
 
@@ -62,10 +67,8 @@ public class NioServerEventHandler implements NioEventHandler {
                 sk.cancel();
                 log.info("connect close from {}:{}", hostAddress, port);
             } else {
-                // 读完之后 给客户端回话
-                String msg = "hi,i am wr1ttenyu, my ip : 122.51.219.124";
-                ByteBuffer wrap = ByteBuffer.wrap(msg.getBytes());
-                sChannel.write(wrap);
+                // 将客户端消息广播给其他客户端
+                broadcastMsg(selector, sk, port + ": " + msg);
                 sk.interestOps(SelectionKey.OP_READ);
             }
         } catch (IOException e) {
@@ -96,6 +99,20 @@ public class NioServerEventHandler implements NioEventHandler {
             sChannel.write(wrap);
         } catch (IOException e) {
             log.error("have a exception msg:{} stack-trace:{}", e.getMessage(), e.getStackTrace());
+        }
+    }
+
+    private void broadcastMsg(Selector selector, SelectionKey sk, String loginMsg) throws IOException {
+        Set<SelectionKey> keys = selector.keys();
+        if (!keys.isEmpty()) {
+            SocketChannel channel;
+            for (SelectionKey key : keys) {
+                if (key != sk && key.channel() instanceof SocketChannel) {
+                    ByteBuffer loginMsgBuffer = ByteBuffer.wrap(loginMsg.getBytes());
+                    channel = (SocketChannel) key.channel();
+                    channel.write(loginMsgBuffer);
+                }
+            }
         }
     }
 }

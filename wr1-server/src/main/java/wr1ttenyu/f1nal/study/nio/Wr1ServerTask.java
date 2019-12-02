@@ -21,9 +21,9 @@ class Wr1ServerTask implements Runnable {
         if (sk.isAcceptable()) {
             serverEventHandler.handleAccept(selector, sk);
         } else if (sk.isReadable()) {
-            serverEventHandler.handleRead(sk);
-        } else if(sk.isWritable()) {
-            serverEventHandler.handleWrite(sk);
+            serverEventHandler.handleRead(selector, sk);
+        } else if (sk.isWritable()) {
+            serverEventHandler.handleWrite(selector, sk);
         }
     }
 

@@ -9,15 +9,15 @@ public interface NioEventHandler {
         throw new RuntimeException("操作不支持");
     }
 
-    default void handleConnect(SelectionKey sk) {
+    default void handleConnect(Selector selector, SelectionKey sk) {
         throw new RuntimeException("操作不支持");
     }
 
-    default void handleRead(SelectionKey sk) {
+    default void handleRead(Selector selector, SelectionKey sk) {
         throw new RuntimeException("操作不支持");
     }
 
-    default void handleWrite(SelectionKey sk) {
+    default void handleWrite(Selector selector, SelectionKey sk) {
         throw new RuntimeException("操作不支持");
     }
 }
