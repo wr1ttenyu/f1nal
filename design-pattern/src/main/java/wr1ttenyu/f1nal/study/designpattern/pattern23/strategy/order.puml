@@ -24,15 +24,31 @@ interface IOrderRefund {
     +refund(Order order):Order
 }
 
-Order ..|> IOrderCreate
-Order ..|> IOrderCancle
-Order ..|> IOrderPayPrepare
-Order ..|> IOrderPaySuccess
-Order ..|> IOrderDefray
-Order ..|> IOrderPayFail
-Order ..|> IOrderRefund
+IOrderCreate ..> Order
+IOrderCancle ..> Order
+IOrderPayPrepare ..> Order
+IOrderPaySuccess ..> Order
+IOrderDefray ..> Order
+IOrderPayFail ..> Order
+IOrderRefund ..> Order
 
-TicketChargeOrder --|> Order
+TicketChargeOrderExecutor --|> OrderLifeCycleExecutor
+
+TicketChargeOrderCreate <.. TicketChargeOrderExecutor
+TicketChargeOrderCancle <.. TicketChargeOrderExecutor
+TicketChargeOrderPayPrepare <.. TicketChargeOrderExecutor
+TicketChargeOrderPaySuccess <.. TicketChargeOrderExecutor
+TicketChargeOrderDefray <.. TicketChargeOrderExecutor
+TicketChargeOrderPayFail <.. TicketChargeOrderExecutor
+TicketChargeOrderRefund <.. TicketChargeOrderExecutor
+
+OrderLifeCycleExecutor o.. IOrderCreate
+OrderLifeCycleExecutor o.. IOrderCancle
+OrderLifeCycleExecutor o.. IOrderPayPrepare
+OrderLifeCycleExecutor o.. IOrderPaySuccess
+OrderLifeCycleExecutor o.. IOrderDefray
+OrderLifeCycleExecutor o.. IOrderPayFail
+OrderLifeCycleExecutor o.. IOrderRefund
 
 TicketChargeOrderCreate ..|> IOrderCreate
 TicketChargeOrderCancle ..|> IOrderCancle
@@ -42,18 +58,11 @@ TicketChargeOrderDefray ..|> IOrderDefray
 TicketChargeOrderPayFail ..|> IOrderPayFail
 TicketChargeOrderRefund ..|> IOrderRefund
 
-TicketChargeOrder o.. TicketChargeOrderCreate
-TicketChargeOrder o.. TicketChargeOrderCancle
-TicketChargeOrder o.. TicketChargeOrderPayPrepare
-TicketChargeOrder o.. TicketChargeOrderPaySuccess
-TicketChargeOrder o.. TicketChargeOrderDefray
-TicketChargeOrder o.. TicketChargeOrderPayFail
-TicketChargeOrder o.. TicketChargeOrderRefund
-
 class Order {
+
 }
 
-class TicketChargeOrder {
+abstract class OrderLifeCycleExecutor {
     -orderCreateExecutor:IOrderCreate
     -orderCancleExecutor:IOrderCancle
     -orderPayPrepareExecutor:IOrderPayPrepare
@@ -61,6 +70,14 @@ class TicketChargeOrder {
     -orderOrderDefrayExecutor:IOrderDefray
     -orderOrderPayFailExecutor:IOrderPayFail
     -orderOrderRefundExecutor:IOrderRefund
+
+    +setOrderCreateExecutor(IOrderCreate):void
+    +setOrderCancleExecutor(IOrderCancle):void
+    +setOrderPayPrepareExecutor(IOrderPayPrepare):void
+    +setOrderPaySuccessExecutor(IOrderPaySuccess):void
+    +setOrderOrderDefrayExecutor(IOrderDefray):void
+    +setOrderOrderPayFailExecutor(IOrderPayFail):void
+    +setOrderOrderRefundExecutor(IOrderRefund):void
 }
 
 @enduml

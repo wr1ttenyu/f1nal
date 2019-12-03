@@ -1,19 +1,31 @@
 @startuml
 
-class Voltage220V
-class Voltage220To5Adapter
-interface IVoltage
-class Voltage5VPhone
+class IInterface
+abstract class AbstractImpl
+note right: 空实现了 IInterface 的全部接口
+class FinalImplClass
+note right: 继承 AbstractImpl 只实现自己需要的方法
 
-Voltage220To5Adapter --|> Voltage220V
-Voltage220To5Adapter ..|> IVoltage
+AbstractImpl ..|> IInterface
+FinalImplClass --|> AbstractImpl
 
-Voltage5VPhone ..> IVoltage5V
-Voltage5VPhone ..> Voltage220V
+class FinalImplClass {
+    + method1():void
+    + method2():void
+}
 
-interface IVoltage {
-    + voltage220():void
-    + voltage5():void
+interface AbstractImpl {
+    + method1():void
+    + method2():void
+    + method3():void
+    + method4():void
+}
+
+interface IInterface {
+    + method1():void
+    + method2():void
+    + method3():void
+    + method4():void
 }
 
 @enduml
