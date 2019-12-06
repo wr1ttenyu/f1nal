@@ -1,3 +1,5 @@
 // TODO 如果利用 scheduleService 里面的queue 可以按照时间排序 那么我们就能用在定时回调http工具类里面
 
 // TODO https://www.codercto.com/a/43669.html plant uml 学习网址
+
+// TODO mysql for update 锁多行数据

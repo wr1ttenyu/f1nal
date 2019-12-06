@@ -19,7 +19,7 @@ public class NioClientEventHandler implements NioEventHandler {
         try {
             SocketChannel sc = (SocketChannel) sk.channel();
             sc.finishConnect(); // 完成连接
-            log.info("conntection has been built");
+            System.out.println("已经登录聊天室.....");
             sk.interestOps(SelectionKey.OP_READ);
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,14 +35,11 @@ public class NioClientEventHandler implements NioEventHandler {
             InetSocketAddress remoteAddress = (InetSocketAddress) sc.getRemoteAddress();
             String hostAddress = remoteAddress.getAddress().getHostAddress();
             int port = remoteAddress.getPort();
-            log.info("read msg from address --> {}:{}", hostAddress, port);
-
             ByteBuffer buf = ByteBuffer.allocate(1024);
             int length;
             while ((length = sc.read(buf)) > 0) {
                 buf.flip();
-                log.info("read from address --> {}:{} msg is {}", hostAddress, port, new String(buf.array(), 0,
-                        length));
+                System.out.println((new String(buf.array(), 0, length)));
                 buf.clear();
             }
 
@@ -62,9 +59,10 @@ public class NioClientEventHandler implements NioEventHandler {
             // 3. generator fixed size byte buffer
             ByteBuffer buf = ByteBuffer.allocate(1024);
             Scanner scanner = new Scanner(System.in);
+            scanner.useDelimiter("\n");
             while (!scanner.hasNext("eof")) {
                 String str = scanner.next();
-                buf.put((new Date().toString() + "\n" + str).getBytes());
+                buf.put(str.getBytes());
                 buf.flip();
                 sc.write(buf);
                 buf.clear();
@@ -73,7 +71,6 @@ public class NioClientEventHandler implements NioEventHandler {
             InetSocketAddress remoteAddress = (InetSocketAddress) sc.getRemoteAddress();
             String hostAddress = remoteAddress.getAddress().getHostAddress();
             int port = remoteAddress.getPort();
-            log.info("send msg to server --> {}:{}", hostAddress, port);
         } catch (IOException e) {
             e.printStackTrace();
         }

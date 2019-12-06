@@ -1,0 +1,34 @@
+@startuml
+
+interface IFunction
+abstract class PhoneStyle
+class FoldedPhone
+class UpRightPhone
+class SlidePhone
+
+IFunction --o PhoneStyle
+
+FoldedPhone --|> PhoneStyle
+UpRightPhone --|> PhoneStyle
+SlidePhone --|> PhoneStyle
+
+Vivo ..|> IFunction
+Xiaomi ..|> IFunction
+HuaWei ..|> IFunction
+
+abstract class PhoneStyle {
+    -function:IFunction
+    -style:name
+    +PhoneStyle(function:IFunction, style:String):void
+    +call():void
+    +close():void
+    +open():void
+}
+
+interface IFunction {
+    +call():void
+    +close():void
+    +open():void
+}
+
+@enduml

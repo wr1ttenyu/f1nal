@@ -1,5 +1,7 @@
 package wr1ttenyu.f1nal.study.designpattern.pattern23.factory;
 
+import wr1ttenyu.f1nal.study.designpattern.pattern23.bridge.FoldedPhone;
+
 import java.util.Calendar;
 
 /**

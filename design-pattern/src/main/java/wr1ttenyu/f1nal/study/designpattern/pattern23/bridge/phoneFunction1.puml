@@ -1,0 +1,34 @@
+@startuml
+
+class Phone
+class FoldedPhone
+class UpRightPhone
+class SlidePhone
+
+FoldedPhone --|> Phone
+UpRightPhone --|> Phone
+SlidePhone --|> Phone
+
+HuaWeiFolded --|> FoldedPhone
+ViVoFolded --|> FoldedPhone
+XiaoMiFolded --|> FoldedPhone
+
+HuaWeiUpRight --|> UpRightPhone
+ViVoUpRight --|> UpRightPhone
+XiaoMiUpRight --|> UpRightPhone
+
+HuaWeiSlide --|> SlidePhone
+ViVoSlide --|> SlidePhone
+XiaoMiSlide --|> SlidePhone
+
+class FoldedPhone {
+    +call():void
+}
+class UpRightPhone {
+    +call():void
+}
+class SlidePhone {
+    +call():void
+}
+
+@enduml

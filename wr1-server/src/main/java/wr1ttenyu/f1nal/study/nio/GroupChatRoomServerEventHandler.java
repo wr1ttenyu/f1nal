@@ -24,9 +24,9 @@ public class GroupChatRoomServerEventHandler implements NioEventHandler {
             InetSocketAddress remoteAddress = (InetSocketAddress) socketChannel.getRemoteAddress();
             String hostAddress = remoteAddress.getAddress().getHostAddress();
             int port = remoteAddress.getPort();
-            log.info("用户：{} 已经登录了!", port);
+            System.out.println("用户：" + port + " 登录了!");
 
-            String welcomeMsg = "hi,欢迎登陆聊天室";
+            String welcomeMsg = "hi " + port + ",欢迎登陆聊天室";
             ByteBuffer welcomeMsgBuffer = ByteBuffer.wrap(welcomeMsg.getBytes());
             socketChannel.write(welcomeMsgBuffer);
 
@@ -40,24 +40,21 @@ public class GroupChatRoomServerEventHandler implements NioEventHandler {
 
     @Override
     public void handleRead(Selector selector, SelectionKey sk) {
-        log.info("{} handle read event", Thread.currentThread().getName());
-        SocketChannel sChannel = (SocketChannel) sk.channel();
-        String hostAddress = "@hostAddress@";
         Integer port = 0;
+        SocketChannel sChannel = null;
         try {
             // process read event
             // gain channel from SelectionKey
+            sChannel = (SocketChannel) sk.channel();
             InetSocketAddress remoteAddress = (InetSocketAddress) sChannel.getRemoteAddress();
-            hostAddress = remoteAddress.getAddress().getHostAddress();
             port = remoteAddress.getPort();
-            log.info("from {}:{} read event", hostAddress, port);
             ByteBuffer buf = ByteBuffer.allocate(1024);
             int length;
             String msg = "";
             while ((length = sChannel.read(buf)) > 0) {
                 buf.flip();
-                msg = new String(buf.array(), 0, length);
-                log.info("msg from {}:{} --> {}", hostAddress, port, msg);
+                msg = port + " 说: " + new String(buf.array(), 0, length);
+                System.out.println(msg);
                 buf.clear();
             }
 
@@ -65,20 +62,23 @@ public class GroupChatRoomServerEventHandler implements NioEventHandler {
             if (length < 0) {
                 sChannel.close();
                 sk.cancel();
-                log.info("connect close from {}:{}", hostAddress, port);
             } else {
                 // 将客户端消息广播给其他客户端
-                broadcastMsg(selector, sk, port + ": " + msg);
+                broadcastMsg(selector, sk, msg);
                 sk.interestOps(SelectionKey.OP_READ);
             }
         } catch (IOException e) {
+            sk.cancel();
             try {
-                sChannel.close();
+                if (sChannel != null) {
+                    sChannel.close();
+                }
+                String logoutMsg = "用户：" + port + " 下线了!";
+                System.out.println(logoutMsg);
+                broadcastMsg(selector, sk, logoutMsg);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            sk.cancel();
-            log.info("occur exception msg : {} \n connect close from {}:{}", e.getMessage(), hostAddress, port);
         }
     }
 
