@@ -53,6 +53,7 @@
         <lombok.version>1.18.8</lombok.version>
         <slf4j.version>1.7.25</slf4j.version>
         <logback.classic.version>1.2.3</logback.classic.version>
+        <netty.version>4.1.25.Final</netty.version>
     </properties>
 
     <dependencyManagement>
@@ -79,6 +80,12 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

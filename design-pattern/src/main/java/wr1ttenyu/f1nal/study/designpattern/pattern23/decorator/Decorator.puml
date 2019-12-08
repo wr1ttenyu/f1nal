@@ -1,0 +1,16 @@
+@startuml
+
+abstract class Drink
+abstract class Coffee
+abstract class Decorator
+
+Drink <|-- Coffee
+Drink <|-- Decorator
+
+class Drink {
+Object[] elementData
+size()
+}
+
+
+@enduml
