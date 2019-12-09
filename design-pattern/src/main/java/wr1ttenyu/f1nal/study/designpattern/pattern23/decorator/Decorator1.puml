@@ -1,0 +1,29 @@
+@startuml
+
+abstract class Drink
+class EspressoCoffee
+class LongCoffee
+class Milk
+class Soy
+class EspressoCoffeeAndSoy
+class LongCoffeeAndSoy
+class EspressoCoffeeAndMilk
+class LongCoffeeAndMilk
+
+Drink <|-- EspressoCoffee
+Drink <|-- LongCoffee
+Drink <|-- Milk
+Drink <|-- Soy
+Drink <|-- EspressoCoffeeAndSoy
+Drink <|-- LongCoffeeAndSoy
+Drink <|-- EspressoCoffeeAndMilk
+Drink <|-- LongCoffeeAndMilk
+
+class Drink {
+    -price:float
+    -description:String
+    +getDesc()
+    +getCost()
+}
+
+@enduml

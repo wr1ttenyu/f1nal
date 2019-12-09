@@ -8,9 +8,10 @@ Drink <|-- Coffee
 Drink <|-- Decorator
 
 class Drink {
-Object[] elementData
-size()
+    -price:float
+    -description:String
+    +getDesc()
+    +getCost()
 }
-
 
 @enduml

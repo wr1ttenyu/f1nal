@@ -24,12 +24,18 @@ public class NettyServer {
 
         bootstrap.group(bossGroup, workerGroup) // 设置两个线程组
                 .channel(NioServerSocketChannel.class) // 使用NioServerSocketChannel 作为服务器的通道实现
-                .option(ChannelOption.SO_BACKLOG, 128) // 设置线程队列得到连接个数 // TODO SO_BACKLOG 参数作用
-                .childOption(ChannelOption.SO_KEEPALIVE, true) // 设置保持活动连接状态  // TODO SO_KEEPALIVE 参数作用
+                // SO_BACKLOG tcp 三次握手 第二次握手 和 第三次握手的次数 分别会保存在两个队列中
+                // 第二次握手之后 等待客户端应答  第三次握手之后  等待服务端accept
+                // SO_BACKLOG 就是设置这两个队列的内连接数量的最大值
+                .option(ChannelOption.SO_BACKLOG, 128)
+                // SO_KEEPALIVE 参数作用 相当于开启 tcp 自带的心跳功能
+                .childOption(ChannelOption.SO_KEEPALIVE, true) // 设置保持活动连接状态
                 .childHandler(new ChannelInitializer<SocketChannel>() { // 创建一个通道初始化对象（匿名对象）
                     // 给pipeline设置处理器
                     @Override
                     protected void initChannel(SocketChannel sc) {
+                        // 可以使用一个集合将SocketChannel和对应的用户关联关系保存起来
+                        // 通过这种方式可以 实现 非Reactor线程来调用SocketChannel的各种方法
                         sc.pipeline().addLast(new NettyServerHandler());
                     }
                 }); // 给我们的workerGroup的EventLoop对应的管道设置处理器
@@ -40,6 +46,17 @@ public class NettyServer {
             // 绑定一个端口并且同步，生成一个 ChannelFuture 对象
             // 启动服务器（并绑定端口）
             ChannelFuture cf = bootstrap.bind(6688).sync();
+            // 给cf注册监听器  监听我们关心的事件
+            cf.addListener((ChannelFuture channelFuture) -> {
+                if(cf == channelFuture) {
+                    System.out.println("是一个future");
+                }
+                if(channelFuture.isSuccess()) {
+                    System.out.println("绑定成功了");
+                } else {
+                    System.out.println("绑定失败了");
+                }
+            });
             // 对关闭通道进行监听
             cf.channel().closeFuture().sync();
         } catch (InterruptedException e) {
