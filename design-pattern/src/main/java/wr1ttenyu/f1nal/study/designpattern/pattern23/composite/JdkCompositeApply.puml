@@ -1,22 +1,15 @@
 @startuml
 
-abstract class InputStream
-class FileInputStream
-class ByteArrayInputStream
-class FilterInputStream
+Interface Map
+Interface Entry
+abstract class AbstractMap
+class HashMap
+class Node
 
-class DataInputStream
-class BufferedInputStream
-
-ByteArrayInputStream --|> InputStream
-FileInputStream --|> InputStream
-FilterInputStream --|> InputStream
-
-DataInputStream --|> FilterInputStream
-BufferedInputStream --|> FilterInputStream
-
-class FilterInputStream {
-    #in:volatile InputStream
-}
+AbstractMap ..|> Map
+Node ..|> Entry
+HashMap --|> AbstractMap
+Node --* HashMap
+Entry --* AbstractMap
 
 @enduml

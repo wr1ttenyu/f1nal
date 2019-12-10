@@ -1,0 +1,28 @@
+@startuml
+
+class Configuration
+interface ReflectorFactory
+interface ReflectorFactory
+interface ObjectWrapperFactory
+class DefaultReflectorFactory
+class DefaultObjectFactory
+class DefaultObjectWrapperFactory
+class MetaObject
+
+DefaultReflectorFactory --* Configuration
+DefaultObjectFactory --* Configuration
+DefaultObjectWrapperFactory --* Configuration
+
+DefaultReflectorFactory ..|> ReflectorFactory
+DefaultObjectFactory ..|> ObjectFactory
+DefaultObjectWrapperFactory ..|> ObjectWrapperFactory
+
+Configuration ..> MetaObject
+
+Client ..> MetaObject
+
+class Configuration{
+    +newMetaObject(object:Object)
+}
+
+@enduml

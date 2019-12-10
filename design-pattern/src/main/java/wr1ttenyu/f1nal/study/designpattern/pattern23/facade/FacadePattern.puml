@@ -1,0 +1,18 @@
+@startuml
+
+class Facade
+note left:<size:8>为调用端提供统一的调用接口，外观类知道哪些子系统\n<size:8>负责处理请求，从而将调用端的请求代理给适当子系统对象
+class Sub1
+class Sub2
+class Sub3
+note left:<size:8>子系统：指模块或者子系统，处理Facade对象指派的任务，他是功能的实际提供者
+class Client
+note left:<size:8>外观接口的调用者
+
+Client ..> Facade
+
+Sub1 --o Facade
+Sub2 --o Facade
+Sub3 --o Facade
+
+@enduml

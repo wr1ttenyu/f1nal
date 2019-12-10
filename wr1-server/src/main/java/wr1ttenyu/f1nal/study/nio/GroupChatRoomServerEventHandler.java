@@ -11,6 +11,8 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Set;
 
+import static wr1ttenyu.f1nal.study.nio.GroupChatRoom.CHANNEL_CONTIANER;
+
 @Slf4j
 public class GroupChatRoomServerEventHandler implements NioEventHandler {
 
@@ -22,9 +24,9 @@ public class GroupChatRoomServerEventHandler implements NioEventHandler {
             socketChannel.configureBlocking(false);
 
             InetSocketAddress remoteAddress = (InetSocketAddress) socketChannel.getRemoteAddress();
-            String hostAddress = remoteAddress.getAddress().getHostAddress();
+            addChannel(remoteAddress, socketChannel);
             int port = remoteAddress.getPort();
-            System.out.println("用户：" + port + " 登录了!");
+            log.info("用户：{} 登录了!", port);
 
             String welcomeMsg = "hi " + port + ",欢迎登陆聊天室";
             ByteBuffer welcomeMsgBuffer = ByteBuffer.wrap(welcomeMsg.getBytes());
@@ -42,11 +44,12 @@ public class GroupChatRoomServerEventHandler implements NioEventHandler {
     public void handleRead(Selector selector, SelectionKey sk) {
         Integer port = 0;
         SocketChannel sChannel = null;
+        InetSocketAddress remoteAddress = null;
         try {
+            sChannel = (SocketChannel) sk.channel();
+            remoteAddress = (InetSocketAddress) sChannel.getRemoteAddress();
             // process read event
             // gain channel from SelectionKey
-            sChannel = (SocketChannel) sk.channel();
-            InetSocketAddress remoteAddress = (InetSocketAddress) sChannel.getRemoteAddress();
             port = remoteAddress.getPort();
             ByteBuffer buf = ByteBuffer.allocate(1024);
             int length;
@@ -54,12 +57,15 @@ public class GroupChatRoomServerEventHandler implements NioEventHandler {
             while ((length = sChannel.read(buf)) > 0) {
                 buf.flip();
                 msg = port + " 说: " + new String(buf.array(), 0, length);
-                System.out.println(msg);
+                log.info(msg);
                 buf.clear();
             }
 
             // 断开连接后,会产生OP_READ事件,length 小于0则关闭channel
             if (length < 0) {
+                String logoutMsg = "用户：" + port + " 正常下线了!";
+                log.info(logoutMsg);
+                removeChannel(remoteAddress);
                 sChannel.close();
                 sk.cancel();
             } else {
@@ -73,8 +79,9 @@ public class GroupChatRoomServerEventHandler implements NioEventHandler {
                 if (sChannel != null) {
                     sChannel.close();
                 }
-                String logoutMsg = "用户：" + port + " 下线了!";
-                System.out.println(logoutMsg);
+                String logoutMsg = "用户：" + port + " 强制下线了!";
+                removeChannel(remoteAddress);
+                log.info(logoutMsg);
                 broadcastMsg(selector, sk, logoutMsg);
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -113,6 +120,23 @@ public class GroupChatRoomServerEventHandler implements NioEventHandler {
                     channel.write(loginMsgBuffer);
                 }
             }
+        }
+    }
+
+    private String createChannelKey(InetSocketAddress remoteAddress) {
+        return remoteAddress.getHostName() + ":" + remoteAddress.getPort();
+    }
+
+    private void removeChannel(InetSocketAddress remoteAddress) {
+        if(remoteAddress != null) {
+            CHANNEL_CONTIANER.remove(remoteAddress.getHostName() + ":" + remoteAddress.getPort());
+        }
+    }
+
+    private void addChannel(InetSocketAddress remoteAddress, SocketChannel socketChannel) {
+        if(remoteAddress != null) {
+            String channelKey = createChannelKey(remoteAddress);
+            CHANNEL_CONTIANER.put(channelKey, socketChannel);
         }
     }
 }
