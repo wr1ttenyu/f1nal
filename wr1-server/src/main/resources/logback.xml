@@ -2,7 +2,7 @@
 <!-- configuration 属性
     debug 是输出 logback 的配置文件加载状态信息 比如配置文件有错误  debug="true"
     scan 是配置是否扫描配置文件是否有更改 scanPeriod 是扫描的时间间隔  scan="false" scanPeriod="1 seconds" -->
-<configuration debug="false">
+<configuration debug="true">
     <contextName>logback</contextName>
     <!--定义参数,后面可以通过${app.name}使用-->
     <property name="app.name" value="wr1-server"/>

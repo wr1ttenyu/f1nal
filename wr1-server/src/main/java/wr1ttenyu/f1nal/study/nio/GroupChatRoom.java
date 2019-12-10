@@ -1,5 +1,6 @@
 package wr1ttenyu.f1nal.study.nio;
 
+import ch.qos.logback.classic.util.ContextInitializer;
 import lombok.extern.slf4j.Slf4j;
 import sun.misc.Signal;
 
@@ -28,8 +29,11 @@ public class GroupChatRoom {
 
     public static HashMap<String, SocketChannel> CHANNEL_CONTIANER = new HashMap<>();
 
-    public static void main(String[] args) {
+    public GroupChatRoom() {
+        System.out.println("classpath=>" + ContextInitializer.class.getClassLoader());
+    }
 
+    public static void main(String[] args) {
         // SIGTERM 为linux下的信号量
         Signal sg = new Signal("TERM"); // kill -15 pid
         // 监听信号量
@@ -62,10 +66,10 @@ public class GroupChatRoom {
     }
 
     private static void sendChatRoomCloseMsg(String msg) {
-        if(msg == null) {
+        if (msg == null) {
             return;
         }
-        for (Map.Entry<String,SocketChannel> entry : CHANNEL_CONTIANER.entrySet()) {
+        for (Map.Entry<String, SocketChannel> entry : CHANNEL_CONTIANER.entrySet()) {
             try {
                 entry.getValue().write(ByteBuffer.wrap(msg.getBytes()));
             } catch (IOException e) {
@@ -75,7 +79,7 @@ public class GroupChatRoom {
         log.info("已经通过全部客户端聊天室关闭信息");
     }
 
-    private void initServer() throws IOException {
+    public void initServer() throws IOException {
         // 1. gain channel
         ServerSocketChannel serverSokcetChannel = ServerSocketChannel.open();
 
@@ -92,7 +96,7 @@ public class GroupChatRoom {
         serverSokcetChannel.register(selector, SelectionKey.OP_ACCEPT);
     }
 
-    private void listen(NioEventHandler serverEventHandler) throws IOException {
+    public void listen(NioEventHandler serverEventHandler) throws IOException {
         // polled get ready events in selectors
         while (selector.select() > 0) {
             // gain ready select key iterator

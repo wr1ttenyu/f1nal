@@ -53,7 +53,7 @@ public class Wr1NonBlockingNIOClient {
         }
     }
 
-    private void listen(NioClientEventHandler clientEventHandler) throws IOException {
+    public void listen(NioClientEventHandler clientEventHandler) throws IOException {
         // polled get ready events in selectors
         while(selector.select() > 0) {
             // gain ready select key iterator
@@ -65,9 +65,9 @@ public class Wr1NonBlockingNIOClient {
                 if(sk.isConnectable()) {
                     clientEventHandler.handleConnect(sk);
 
-                    workers.execute(() -> {
+                    /*workers.execute(() -> {
                         clientEventHandler.handleWrite(sk);
-                    });
+                    });*/
                 } else if (sk.isReadable()) {
                     clientEventHandler.handleRead(sk);
                 }
@@ -77,7 +77,7 @@ public class Wr1NonBlockingNIOClient {
 
     // nio channel 来了没有注册的事件 会怎么样
     // 对于读事件 即使没有去监听 服务端发送的数据都会积累在tcp的缓冲区 等到监听读事件时  会一次性全部读出来
-    private void initClient() throws IOException{
+    public void initClient() throws IOException{
         // 1. gain channel
         SelectorProvider selectorProvider = SelectorProvider.provider();
         SocketChannel client =  selectorProvider.openSocketChannel();
@@ -88,7 +88,7 @@ public class Wr1NonBlockingNIOClient {
         // 4. register channel into selector and specify listen to accept event
         SelectionKey sk = client.register(this.selector, SelectionKey.OP_CONNECT);
         // 122.51.219.124
-        if (client.connect(new InetSocketAddress("127.0.0.1", 9898))) {
+        if (client.connect(new InetSocketAddress("122.51.219.124", 9898))) {
             sk.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE); // 监听读就绪和写就绪（准备写数据）
         } else {
             sk.interestOps(SelectionKey.OP_CONNECT); // 监听连接就绪

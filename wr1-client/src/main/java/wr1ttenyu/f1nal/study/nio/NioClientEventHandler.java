@@ -43,6 +43,8 @@ public class NioClientEventHandler implements NioEventHandler {
                 buf.clear();
             }
 
+            sc.write(ByteBuffer.wrap("wr1ttenyu真帅。。。。".getBytes()));
+
             sk.interestOps(SelectionKey.OP_READ);
         } catch (IOException e) {
             e.printStackTrace();
