@@ -21,7 +21,7 @@ public class AppTest {
 
     @Test
     public void testALotOfClient() {
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10000; i++) {
             new Thread(() -> {
                 try {
                     Wr1NonBlockingNIOClient nioClient = new Wr1NonBlockingNIOClient();

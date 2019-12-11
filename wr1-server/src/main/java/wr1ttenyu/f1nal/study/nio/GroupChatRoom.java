@@ -29,10 +29,6 @@ public class GroupChatRoom {
 
     public static HashMap<String, SocketChannel> CHANNEL_CONTIANER = new HashMap<>();
 
-    public GroupChatRoom() {
-        System.out.println("classpath=>" + ContextInitializer.class.getClassLoader());
-    }
-
     public static void main(String[] args) {
         // SIGTERM 为linux下的信号量
         Signal sg = new Signal("TERM"); // kill -15 pid

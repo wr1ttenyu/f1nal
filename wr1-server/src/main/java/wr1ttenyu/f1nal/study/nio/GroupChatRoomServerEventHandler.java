@@ -110,7 +110,7 @@ public class GroupChatRoomServerEventHandler implements NioEventHandler {
     }
 
     private void broadcastMsg(Selector selector, SelectionKey sk, String loginMsg) throws IOException {
-        Set<SelectionKey> keys = selector.keys();
+        /*Set<SelectionKey> keys = selector.keys();
         if (!keys.isEmpty()) {
             SocketChannel channel;
             for (SelectionKey key : keys) {
@@ -120,7 +120,7 @@ public class GroupChatRoomServerEventHandler implements NioEventHandler {
                     channel.write(loginMsgBuffer);
                 }
             }
-        }
+        }*/
     }
 
     private String createChannelKey(InetSocketAddress remoteAddress) {

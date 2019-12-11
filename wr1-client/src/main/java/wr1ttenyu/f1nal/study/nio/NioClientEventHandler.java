@@ -38,8 +38,8 @@ public class NioClientEventHandler implements NioEventHandler {
             ByteBuffer buf = ByteBuffer.allocate(1024);
             int length;
             while ((length = sc.read(buf)) > 0) {
-                buf.flip();
-                System.out.println((new String(buf.array(), 0, length)));
+                /*buf.flip();
+                System.out.println((new String(buf.array(), 0, length)));*/
                 buf.clear();
             }
 

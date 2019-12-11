@@ -1,0 +1,27 @@
+@startuml
+
+abstract class Flyweight
+class FlyweightFactory
+class ConcreteFlyweight
+class UnsharedConcreteFlyweight
+note left: <size:8>并非所有的Flyweight子类都需要被共享。Flyweight接口使共享成为可能,\n<size:8>但它并不强制共享。在Flyweight对象结构的某些层次,\n<size:8>UnsharedConcreteFlyweight对象通常将ConcreteFlyweight对象作为子节点。
+class Client
+
+ConcreteFlyweight --|> Flyweight
+UnsharedConcreteFlyweight --|> Flyweight
+
+Flyweight --o FlyweightFactory
+
+Client --> ConcreteFlyweight
+Client --> UnsharedConcreteFlyweight
+Client --> FlyweightFactory
+
+abstract class Flyweight {
+    +operation()
+}
+
+class FlyweightFactory {
+    +getFlyweight(key)
+}
+
+@enduml

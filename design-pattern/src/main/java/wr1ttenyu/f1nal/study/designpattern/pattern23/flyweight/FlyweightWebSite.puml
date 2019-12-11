@@ -1,0 +1,28 @@
+@startuml
+
+abstract class WebSite
+class WebSiteFactory
+class ConcreteWebSite
+class UnsharedConcreteWebSite
+class User
+note left:享元模式中的外部状态
+class Client
+
+ConcreteWebSite --|> WebSite
+UnsharedConcreteWebSite --|> WebSite
+
+WebSite --o WebSiteFactory
+
+Client --> ConcreteWebSite
+Client --> UnsharedConcreteWebSite
+Client --> WebSiteFactory
+
+abstract class WebSite {
+    +use():void
+}
+
+class WebSiteFactory {
+    +getWebSite(type)
+}
+
+@enduml

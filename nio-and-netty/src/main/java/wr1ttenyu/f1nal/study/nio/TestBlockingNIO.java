@@ -118,6 +118,7 @@ public class TestBlockingNIO {
 
             // 如果不关闭输出 那么接收端是不知道已经传输完毕的
             // TODO 这个可能就是对应 tcp ip 协议中的一个动作 需要搞清楚 到底对应什么 顺便也就把 tcp ip 协议再总结一下
+            // https://blog.csdn.net/erlib/article/details/50132307
             sChannel.shutdownOutput();
 
             while (sChannel.read(byteBuffer) != -1) {
