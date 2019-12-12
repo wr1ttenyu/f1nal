@@ -104,9 +104,9 @@ public class TestBlockingNIO {
     @Test
     public void clientWithResponse() {
         try {
-            SocketChannel sChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 8888));
+            SocketChannel sChannel = SocketChannel.open(new InetSocketAddress("122.51.219.124", 8888));
 
-            FileChannel fileChannel = FileChannel.open(Paths.get("C:\\Users\\wr1ttenyu\\学习\\1.gif"),
+            /*FileChannel fileChannel = FileChannel.open(Paths.get("C:\\Users\\wr1ttenyu\\学习\\1.gif"),
                     StandardOpenOption.READ);
 
             ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
@@ -114,10 +114,14 @@ public class TestBlockingNIO {
                 byteBuffer.flip();
                 sChannel.write(byteBuffer);
                 byteBuffer.clear();
-            }
+            }*/
+            ByteBuffer byteBuffer = ByteBuffer.wrap("hello 8888~".getBytes());
+            sChannel.write(byteBuffer);
 
             // 如果不关闭输出 那么接收端是不知道已经传输完毕的
             // TODO 这个可能就是对应 tcp ip 协议中的一个动作 需要搞清楚 到底对应什么 顺便也就把 tcp ip 协议再总结一下
+            // TODO 把 tcp 的三次握手连接 和 四次握手断开 流程图画一画
+            // 通过在 linux 上 tcpdump port 发现 sChannel.shutdownOutput(); 确实向 服务端发送一次请求
             // https://blog.csdn.net/erlib/article/details/50132307
             sChannel.shutdownOutput();
 
@@ -131,7 +135,6 @@ public class TestBlockingNIO {
             }
 
             sChannel.close();
-            fileChannel.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
