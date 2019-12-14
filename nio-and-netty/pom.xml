@@ -13,8 +13,6 @@
     <artifactId>nio-and-netty</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>nio-and-netty</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
     <packaging>jar</packaging>
 
     <properties>

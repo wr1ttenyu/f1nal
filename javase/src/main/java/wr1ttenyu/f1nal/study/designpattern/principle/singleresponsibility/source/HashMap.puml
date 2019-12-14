@@ -1,0 +1,17 @@
+@startuml
+
+abstract class AbstractMap
+interface Map
+interface Cloneable
+interface Serializable
+class HashMap
+
+HashMap --|> AbstractMap
+HashMap ..|> Map
+HashMap ..|> Cloneable
+HashMap ..|> Serializable
+AbstractMap ..|> Map
+
+
+
+@enduml

@@ -118,13 +118,17 @@ public class TestBlockingNIO {
             ByteBuffer byteBuffer = ByteBuffer.wrap("hello 8888~".getBytes());
             sChannel.write(byteBuffer);
 
-            // 如果不关闭输出 那么接收端是不知道已经传输完毕的
-            // TODO 这个可能就是对应 tcp ip 协议中的一个动作 需要搞清楚 到底对应什么 顺便也就把 tcp ip 协议再总结一下
-            // TODO 把 tcp 的三次握手连接 和 四次握手断开 流程图画一画
-            // 通过在 linux 上 tcpdump port 发现 sChannel.shutdownOutput(); 确实向 服务端发送一次请求
             // https://blog.csdn.net/erlib/article/details/50132307
+            // SOLVE 这个可能就是对应 tcp ip 协议中的一个动作 需要搞清楚 到底对应什么 顺便也就把 tcp ip 协议再总结一下
+            // 如果不关闭输出 那么接收端是不知道已经传输完毕的
+            // 通过在 linux 上 tcpdump port 发现 sChannel.shutdownOutput(); 确实向 服务端发送一次请求
+            // 这次请求是一个断开连接的请求 内容长度为0 标志位为 F.
+            // shutdownOutput 与 close 两个方法的区别
+            // shutdownOutput 之后仍然可以 read 但是 close 之后就不能 read了
+            // TODO 把 tcp 的三次握手连接 和 四次握手断开 流程图画一画 而且为什么要四次握手才断开
             sChannel.shutdownOutput();
 
+            byteBuffer.clear();
             while (sChannel.read(byteBuffer) != -1) {
                 byteBuffer.flip();
                 byte[] resByte = new byte[byteBuffer.limit()];
