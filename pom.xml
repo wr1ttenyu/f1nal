@@ -55,6 +55,7 @@
         <logback.classic.version>1.2.3</logback.classic.version>
         <netty.version>4.1.25.Final</netty.version>
         <mybatis.version>3.4.6</mybatis.version>
+        <cglib.version>3.2.6</cglib.version>
     </properties>
 
     <dependencyManagement>
@@ -93,6 +94,12 @@
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

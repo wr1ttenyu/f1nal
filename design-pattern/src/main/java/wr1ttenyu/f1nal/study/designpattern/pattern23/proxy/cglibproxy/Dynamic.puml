@@ -1,0 +1,19 @@
+@startuml
+
+interface MethodIntercept
+class TeacherDao
+class ProxyFactory
+note bottom: <size:8>1.根据传入的对象（目标对象），创建一个代理对象\n<size:8>2.需要重写intercept方法,实现对被代理对象（目标对象）方法的调用
+
+Client ..> ProxyFactory
+Client ..> TeacherDao
+MethodIntercept <|.. ProxyFactory
+
+class ProxyFactory {
+    -target: Object
+    +ProxyFactory(target:Object)
+    +getProxyInstance():Object
+    +intercept():void
+}
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+
+interface ITeacherDao
+class TeacherDao
+class TeacherDaoProxy
+
+TeacherDaoProxy o.. TeacherDao
+Client ..> TeacherDaoProxy
+Client ..> TeacherDao
+ITeacherDao <|.. TeacherDao
+ITeacherDao <|.. TeacherDaoProxy
+
+class TeacherDaoProxy {
+    +TeacherDaoProxy()
+    +getProxyInstance():Object
+}
+
+@enduml
