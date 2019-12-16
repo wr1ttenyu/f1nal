@@ -1,0 +1,31 @@
+@startuml
+
+interface ConfigurableApplicationContext
+abstract class AbstractApplicationContext
+abstract class AbstractRefreshableApplicationContext
+abstract class AbstractRefreshableConfigApplicationContext
+abstract class AbstractXmlApplicationContext
+abstract class ClassPathXmlApplicationContext
+
+ConfigurableApplicationContext <|.. AbstractApplicationContext
+AbstractApplicationContext <|-- AbstractRefreshableApplicationContext
+AbstractRefreshableApplicationContext <|-- AbstractRefreshableConfigApplicationContext
+AbstractRefreshableConfigApplicationContext <|-- AbstractXmlApplicationContext
+AbstractXmlApplicationContext <|-- ClassPathXmlApplicationContext
+Client *.. ConfigurableApplicationContext
+Client ..> ClassPathXmlApplicationContext
+
+interface ConfigurableApplicationContext {
+    +void refresh() // 算法
+}
+
+abstract class AbstractApplicationContext {
+    #obtainFreshBeanFactory():ConfigurableListableBeanFactory
+    #refreshBeanFactory() // 模板方法
+    #getBeanFactory():ConfigurableListableBeanFactory // 模板方法
+    #postProcessBeanFactory(beanFactory:ConfigurableListableBeanFactory) // 钩子方法
+    #onRefresh() // 钩子方法
+}
+
+
+@enduml

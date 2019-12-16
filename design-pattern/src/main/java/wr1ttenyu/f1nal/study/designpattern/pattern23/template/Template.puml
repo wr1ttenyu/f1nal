@@ -1,0 +1,22 @@
+@startuml
+
+abstract class AbstractTemplate
+note right: <size:8>template()方法定义模板方法的调用顺序,子类不能修改\n<size:8>抽象方法则是具体模板方法，交由子类实现
+class ConcreteTemplateImpl
+
+AbstractTemplate <|-- ConcreteTemplateImpl
+
+abstract class AbstractTemplate {
+    +final template()
+    +abstract operateA()
+    +abstract operateB()
+    +abstract operateC()
+}
+
+class ConcreteTemplateImpl {
+    +operateA()
+    +operateB()
+    +operateC()
+}
+
+@enduml
