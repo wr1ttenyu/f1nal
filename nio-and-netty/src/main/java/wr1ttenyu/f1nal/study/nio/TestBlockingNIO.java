@@ -126,6 +126,7 @@ public class TestBlockingNIO {
             // shutdownOutput 与 close 两个方法的区别
             // shutdownOutput 之后仍然可以 read 但是 close 之后就不能 read了
             // TODO 把 tcp 的三次握手连接 和 四次握手断开 流程图画一画 而且为什么要四次握手才断开
+            // TODO linux 内核 IO 高效文章 https://mp.weixin.qq.com/s/E3PYOSCuO4O6JB2FpHyZCg
             sChannel.shutdownOutput();
 
             byteBuffer.clear();
