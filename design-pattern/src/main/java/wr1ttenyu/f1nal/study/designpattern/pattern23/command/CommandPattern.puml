@@ -1,0 +1,31 @@
+@startuml
+
+class Invoker
+note right: <size:8>是调用者角色
+interface Command
+note right: <size:8>是命令角色，需要执行的所有命令都在这里\n<size:8>可以使接口或者抽象类
+class ConcreteCommand
+note right: <size:8>将一个命令的接收者和具体的命令绑定，调用命令接收者相应的操作，实现execute
+class Receiver
+note right: <size:8>是命令的接收者，知道如何实施和执行一个命令的相关操作
+
+Command <|.. ConcreteCommand
+ConcreteCommand o.. Receiver
+Invoker o.. Command
+
+
+interface Command {
+    +execute():void
+    +undo():void
+}
+
+class ConcreteCommand {
+    +execute():void
+    +undo():void
+}
+
+class Receiver {
+    +action():void
+}
+
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+
+class RemoteController
+interface Command
+class LightOnCommand
+class LightOffCommand
+class NoCommand
+class LightReceiver
+
+Command <|.. LightOnCommand
+Command <|.. LightOffCommand
+Command <|.. NoCommand
+
+LightOnCommand o.. LightReceiver
+LightOffCommand o.. LightReceiver
+
+RemoteController ..o Command
+RemoteController ..> LightOnCommand
+RemoteController ..> LightOffCommand
+
+@enduml

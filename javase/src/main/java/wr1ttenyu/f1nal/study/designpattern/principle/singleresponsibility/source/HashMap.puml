@@ -6,12 +6,15 @@ interface Cloneable
 interface Serializable
 class HashMap
 
+interface Map$Entry
+class HashMap$Node
+
 HashMap --|> AbstractMap
 HashMap ..|> Map
 HashMap ..|> Cloneable
 HashMap ..|> Serializable
 AbstractMap ..|> Map
 
-
+HashMap$Node --|> Map$Entry
 
 @enduml
