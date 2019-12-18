@@ -1,5 +1,6 @@
 package wr1ttenyu.f1nal.study.netty.simple;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -22,6 +23,11 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
+        // 将msg转成netty的ByteBuf，不是NIO的ByteBuffer
+        ByteBuf buf = (ByteBuf) msg;
+        System.out.println("client msg is : " + buf.toString(CharsetUtil.UTF_8));
+
         // --------------------  耗时操作  --------------------
         // 1. 用户自定义的任务
         ctx.channel().eventLoop().execute(() -> {

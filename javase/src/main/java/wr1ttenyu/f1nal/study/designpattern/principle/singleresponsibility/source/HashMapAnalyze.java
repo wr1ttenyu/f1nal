@@ -14,7 +14,7 @@ import java.util.Set;
  *          jdk 1.7 数组 + 单向链表
  *          jdk 1.8 数组 + 单向链表 + 红黑树 (当链表长度超过 8 的时候，就将链表变成红黑树)
  *      2.关键属性
- *          threshold：表示容器所能容纳的 key-value 对极限 默认构造器下 size 在第一次被调用put时
+ *          threshold：表示容器所能容纳的 key-value 对数量极限 默认构造器下 size 在第一次被调用put时
  *              被初始化为 {@link HashMap#DEFAULT_INITIAL_CAPACITY} 16 * {@link HashMap#DEFAULT_LOAD_FACTOR} 0.75f = 12
  *          loadFactor：负载因子  默认初始化为 {@link HashMap#DEFAULT_LOAD_FACTOR} 0.75f
  *          modCount：记录修改次数
@@ -24,6 +24,8 @@ import java.util.Set;
  */
 public class HashMapAnalyze {
 
+    static final int MAXIMUM_CAPACITY = 1 << 30;
+
     public static void main(String[] args) {
         // TODO HashMap 源码学习 https://blog.csdn.net/USTC_Zn/article/details/78173217
         // TODO 假如我们有1000  10000  100000 的三种数据量  我们应该如何初始化hashMap的大小
@@ -31,6 +33,8 @@ public class HashMapAnalyze {
         // https://mp.weixin.qq.com/s/SiHedmstpeA8BwCyCW9m7w
         System.out.println(111);
         HashMap<String, String> map1 = new HashMap<>();
+        HashMap<String, String> map2 = new HashMap<>(10000);
+        HashMap<String, String> map3 = new HashMap<>();
 
         map1.put("2344", "453");
         map1.put("34", "123453");
@@ -40,5 +44,22 @@ public class HashMapAnalyze {
         for (Map.Entry<String, String> entry : entries) {
             System.out.println("key=" + entry.getKey() + ";value=" + entry.getValue());
         }
+
+        int j = 2<<20;
+        int k = 2<<18;
+        int i = tableSizeFor(j + k);
+        System.out.println(i);
+    }
+
+    // TODO 看看这个算法怎么弄的
+    static final int tableSizeFor(int cap) {
+        // 对于
+        int n = cap - 1;
+        n |= n >>> 1;
+        n |= n >>> 2;
+        n |= n >>> 4;
+        n |= n >>> 8;
+        n |= n >>> 16;
+        return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
     }
 }
