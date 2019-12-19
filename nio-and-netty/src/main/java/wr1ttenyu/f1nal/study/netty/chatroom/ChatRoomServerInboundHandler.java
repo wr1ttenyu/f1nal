@@ -8,7 +8,6 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.CharsetUtil;
 
 import java.net.InetSocketAddress;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,7 +21,9 @@ public class ChatRoomServerInboundHandler extends ChannelInboundHandlerAdapter {
         String userCode = getUserCode(channel);
         allUser.put(userCode, channel);
         String msg = "[" + userCode + "] 欢迎登陆聊天室";
-        System.out.println(msg);
+        String msgCaster = "[" + userCode + "] 登陆了聊天室";
+        System.out.println(msgCaster);
+        msgBroadcaster(msgCaster, channel);
         ctx.writeAndFlush(Unpooled.copiedBuffer(msg, CharsetUtil.UTF_8));
     }
 
@@ -56,12 +57,5 @@ public class ChatRoomServerInboundHandler extends ChannelInboundHandlerAdapter {
     private String getUserCode(Channel channel) {
         InetSocketAddress socketAddress = (InetSocketAddress) channel.remoteAddress();
         return socketAddress.getHostString() + ":" + socketAddress.getPort();
-    }
-
-    public void test(HashMap<String, String> map) {
-        map.put("2", "2");
-        System.out.println("test:" + map);
-        map = new HashMap<>();
-        map.put("3", "3");
     }
 }

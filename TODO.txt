@@ -2,4 +2,6 @@
 
 // TODO https://www.codercto.com/a/43669.html plant uml 学习网址
 
-// TODO mysql for update 锁多行数据
+// TODO mysql for update 能不能锁多行数据
+
+// TODO 画一画 jvm 内存模型图https://blog.csdn.net/bntx2jsqfehy7/article/details/83508006
