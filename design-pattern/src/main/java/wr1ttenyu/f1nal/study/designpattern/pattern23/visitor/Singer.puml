@@ -1,0 +1,54 @@
+@startuml
+
+abstract class Action
+class Success
+class Fail
+
+abstract class Person
+class Man
+class Woman
+
+class ObjectStructure
+
+Action <|-- Success
+Fail <|-- Success
+Person <|-- Man
+Person <|-- Woman
+ObjectStructure o-- Person
+Client --> ObjectStructure
+Client --> Action
+
+Person <...> Action
+
+abstract class Action {
+    +operation1()
+    +operation2()
+}
+
+class Success {
+    +operation1()
+    +operation2()
+}
+
+class Fail {
+    +operation1()
+    +operation2()
+}
+
+abstract class Person {
+    +accept(action:Action):void
+}
+
+class Man {
+    +accept(action:Action):void
+}
+
+class Woman {
+    +accept(action:Action):void
+}
+
+class ObjectStructure {
+    -element:Person
+}
+
+@enduml

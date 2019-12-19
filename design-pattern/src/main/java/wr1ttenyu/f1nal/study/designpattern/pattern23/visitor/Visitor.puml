@@ -1,0 +1,40 @@
+@startuml
+
+abstract class Visitor
+class ConcreteVisitor
+
+abstract class Element
+class ConcreteElement
+
+class ObjectStructure
+note right:<size:8>能枚举他的元素，可以提供一个高层的接口，用来允许访问者访问元素
+
+Visitor <|-- ConcreteVisitor
+Element <|-- ConcreteElement
+ObjectStructure o-- Element
+Client --> ObjectStructure
+Client --> Visitor
+
+abstract class Visitor {
+    +operation1()
+    +operation2()
+}
+
+class ConcreteVisitor {
+    +operation1()
+    +operation2()
+}
+
+abstract class Element {
+    +accept(visitor:Visitor):void
+}
+
+class ConcreteElement {
+    +accept(visitor:Visitor):void
+}
+
+class ObjectStructure {
+    -element:Element
+}
+
+@enduml
