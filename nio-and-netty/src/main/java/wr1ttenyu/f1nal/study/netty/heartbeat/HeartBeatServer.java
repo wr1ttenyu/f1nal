@@ -30,9 +30,16 @@ public class HeartBeatServer {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline pipeline = ch.pipeline();
-                        // 加入一个 netty 提供的 处理空闲
-                        pipeline.addLast(new IdleStateHandler(3, 5, 7, TimeUnit.SECONDS));
+                        // 加入一个 netty 提供的 处理空闲 Handler
+                        pipeline.addLast(new IdleStateHandler(3, 5, 7, TimeUnit.SECONDS))
+                                .addLast(new MyIdleEventHandler());
                     }
                 });
+
+        try {
+            bootstrap.bind(8989).sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

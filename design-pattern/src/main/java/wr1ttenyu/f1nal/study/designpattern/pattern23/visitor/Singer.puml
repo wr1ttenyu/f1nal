@@ -15,10 +15,10 @@ Fail <|-- Success
 Person <|-- Man
 Person <|-- Woman
 ObjectStructure o-- Person
-Client --> ObjectStructure
-Client --> Action
+Client ..> ObjectStructure
+Client ..> Action
 
-Person <...> Action
+Person <--> Action
 
 abstract class Action {
     +operation1()

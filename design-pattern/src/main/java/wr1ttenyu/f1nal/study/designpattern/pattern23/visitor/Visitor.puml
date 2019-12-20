@@ -1,10 +1,14 @@
 @startuml
 
 abstract class Visitor
+note right:<size:8>是抽象访问者,为该对象结构中的每一个Element具体实现声明一个visit操作
 class ConcreteVisitor
+note right:<size:8>是一个具体访问者,实现Visitor声明的每一个visit操作
 
 abstract class Element
+note right:<size:8>定义一个accept方法，接收一个访问者对象
 class ConcreteElement
+note right:<size:8>为具体的Element实现类，实现了accept方法
 
 class ObjectStructure
 note right:<size:8>能枚举他的元素，可以提供一个高层的接口，用来允许访问者访问元素
