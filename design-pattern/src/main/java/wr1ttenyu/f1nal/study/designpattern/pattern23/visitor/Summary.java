@@ -26,4 +26,6 @@ package wr1ttenyu.f1nal.study.designpattern.pattern23.visitor;
  *
  */
 public class Summary {
+
+    // TODO 访问者模式的应用实例
 }

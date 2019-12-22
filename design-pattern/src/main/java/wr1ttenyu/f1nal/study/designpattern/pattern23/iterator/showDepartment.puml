@@ -1,0 +1,42 @@
+@startuml
+
+interface Iterator
+interface College
+
+ComputerCollegeIterator ..|> Iterator
+InfoCollegeIterator ..|> Iterator
+InfoCollege ..|> College
+ComputerCollege ..|> College
+
+InfoCollege ..> InfoCollegeIterator
+ComputerCollege ..> ComputerCollegeIterator
+
+Client ..> Iterator
+Client ..> College
+
+Department ..o ComputerCollegeIterator
+Department ..o InfoCollegeIterator
+Department ..o InfoCollege
+Department ..o ComputerCollege
+
+interface Iterator {
+    +hasNext():boolean
+    +next():E
+    +remove():void
+}
+
+interface College {
+    +createAggregate():Iterator
+}
+
+class ComputerCollege {
+    -elements:ArrayList
+    +createAggregate():Iterator
+}
+
+class InfoCollege {
+    -elements:Array
+    +createAggregate():Iterator
+}
+
+@enduml

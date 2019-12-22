@@ -1,0 +1,56 @@
+@startuml
+
+class EventObject
+abstract class ApplicationEvent {
+    +ApplicationEvent(source: Object)
+}
+
+interface EventListener
+interface ApplicationListener {
+    +onApplicationEvent(event:<E extends ApplicationEvent>): void
+}
+
+interface ApplicationEventMulticaster {
+    	+addApplicationListener(ApplicationListener<?> listener): void
+    	+addApplicationListenerBean(String listenerBeanName): void
+    	+removeApplicationListener(ApplicationListener<?> listener): void
+    	+removeApplicationListenerBean(String listenerBeanName): void
+    	+removeAllListeners(): void
+    	+multicastEvent(ApplicationEvent event): void
+    	+multicastEvent(ApplicationEvent event, @Nullable ResolvableType eventType): void
+}
+
+abstract class AbstractApplicationEventMulticaster {
+    -applicationListeners:Set<ApplicationListener<?>> = new LinkedHashSet<>()
+}
+
+abstract class AbstractApplicationContext {
+    -applicationEventMulticaster: ApplicationEventMulticaster
+    +publishEvent(event: ApplicationEvent): void
+    #initApplicationEventMulticaster(): void
+    +refresh(): void
+    #registerListeners(): void
+}
+
+interface ApplicationEventPublisher {
+    +publishEvent(event: ApplicationEvent): void
+}
+
+ApplicationListener ..> ApplicationEvent
+ApplicationEvent --|> EventObject
+ApplicationListener --|> EventListener
+
+ApplicationEventMulticaster ..> ApplicationEvent
+ApplicationEventMulticaster ..> ApplicationListener
+
+AbstractApplicationEventMulticaster ..|> ApplicationEventMulticaster
+
+AbstractApplicationContext o.. AbstractApplicationEventMulticaster
+AbstractApplicationContext ..> ApplicationEvent
+
+ConfigurableApplicationContext <|.. AbstractApplicationContext
+ApplicationContext <|.. ConfigurableApplicationContext
+
+ApplicationEventPublisher <|-- ApplicationContext
+
+@enduml

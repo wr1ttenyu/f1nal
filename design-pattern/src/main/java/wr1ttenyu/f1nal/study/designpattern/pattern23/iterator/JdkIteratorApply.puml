@@ -1,0 +1,33 @@
+@startuml
+
+interface List
+interface Collection
+interface Iterable
+interface Iterator
+class ArrayList
+class Itr
+
+List --|> Collection
+Collection --|> Iterable
+
+ArrayList ..|> List
+Itr ..|> Iterator
+
+Itr ..* ArrayList
+
+interface Iterable {
+    +iterator():Iterator<T>
+}
+
+class ArrayList {
+    -elementData:Object[]
+    +iterator():Iterator<T>
+}
+
+interface Iterator {
+    +hasNext():boolean
+    +next():E
+    +remove():void
+}
+
+@enduml

@@ -1,0 +1,44 @@
+@startuml
+
+interface Iterator
+interface Aggregate
+
+ConcreteIterator ..|> Iterator
+ConcreteIterator02 ..|> Iterator
+ConcreteAggregate ..|> Aggregate
+ConcreteAggregate02 ..|> Aggregate
+
+ConcreteAggregate ..> ConcreteIterator
+ConcreteAggregate02 ..> ConcreteIterator02
+
+Client ..> Iterator
+Client ..> Aggregate
+
+Element ..o ConcreteIterator
+Element ..o ConcreteIterator02
+Element ..o ConcreteAggregate
+Element ..o ConcreteAggregate02
+
+interface Iterator {
+    +hasNext():boolean
+    +next():E
+    +remove():void
+}
+
+interface Aggregate {
+    +createAggregate():Iterator
+}
+
+class ConcreteAggregate {
+    -elements:ArrayList
+    +createAggregate():Iterator
+}
+
+class ConcreteAggregate02 {
+    -elements:Array
+    +createAggregate():Iterator
+}
+
+note : <size:9> Iterator 迭代器接口，系统提供,是迭代数据方法定义接口\n <size:9>Aggregate 是一个统一的聚合接口，将客户端与数据的具体聚合方式解耦\n <size:9>ConcreteIterator 是迭代器的具体实现\n <size:9>ConcreteAggregate02 具体的聚合实现，持有对象集合，提供返回迭代器的集合
+
+@enduml

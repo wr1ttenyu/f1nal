@@ -1,0 +1,10 @@
+@startuml
+
+interface Observer
+note right:<size:9>就是观察者接口，包含update方法
+class Observable
+note right:<size:9>相当于Subject，只不过这里是一个类，可以通过继续该类实现自定义扩展
+
+Observable o.. Observer
+
+@enduml

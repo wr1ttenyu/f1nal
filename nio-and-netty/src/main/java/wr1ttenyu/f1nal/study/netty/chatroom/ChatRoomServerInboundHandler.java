@@ -24,7 +24,9 @@ public class ChatRoomServerInboundHandler extends ChannelInboundHandlerAdapter {
         String msgCaster = "[" + userCode + "] 登陆了聊天室";
         System.out.println(msgCaster);
         msgBroadcaster(msgCaster, channel);
-        ctx.writeAndFlush(Unpooled.copiedBuffer(msg, CharsetUtil.UTF_8));
+        // TODO 如果这里直接用 ctx.writeAndFlush(msg); 信息发不出去 为什么
+        ctx.writeAndFlush(msg);
+        /*ctx.writeAndFlush(Unpooled.copiedBuffer(msg, CharsetUtil.UTF_8));*/
     }
 
     @Override
