@@ -1,0 +1,18 @@
+@startuml
+
+class Client
+class Originator
+class Memento {
+    -state:String
+}
+class CareTaker {
+    -mementos: List<Memento>
+}
+
+Originator --> Memento
+CareTaker o-- Memento
+
+Client ..> Originator
+Client ..> Memento
+
+@enduml

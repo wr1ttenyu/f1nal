@@ -1,0 +1,26 @@
+@startuml
+
+abstract class Mediator
+note left: <size:9>抽象中介者，定义了同事对象到中介对象的接口
+class ConcreteMediator
+note left: <size:9>具体中介者，实现抽象方法，他需要知道所有的具体的同事类，\n<size:9>即以一个集合来管理HashMap，并接受某个同事对象消息，完成相应的任务
+
+abstract class Colleague
+note left: <size:9>抽象同事类
+class ConcreteColleague
+note top: <size:9>具体同事类,会有很多，每个同事只知道自己的行为，\n<size:9>而不了解其他同事类的行为，但他们都依赖中介者对象
+
+ConcreteMediator --|> Mediator
+ConcreteColleague --|> Colleague
+
+Mediator -- Colleague
+
+abstract class Mediator {
+    -colleagues:List<Colleague>
+}
+
+abstract class Colleague {
+    -mediator:Mediator
+}
+
+@enduml
