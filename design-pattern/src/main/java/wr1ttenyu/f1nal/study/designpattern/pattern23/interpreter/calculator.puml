@@ -1,0 +1,22 @@
+@startuml
+
+class Client
+class Context
+abstract class Expression
+class VarExpression
+class SymbolExpression
+class SubExpression
+class AddExpression
+
+VarExpression --|> Expression
+
+SymbolExpression --|> Expression
+
+AddExpression --|> SymbolExpression
+SubExpression --|> SymbolExpression
+
+abstract class Expression {
+    +interpreter()
+}
+
+@enduml

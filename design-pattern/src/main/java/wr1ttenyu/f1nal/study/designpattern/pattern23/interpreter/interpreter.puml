@@ -1,0 +1,25 @@
+@startuml
+
+class Client
+class Context
+note left: <size:9>是环境角色,含有解释器之外的全局信息
+abstract class AbstractExpression
+note left: <size:9>抽象表达式,声明一个抽象的解释操作,\n<size:9>这个方法为抽象语法树中所有的节点所共享
+class TerminalExpression
+note left: <size:9>为终结符表达式,实现语法中的终结符相关的解释操作
+class NonTerminalExpression
+note left: <size:9>为非终结符表达式,实现语法中的非终结符相关的解释操作
+
+TerminalExpression --|> AbstractExpression
+NonTerminalExpression --|> AbstractExpression
+
+AbstractExpression --o TerminalExpression
+
+Client ..> Context
+Client ..> AbstractExpression
+
+class AbstractExpression {
+    +interpreter()
+}
+
+@enduml
