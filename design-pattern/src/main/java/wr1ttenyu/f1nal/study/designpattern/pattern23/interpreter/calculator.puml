@@ -1,7 +1,7 @@
 @startuml
 
 class Client
-class Context
+class Calculator
 abstract class Expression
 class VarExpression
 class SymbolExpression
@@ -14,6 +14,11 @@ SymbolExpression --|> Expression
 
 AddExpression --|> SymbolExpression
 SubExpression --|> SymbolExpression
+
+Expression --o SymbolExpression
+Expression --o Calculator
+
+Client ..> Calculator
 
 abstract class Expression {
     +interpreter()
