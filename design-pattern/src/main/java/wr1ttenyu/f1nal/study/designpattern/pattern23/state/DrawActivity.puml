@@ -1,0 +1,28 @@
+@startuml
+
+interface State
+class NoRaffleState
+class CanRaffleState
+class DispensePrize
+class DispenseOutPrize
+
+class Activity
+note right: <size:9>Activity 含所有的状态对象,各个状态子类也含有Activity对象
+
+DispenseOutPrize ..|> State
+NoRaffleState ..|> State
+CanRaffleState ..|> State
+DispensePrize ..|> State
+
+DispenseOutPrize -- Activity
+NoRaffleState -- Activity
+CanRaffleState -- Activity
+DispensePrize -- Activity
+
+interface State {
+    +deduceMoney ():void
+    +raffle():boolean
+    +dispensePrize():boolean
+}
+
+@enduml

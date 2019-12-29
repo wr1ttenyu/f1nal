@@ -9,4 +9,16 @@ package wr1ttenyu.f1nal.study.designpattern.pattern23.state;
  * 3) 活动有四个状态: 可以抽奖、 不能抽奖、 发放奖品和奖品领完
  */
 public class Client {
+
+    public static void main(String[] args) {
+        RaffleAcitivity raffleAcitivity = new RaffleAcitivity(1);
+        State state = raffleAcitivity.getState();
+        System.out.println("activity init state: " + state.getClass());
+        raffleAcitivity.deduceMoney();
+        for (int i = 0; i < 10; i++) {
+            if(raffleAcitivity.raffle()) {
+                raffleAcitivity.dispensePrize();
+            }
+        }
+    }
 }

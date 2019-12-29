@@ -1,0 +1,36 @@
+@startuml
+
+abstract class Duck
+interface FlyBehavior
+interface QuackBehavior
+
+class NoFlyBehavior
+class GoodFlyBehavior
+class GaGaQuackBehavior
+class YiYiQuackBehavior
+
+FlyBehavior --o Duck
+QuackBehavior --o Duck
+
+NoFlyBehavior ..|> FlyBehavior
+GoodFlyBehavior ..|> FlyBehavior
+GaGaQuackBehavior ..|> QuackBehavior
+YiYiQuackBehavior ..|> QuackBehavior
+
+DomesticDuck --|> Duck
+WildDuck --|> Duck
+
+class Duck {
+    -flyBehavior: FlyBehavior
+    -quackBehavior: QuackBehavior
+}
+
+interface FlyBehavior {
+    +fly(): void
+}
+
+interface QuackBehavior {
+    +quack(): void
+}
+
+@enduml

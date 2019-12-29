@@ -1,0 +1,35 @@
+@startuml
+
+class Context
+note right:<size:9> context 中聚合了策略接口，具体是哪种策略根据客户端的输入决定
+interface StrategyA
+interface StrategyB
+class ConcreteStrategyA1
+class ConcreteStrategyA2
+class ConcreteStrategyB1
+class ConcreteStrategyB2
+
+StrategyA --o Context
+StrategyB --o Context
+
+ConcreteStrategyA1 ..|> StrategyA
+ConcreteStrategyA2 ..|> StrategyA
+ConcreteStrategyB2 ..|> StrategyB
+ConcreteStrategyB1 ..|> StrategyB
+
+class Context {
+    -strategyA: StrategyA
+    -strategyB: StrategyB
+}
+
+interface StrategyA {
+    +operation1(): void
+    +operation2(): void
+}
+
+interface StrategyB {
+    +operation1(): void
+    +operation2(): void
+}
+
+@enduml
