@@ -22,13 +22,59 @@ import java.util.Set;
  *          table：一个哈希桶数组，键值对就存放在里面，键值对的存放形式为：{@link HashMap.Node}
  *          entrySet：存放所有的键值对的Set集合
  */
+
+/**
+ *  SOLVE 假如我们有1000  10000  100000 的三种数据量  我们应该如何初始化hashMap的大小
+ *  根据 {@link HashMap#tableSizeFor(int)} 算法，在使用{@link HashMap#HashMap(int)} 指定初始容量时
+ *  指定的参数值总是被调整成 大于且最接近该值的 2的n次方，接着在第一次调用 put 时,见下面代码：
+ *  final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+ *                 boolean evict) {
+ *            Node<K,V>[] tab; Node<K,V> p; int n, i;
+ *            if ((tab = table) == null || (n = tab.length) == 0)
+ *                // 第一次put  调用resize()
+ *                n = (tab = resize()).length;
+ *                      ...
+ *     }
+ *  在 resize 方法中，见下面:
+ *  final Node<K,V>[] resize() {
+ *         Node<K,V>[] oldTab = table;
+ *         int oldCap = (oldTab == null) ? 0 : oldTab.length;
+ *         int oldThr = threshold;
+ *         int newCap, newThr = 0;
+ *         if (oldCap > 0) {
+ *             if (oldCap >= MAXIMUM_CAPACITY) {
+ *                 threshold = Integer.MAX_VALUE;
+ *                 return oldTab;
+ *             }
+ *             else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+ *                      oldCap >= DEFAULT_INITIAL_CAPACITY)
+ *                 newThr = oldThr << 1; // double threshold
+ *         }
+ *         else if (oldThr > 0) // initial capacity was placed in threshold
+ *             newCap = oldThr;
+ *         else {               // zero initial threshold signifies using defaults
+ *             newCap = DEFAULT_INITIAL_CAPACITY;
+ *             newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+ *         }
+ *         if (newThr == 0) {
+ *             float ft = (float)newCap * loadFactor;
+ *             // threshold 最终被调整成为 初始化容量 * 0.75
+ *             // 所以当预期存储 1000 时，指定1000，最后的容量阈值就是  1024*0.75 < 1000
+ *             // 但是当预期10000时，指定10000，最后的容量阈值就是  16384 * 0.75 > 10000
+ *             newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
+ *                       (int)ft : Integer.MAX_VALUE);
+ *         }
+ *         threshold = newThr;
+ *         ...
+ *   }
+ */
 public class HashMapAnalyze {
 
     static final int MAXIMUM_CAPACITY = 1 << 30;
 
     public static void main(String[] args) {
         // TODO HashMap 源码学习 https://blog.csdn.net/USTC_Zn/article/details/78173217
-        // TODO 假如我们有1000  10000  100000 的三种数据量  我们应该如何初始化hashMap的大小
+        // https://mp.weixin.qq.com/s/SiHedmstpeA8BwCyCW9m7w
         // TODO modCount 作用 以及 多线程时的  resize
         // https://mp.weixin.qq.com/s/SiHedmstpeA8BwCyCW9m7w
         System.out.println(111);
@@ -62,4 +108,9 @@ public class HashMapAnalyze {
         n |= n >>> 16;
         return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
     }
+
+
+
+
+
 }

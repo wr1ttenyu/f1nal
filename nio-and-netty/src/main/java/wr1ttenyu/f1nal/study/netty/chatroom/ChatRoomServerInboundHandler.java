@@ -2,9 +2,8 @@ package wr1ttenyu.f1nal.study.netty.chatroom;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.*;
+import io.netty.channel.nio.AbstractNioByteChannel;
 import io.netty.util.CharsetUtil;
 
 import java.net.InetSocketAddress;
@@ -24,8 +23,14 @@ public class ChatRoomServerInboundHandler extends ChannelInboundHandlerAdapter {
         String msgCaster = "[" + userCode + "] 登陆了聊天室";
         System.out.println(msgCaster);
         msgBroadcaster(msgCaster, channel);
-        // TODO 如果这里直接用 ctx.writeAndFlush(msg); 信息发不出去 为什么
-        ctx.writeAndFlush(msg);
+        /**
+         * SOLVE 如果这里直接用 ctx.writeAndFlush(msg); 信息发不出去 为什么
+         * {@link AbstractNioByteChannel#filterOutboundMessage(java.lang.Object)}
+         * 默认只支持发送 {@link ByteBuf} 和 {@link FileRegion}
+         */
+        ctx.writeAndFlush(msg).sync().addListener((future -> {
+            System.out.println("发送成功了吗");
+        }));
         /*ctx.writeAndFlush(Unpooled.copiedBuffer(msg, CharsetUtil.UTF_8));*/
     }
 
