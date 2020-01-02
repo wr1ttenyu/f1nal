@@ -9,11 +9,12 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Long> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Long msg) throws Exception {
+        System.out.println("从服务端：" + ctx.channel().remoteAddress() + " 接收到消息：" + msg);
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("NettyClientHandler 发送数据");
-        ctx.writeAndFlush(Unpooled.copiedBuffer("abfjjgubjdhsjgjbjt", CharsetUtil.UTF_8));
+        ctx.writeAndFlush(955759L);
     }
 }
