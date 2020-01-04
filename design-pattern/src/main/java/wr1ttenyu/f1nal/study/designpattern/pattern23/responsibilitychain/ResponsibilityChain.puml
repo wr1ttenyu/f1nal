@@ -3,7 +3,9 @@
 class Request
 class Client
 abstract class Handler
+note right:<size:9> 抽象处理者，定义一个处理请求的接口，同时含有另外Handler
 class ConcreteHandlerA
+note bottom:<size:9> 具体处理者，处理他自己匹配的请求，可以访问它的后继者，如果\n<size:9>可以处理当前请求，则处理，否则就将该请求交给后继者去处理，n<size:9>从而形成一个职责链
 class ConcreteHandlerB
 
 Handler <|-- ConcreteHandlerA

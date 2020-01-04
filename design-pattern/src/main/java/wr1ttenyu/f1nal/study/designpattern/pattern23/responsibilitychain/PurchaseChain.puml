@@ -1,0 +1,27 @@
+@startuml
+
+class PurchaseRequest
+class Client
+abstract class Approver
+class CollegeApprover
+class SchoolMasterApprover
+class DepartmentApprover
+class ViceSchoolMasterApprover
+
+Approver <|-- CollegeApprover
+Approver <|-- SchoolMasterApprover
+Approver <|-- DepartmentApprover
+Approver <|-- ViceSchoolMasterApprover
+
+Approver --o Approver
+
+Approver ..> PurchaseRequest
+Client ..> Approver
+Client ..> PurchaseRequest
+
+abstract class Approver {
+    -approver:Approver
+    +processRequest():void
+}
+
+@enduml

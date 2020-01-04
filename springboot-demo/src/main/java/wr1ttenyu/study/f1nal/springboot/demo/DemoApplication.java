@@ -1,4 +1,4 @@
-package wr1ttenyu.study.f1nal.spingboot.demo;
+package wr1ttenyu.study.f1nal.springboot.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

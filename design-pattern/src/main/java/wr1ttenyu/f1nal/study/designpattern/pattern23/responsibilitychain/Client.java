@@ -1,5 +1,7 @@
 package wr1ttenyu.f1nal.study.designpattern.pattern23.responsibilitychain;
 
+import java.math.BigDecimal;
+
 /**
  * 需求
  * 学校 OA 系统的采购审批项目： 需求是
@@ -22,4 +24,22 @@ package wr1ttenyu.f1nal.study.designpattern.pattern23.responsibilitychain;
  *     职责链模式
  */
 public class Client {
+
+    public static void main(String[] args) {
+        DepartmentApprover departmentApprover = new DepartmentApprover("杀币辅导员");
+        CollegeApprover collegeApprover = new CollegeApprover("杀币院长");
+        ViceSchoolManagerApprover viceSchoolManagerApprover  = new ViceSchoolManagerApprover("杀币副校长");
+        SchoolManagerApprover schoolManagerApprover = new SchoolManagerApprover("杀币校长");
+
+        // 构成环形
+        departmentApprover.setNextApprover(collegeApprover);
+        collegeApprover.setNextApprover(viceSchoolManagerApprover);
+        schoolManagerApprover.setNextApprover(departmentApprover);
+
+        PurchaseRequest purchaseRequest = new PurchaseRequest();
+        purchaseRequest.setPurchaseAmount(BigDecimal.valueOf(18000));
+        purchaseRequest.setPurchaseReason("安工大重新整顿");
+
+        departmentApprover.processRequest(purchaseRequest);
+    }
 }

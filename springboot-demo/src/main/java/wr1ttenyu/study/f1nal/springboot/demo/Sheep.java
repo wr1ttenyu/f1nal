@@ -1,4 +1,4 @@
-package wr1ttenyu.study.f1nal.spingboot.demo;
+package wr1ttenyu.study.f1nal.springboot.demo;
 
 public class Sheep implements Cloneable {
 
