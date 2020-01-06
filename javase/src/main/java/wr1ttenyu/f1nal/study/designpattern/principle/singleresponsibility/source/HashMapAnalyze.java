@@ -10,9 +10,8 @@ import java.util.Set;
  *      其余跟 Hashtable 大致相同，但跟 TreeMap不同，该容器不保证元素顺序，根据需要该容器可能会对元素重新哈希，
  *      元素的顺序也会被重新打散，因此不同时间迭代同一个 HashMap 的顺序可能会不同。
  *
- *      1.数据结构
- *          jdk 1.7 数组 + 单向链表
- *          jdk 1.8 数组 + 单向链表 + 红黑树 (当链表长度超过 8 的时候，就将链表变成红黑树)
+ *
+ *
  *      2.关键属性
  *          threshold：表示容器所能容纳的 key-value 对数量极限 默认构造器下 size 在第一次被调用put时
  *              被初始化为 {@link HashMap#DEFAULT_INITIAL_CAPACITY} 16 * {@link HashMap#DEFAULT_LOAD_FACTOR} 0.75f = 12
@@ -21,6 +20,32 @@ import java.util.Set;
  *          size：表示实际存在的键值对数量
  *          table：一个哈希桶数组，键值对就存放在里面，键值对的存放形式为：{@link HashMap.Node}
  *          entrySet：存放所有的键值对的Set集合
+ */
+
+/**
+ * 1.数据结构
+ *   jdk 1.7 数组 + 单向链表
+ *   jdk 1.8 数组 + 单向链表 + 红黑树 (当链表长度超过 8 的时候，就将链表变成红黑树)
+ *   jdk 1.8 HashMap 链表 Node 结构 {@link java.util.HashMap.Node}
+ *
+ *
+ *   Node<K,V>[] tab; Node<K,V> p; int n, i;
+ *     if ((tab = table) == null || (n = tab.length) == 0)
+ *         n = (tab = resize()).length;
+ *     // tab[i = (n - 1) & hash] 为计算 node 在数组 中的下标值
+ *     // n = tab.length 而 tab 的长度一般不超过 2的16次方 甚至更小 也就是说 hash 的低16位 才能参与到 与 n-1 的 & 运算中
+ *     // 如何让 hash 的高16位 也参与运算呢  因为hash int 是32 的
+ *     // 通过 (h = key.hashCode()) ^ (h >>> 16) 这个方式 就能让 高16位 参与运算了
+ *     // h >>> 16 让高16位 与 低16位 进行^ 为什么不用 & 或者 | 进行运算 从概率上将 & 或 | 的结果都更偏向 0 或者 1
+ *     // 从而让 hash 的高16位 也参与到了最后 tab[i = (n - 1) & hash] 数组下标的计算中 会让得到的下标更加散列
+ *     if ((p = tab[i = (n - 1) & hash]) == null)
+ *         tab[i] = newNode(hash, key, value, null);
+ *
+ *  {@link java.util.HashMap#hash(java.lang.Object)}
+ *  static final int hash(Object key) {
+ *     int h;
+ *     return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+ *  }
  */
 
 /**
@@ -97,9 +122,11 @@ public class HashMapAnalyze {
         System.out.println(i);
     }
 
-    // TODO 看看这个算法怎么弄的
+    // SOLVE 看看这个算法怎么弄的
+    // 对于高位为1的  右移几位  再取| 相当于 高位右移位数*2的位置全变变为1
+    // 比如 10010 右移1位 则 变为 11001
+    // 从1开始 最终到16 int 32位 全部位置变为 1 或者 最高位为0 其他为全部为 1
     static final int tableSizeFor(int cap) {
-        // 对于
         int n = cap - 1;
         n |= n >>> 1;
         n |= n >>> 2;
