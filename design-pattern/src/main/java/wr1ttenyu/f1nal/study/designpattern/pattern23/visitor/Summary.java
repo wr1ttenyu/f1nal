@@ -1,5 +1,7 @@
 package wr1ttenyu.f1nal.study.designpattern.pattern23.visitor;
 
+import org.springframework.beans.factory.config.BeanDefinitionVisitor;
+
 /**
  * 访问者模式基本介绍：
  *  1. 访问者模式（Visitor Pattern),封装一些作用于某种数据结构的各元素的操作，它可以再不改变数据
@@ -27,5 +29,11 @@ package wr1ttenyu.f1nal.study.designpattern.pattern23.visitor;
  */
 public class Summary {
 
-    // TODO 访问者模式的应用实例
+    /**
+     * TODO 访问者模式的应用实例 https://blog.csdn.net/qq_37909508/article/details/94338760
+     * {@link BeanDefinitionVisitor}
+     */
+    public static void main(String[] args) {
+
+    }
 }

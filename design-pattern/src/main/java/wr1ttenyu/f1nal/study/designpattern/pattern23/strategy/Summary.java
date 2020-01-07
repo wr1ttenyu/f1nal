@@ -19,8 +19,6 @@ package wr1ttenyu.f1nal.study.designpattern.pattern23.strategy;
  *
  */
 public class Summary {
-
     public static void main(String[] args) {
-        // TODO spring中两个策略模式的应用  https://mp.weixin.qq.com/s/V4d_nWUsU1HfYAYFVXsquw
     }
 }

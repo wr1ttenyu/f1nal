@@ -29,23 +29,6 @@ import java.util.Set;
  *   jdk 1.8 HashMap 链表 Node 结构 {@link java.util.HashMap.Node}
  *
  *
- *   Node<K,V>[] tab; Node<K,V> p; int n, i;
- *     if ((tab = table) == null || (n = tab.length) == 0)
- *         n = (tab = resize()).length;
- *     // tab[i = (n - 1) & hash] 为计算 node 在数组 中的下标值
- *     // n = tab.length 而 tab 的长度一般不超过 2的16次方 甚至更小 也就是说 hash 的低16位 才能参与到 与 n-1 的 & 运算中
- *     // 如何让 hash 的高16位 也参与运算呢  因为hash int 是32 的
- *     // 通过 (h = key.hashCode()) ^ (h >>> 16) 这个方式 就能让 高16位 参与运算了
- *     // h >>> 16 让高16位 与 低16位 进行^ 为什么不用 & 或者 | 进行运算 从概率上将 & 或 | 的结果都更偏向 0 或者 1
- *     // 从而让 hash 的高16位 也参与到了最后 tab[i = (n - 1) & hash] 数组下标的计算中 会让得到的下标更加散列
- *     if ((p = tab[i = (n - 1) & hash]) == null)
- *         tab[i] = newNode(hash, key, value, null);
- *
- *  {@link java.util.HashMap#hash(java.lang.Object)}
- *  static final int hash(Object key) {
- *     int h;
- *     return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
- *  }
  */
 
 /**
@@ -93,6 +76,158 @@ import java.util.Set;
  *         ...
  *   }
  */
+
+/**
+ * 知识点
+ * 1. 通过 K 获取数组下标
+ *     Node<K,V>[] tab; Node<K,V> p; int n, i;
+ *       if ((tab = table) == null || (n = tab.length) == 0)
+ *           n = (tab = resize()).length;
+ *       // tab[i = (n - 1) & hash] 为计算 node 在数组 中的下标值
+ *       // n = tab.length 而 tab 的长度一般不超过 2的16次方 甚至更小 也就是说 hash 的低16位 才能参与到 与 n-1 的 & 运算中
+ *       // 如何让 hash 的高16位 也参与运算呢  因为hash int 是32 的
+ *       // 通过 (h = key.hashCode()) ^ (h >>> 16) 这个方式 就能让 高16位 参与运算了
+ *       // h >>> 16 让高16位 与 低16位 进行^ 为什么不用 & 或者 | 进行运算 从概率上将 & 或 | 的结果都更偏向 0 或者 1
+ *       // 从而让 hash 的高16位 也参与到了最后 tab[i = (n - 1) & hash] 数组下标的计算中 会让得到的下标更加散列
+ *       if ((p = tab[i = (n - 1) & hash]) == null)
+ *           tab[i] = newNode(hash, key, value, null);
+ *
+ *    {@link java.util.HashMap#hash(java.lang.Object)}
+ *    static final int hash(Object key) {
+ *       int h;
+ *       return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+ *    }
+ *
+ * 2. put 方法的详细执行
+ *  final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+ *                    boolean evict) {
+ *  	Node<K,V>[] tab; Node<K,V> p; int n, i;
+ *      // tab初始化
+ * 		if ((tab = table) == null || (n = tab.length) == 0)
+ * 	        // n值 的逻辑是 初始化默认 16 否则就是指定初始容量最近的2的n次方
+ * 			n = (tab = resize()).length;
+ * 		// 非初始化 计算节点下标 如果节点为空 直接新建Node
+ * 		if ((p = tab[i = (n - 1) & hash]) == null)
+ * 			tab[i] = newNode(hash, key, value, null);
+ * 		else {
+ * 			Node<K,V> e; K k;
+ * 		    // 第一个就是 相同节点
+ * 			if (p.hash == hash &&
+ * 				((k = p.key) == key || (key != null && key.equals(k))))
+ * 				e = p;
+ * 			else if (p instanceof TreeNode)
+ * 		        // 红黑树
+ * 				e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
+ * 			else {
+ * 		        // 遍历后续节点
+ * 				for (int binCount = 0; ; ++binCount) {
+ * 					if ((e = p.next) == null) {
+ * 						p.next = newNode(hash, key, value, null);
+ * 					    // 转红黑树
+ * 						if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
+ * 							treeifyBin(tab, hash);
+ * 						break;
+ *                                        }
+ * 					if (e.hash == hash &&
+ * 						((k = e.key) == key || (key != null && key.equals(k))))
+ * 						break;
+ * 					p = e;                *            }
+ * 			}
+ * 			if (e != null) { // existing mapping for key
+ * 				V oldValue = e.value;
+ * 				if (!onlyIfAbsent || oldValue == null)
+ * 					e.value = value;
+ * 				afterNodeAccess(e);
+ * 				return oldValue;
+ *        }
+ * 		}
+ * 		++modCount;
+ * 	    // 判断size是否超出最大容量
+ * 		if (++size > threshold)
+ * 			resize();
+ * 		afterNodeInsertion(evict);
+ * 		return null;
+ * 	}
+ *
+ * 3. resize 扩容过程
+ * 	final Node<K,V>[] resize() {
+ * 		Node<K,V>[] oldTab = table;
+ * 		int oldCap = (oldTab == null) ? 0 : oldTab.length;
+ * 		int oldThr = threshold;
+ * 		int newCap, newThr = 0;
+ * 		if (oldCap > 0) {
+ * 			if (oldCap >= MAXIMUM_CAPACITY) {
+ * 				threshold = Integer.MAX_VALUE;
+ * 				return oldTab;
+ *                        }
+ * 			else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+ * 					 oldCap >= DEFAULT_INITIAL_CAPACITY)
+ * 				newThr = oldThr << 1; // double threshold        * 		}
+ * 		else if (oldThr > 0) // initial capacity was placed in threshold
+ * 	        // ①第一次初始化 设置 threshold 为 32  则 newCap 为 32
+ * 			newCap = oldThr;
+ * 		else {               // zero initial threshold signifies using defaults
+ * 			newCap = DEFAULT_INITIAL_CAPACITY;
+ * 			newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+ * 		}
+ * 		if (newThr == 0) {
+ * 	        // 按照①的情况 则ft 为24	newThr 为24
+ * 			float ft = (float)newCap * loadFactor;
+ * 			newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
+ * 					  (int)ft : Integer.MAX_VALUE);
+ * 		}
+ * 		threshold = newThr;
+ * 		@SuppressWarnings({"rawtypes","unchecked"})
+ * 	    // 按照①的情况 则newTab 长度为32
+ * 		Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
+ * 		table = newTab;
+ * 		if (oldTab != null) {
+ * 			for (int j = 0; j < oldCap; ++j) {
+ * 				Node<K,V> e;
+ * 				if ((e = oldTab[j]) != null) {
+ * 					oldTab[j] = null;
+ * 					if (e.next == null)
+ * 						newTab[e.hash & (newCap - 1)] = e;
+ * 					else if (e instanceof TreeNode)
+ * 						((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
+ * 					else { // preserve order
+ * 						Node<K,V> loHead = null, loTail = null;
+ * 						Node<K,V> hiHead = null, hiTail = null;
+ * 						Node<K,V> next;
+ * 						do {
+ * 							next = e.next;
+ * 							if ((e.hash & oldCap) == 0) {
+ * 								if (loTail == null)
+ * 									loHead = e;
+ * 								else
+ * 									loTail.next = e;
+ * 								loTail = e;
+ * 							}
+ * 							else {
+ * 								if (hiTail == null)
+ * 									hiHead = e;
+ * 								else
+ * 									hiTail.next = e;
+ * 								hiTail = e;
+ * 							}
+ * 						} while ((e = next) != null);
+ * 						if (loTail != null) {
+ * 							loTail.next = null;
+ * 							newTab[j] = loHead;
+ * 						}
+ * 						if (hiTail != null) {
+ * 							hiTail.next = null;
+ * 							newTab[j + oldCap] = hiHead;
+ * 						}
+ * 					}
+ * 				}
+ * 			}
+ * 		}
+ * 		return newTab;
+ * 	}
+ *
+ *
+ */
 public class HashMapAnalyze {
 
     static final int MAXIMUM_CAPACITY = 1 << 30;
@@ -101,25 +236,13 @@ public class HashMapAnalyze {
         // TODO HashMap 源码学习 https://blog.csdn.net/USTC_Zn/article/details/78173217
         // https://mp.weixin.qq.com/s/SiHedmstpeA8BwCyCW9m7w
         // TODO modCount 作用 以及 多线程时的  resize
+        // TODO CONTINUE 红黑树
         // https://mp.weixin.qq.com/s/SiHedmstpeA8BwCyCW9m7w
-        System.out.println(111);
-        HashMap<String, String> map1 = new HashMap<>();
-        HashMap<String, String> map2 = new HashMap<>(10000);
-        HashMap<String, String> map3 = new HashMap<>();
-
-        map1.put("2344", "453");
-        map1.put("34", "123453");
-        map1.put("123", "123");
-
-        Set<Map.Entry<String, String>> entries = map1.entrySet();
-        for (Map.Entry<String, String> entry : entries) {
-            System.out.println("key=" + entry.getKey() + ";value=" + entry.getValue());
+        HashMap<String, String> map1 = new HashMap<>(32);
+        for (int i = 0; i < 26; i++) {
+            String key = String.valueOf(i);
+            map1.put(key, key);
         }
-
-        int j = 2<<20;
-        int k = 2<<18;
-        int i = tableSizeFor(j + k);
-        System.out.println(i);
     }
 
     // SOLVE 看看这个算法怎么弄的
