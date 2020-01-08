@@ -5,3 +5,5 @@
 // TODO mysql for update 能不能锁多行数据
 
 // TODO 画一画 jvm 内存模型图https://blog.csdn.net/bntx2jsqfehy7/article/details/83508006
+
+// TODO jdk 源码阅读路径 https://blog.csdn.net/weixin_40806611/article/details/82217675
