@@ -24,16 +24,10 @@ public class RedisOperationController {
     @Autowired
     StringRedisTemplate redisTemplate;
 
-    HashSet<RedisClusterAsyncCommands> set = new HashSet<>();
-
     @RequestMapping("/setValue")
     public String setValue(@RequestParam("key") String key, @RequestParam("value") String value) {
         LOGGER.info("redis setValue key:{} value:{}", key, value);
         redisTemplate.opsForValue().set(key, value);
-        int size = set.size();
-        if (size == 2) {
-            System.out.println(123);
-        }
         return key + " => " + value;
     }
 

@@ -2,10 +2,12 @@ package wr1ttenyu.study.f1nal.springboot.demo.web;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.stereotype.Component;
 
-/*@Component*/
+@Component
+@Profile("pool")
 public class RedisConfig implements BeanPostProcessor {
 
     @Override

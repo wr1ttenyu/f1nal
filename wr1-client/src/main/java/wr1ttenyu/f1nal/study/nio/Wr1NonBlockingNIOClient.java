@@ -88,7 +88,7 @@ public class Wr1NonBlockingNIOClient {
         // 4. register channel into selector and specify listen to accept event
         SelectionKey sk = client.register(this.selector, SelectionKey.OP_CONNECT);
         // 122.51.219.124
-        if (client.connect(new InetSocketAddress("122.51.219.124", 9898))) {
+        if (client.connect(new InetSocketAddress("127.0.0.1", 9898))) {
             sk.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE); // 监听读就绪和写就绪（准备写数据）
         } else {
             sk.interestOps(SelectionKey.OP_CONNECT); // 监听连接就绪

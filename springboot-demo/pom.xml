@@ -60,8 +60,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>wr1ttenyu.study.f1nal.springboot.demo.web.DemoWebApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

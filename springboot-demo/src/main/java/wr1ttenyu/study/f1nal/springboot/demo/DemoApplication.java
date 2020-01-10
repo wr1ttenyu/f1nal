@@ -6,7 +6,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 
-@SpringBootApplication
+/*@SpringBootApplication*/
 public class DemoApplication {
 
     public static void main(String[] args) {
