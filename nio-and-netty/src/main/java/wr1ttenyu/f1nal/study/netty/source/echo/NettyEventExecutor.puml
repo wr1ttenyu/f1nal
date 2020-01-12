@@ -10,6 +10,7 @@ abstract class SingleThreadEventExecutor
 abstract class SingleThreadEventLoop
 
 interface EventLoopGroup
+interface EventLoop
 class NioEventLoop
 abstract class MultithreadEventLoopGroup
 
@@ -21,6 +22,7 @@ AbstractScheduledEventExecutor <|-- SingleThreadEventExecutor
 SingleThreadEventExecutor <|-- SingleThreadEventLoop
 SingleThreadEventLoop <|-- NioEventLoop
 
+EventLoopGroup <|-- EventLoop
 EventExecutorGroup <|-- EventLoopGroup
 EventLoopGroup <|.. MultithreadEventLoopGroup
 MultithreadEventLoopGroup <|-- NioEventLoopGroup

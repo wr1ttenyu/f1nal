@@ -15,12 +15,14 @@
  */
 package wr1ttenyu.f1nal.study.netty.source.echo;
 
+import io.netty.bootstrap.AbstractBootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoop;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -29,6 +31,9 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
+import io.netty.util.concurrent.SingleThreadEventExecutor;
+
+import java.util.concurrent.Executor;
 
 /**
  * Echoes back any received data from a client.
@@ -71,6 +76,18 @@ public final class EchoServer {
              });
 
             // Start the server.
+            /**
+             * Netty 的启动流程跟踪总结：
+             * channel 注册到 selector
+             * {@link io.netty.channel.AbstractChannel.AbstractUnsafe#register0(io.netty.channel.ChannelPromise)}
+             * --->
+             * 绑定端口
+             * {@link AbstractBootstrap#doBind0(io.netty.channel.ChannelFuture, io.netty.channel.Channel, java.net.SocketAddress, io.netty.channel.ChannelPromise)}
+             *
+             * 同时在这个过程中启动了 {@link NioEventLoop} 实现的 {@link NioEventLoop#run()} 方法
+             *
+             * TODO 分析一下 {@link NioEventLoop#run()} 方法 在做什么事情
+             */
             ChannelFuture f = b.bind(PORT).sync();
 
             // Wait until the server socket is closed.

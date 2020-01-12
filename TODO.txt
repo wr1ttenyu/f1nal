@@ -7,3 +7,11 @@
 // TODO 画一画 jvm 内存模型图https://blog.csdn.net/bntx2jsqfehy7/article/details/83508006
 
 // TODO jdk 源码阅读路径 https://blog.csdn.net/weixin_40806611/article/details/82217675
+
+// TODO REDIS 压测挂了 正好学习下
+
+// TODO Spring MVC+Spring+Mybatis实现支付宝支付功能（图文详解+完整代码） https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247488651&idx=1&sn=86fcbb597700d8df9891d0d9585ee1a6&chksm=fa496b3acd3ee22ce4adde2a13b953d200cc70e66851a81d88051e97d1f52e79a261435cfa40&mpshare=1&scene=1&srcid=&sharer_sharetime=1578532685148&sharer_shareid=979ae5c1cbc6a728f87050a8fbfbabaf&key=170ff546de852d32002295fef29561a6dc6081d1fa4c16531ece711c6db1b2f07d1bfe74ec04ec091b3d18d2ea61d017a250c6b550382648a70c34bb654dee872c9a49b87ccd4f27663a57b920fda223&ascene=1&uin=Mjc5MDg4OTE4MA%3D%3D&devicetype=Windows+10&version=62070158&lang=zh_CN&exportkey=ARn%2FwonMIeh7YziWBmMFm58%3D&pass_ticket=DDhTuFQpIHjaqohCmgG020ELJO0MIMi4NJTweHVcgGicP2DVJhUQHh%2Bqzg8F8bRl
+
+// TODO 如何保障消息中间件 100% 消息投递成功？如何保证消息幂等性？ https://mp.weixin.qq.com/s?__biz=MzUxOTc4NjEyMw==&mid=2247485597&idx=1&sn=531529e6db421bc30bb3755d3480e1e2&chksm=f9f51379ce829a6ffb672e3895cd65257f1d353714d1589e216ac2f384996646b08488f57092&mpshare=1&scene=1&srcid=&sharer_sharetime=1578407400870&sharer_shareid=979ae5c1cbc6a728f87050a8fbfbabaf&key=575e7d6279b6dee49377f434bfe8ab179f6f365f1e2c676c8ce3db8c47638e14814459b06f36040d584051f1ac3273bc55f74c8e403bfb1d752ac84f2c960a683b847df66c0ba25d4981c8a19293d005&ascene=1&uin=Mjc5MDg4OTE4MA%3D%3D&devicetype=Windows+10&version=62070158&lang=zh_CN&exportkey=AT5vAt3q4AKVdHZ7KQQ87lU%3D&pass_ticket=DDhTuFQpIHjaqohCmgG020ELJO0MIMi4NJTweHVcgGicP2DVJhUQHh%2Bqzg8F8bRl
+
+// TODO 做开发3年，阿里Java二面问Spring问得哑口无言？ https://mp.weixin.qq.com/s/JkdU5dWnyOpNCUERZk1cTA

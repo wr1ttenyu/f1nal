@@ -1,7 +1,5 @@
 package wr1ttenyu.f1nal.study.netty.corecomponent;
 
-// TODO  NETTY 核心组件总结
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
@@ -68,7 +66,12 @@ import io.netty.channel.ChannelOption;
  *          每个 EventLoop 维护着一个 Selector 实例。
  *     2). EventLoopGroup 提供 next 接口，可以从组里面按照一定规则获取其中一个 EventLoop 来处理任务。在 Netty 服务器端编程中，
  *          我们一般都需要两个 EventLoopGroup. BossEventLoopGroup 和 WorkerEventLoopGroup。
+ *     3). 通常一个服务端口即一个 ServerSocketChannel 对应一个 Selector 和一个 EventLoop 线程。BossEventLoop 负责接收客户端的
+ *          连接并将 SocketChannel 交给 WorkerEventLoopGroup 来进行 IO 处理。
  *
+ * 10. Unpooled 类
+ *     1). Netty 提供一个专门用来操作缓冲区（即 Netty 的数据容器）的工具类
+ *     2). 三个重要的属性   readerIndex    writerIndex    capacity
  */
 public class Summary {
 }

@@ -94,5 +94,7 @@ buildNumber.properties
 .classpath
 .settings
 .metadata
-
 .svn
+
+# ignore my log files
+log/
