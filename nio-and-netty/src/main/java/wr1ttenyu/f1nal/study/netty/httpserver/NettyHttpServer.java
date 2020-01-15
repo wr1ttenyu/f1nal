@@ -6,7 +6,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-// TODO netty 最近的进度有点快了 需要回顾一下 把图什么的画一画
 public class NettyHttpServer {
 
     public static void main(String[] args) {

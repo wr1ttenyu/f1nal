@@ -15,19 +15,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 class Wr1RejectedExecutionHandler implements RejectedExecutionHandler {
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-        FutureTask futureTask = (FutureTask) r;
+        log.info("RejectedExecutionHandler is working ..........");
+        Wr1ServerTask wr1ServerTask = (Wr1ServerTask) r;
         try {
-            // callable 实际是一个 java.util.concurrent.Executors.RunnableAdapter
-            Field callable = futureTask.getClass().getDeclaredField("callable");
-            // 设置 callable 可访问
-            callable.setAccessible(true);
-            // task 是 java.util.concurrent.Executors.RunnableAdapter 中实际对应的 runnable
-            Field task = callable.get(futureTask).getClass().getDeclaredField("task");
-            // 设置 task 可访问
-            task.setAccessible(true);
-            // 获取 objTask 实例
-            Object objTask = task.get(callable.get(futureTask));
-            Wr1ServerTask wr1ServerTask = (Wr1ServerTask)objTask;
             // 通过上面一系列的转化  我们最终可以在 Wr1RejectedExecutionHandler 中获取我们自己 runnable 实现
             // 之后我们可以将 自己runnable实现 中的参数 例如 保存在redis中 后续任务量下降后 再次执行
             SelectionKey sk = wr1ServerTask.getSk();
@@ -43,7 +33,7 @@ class Wr1RejectedExecutionHandler implements RejectedExecutionHandler {
             } else if(sk.isWritable()) {
                 log.info("give up to {}:{} write event", hostAddress, port);
             }
-        } catch (NoSuchFieldException | IllegalAccessException | IOException e) {
+        } catch (IOException e) {
             log.error("have a exception msg:{} stack-trace:{}", e.getMessage(), e.getStackTrace());
         }
     }

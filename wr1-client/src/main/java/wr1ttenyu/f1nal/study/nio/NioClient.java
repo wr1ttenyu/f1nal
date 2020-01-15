@@ -77,7 +77,7 @@ public class NioClient {
 
     public static void main(String[] args) throws IOException {
         NioClient client = new NioClient();
-        client.initClient("localhost", 5678);
+        client.initClient("localhost", 9898);
         client.listen();
     }
 }

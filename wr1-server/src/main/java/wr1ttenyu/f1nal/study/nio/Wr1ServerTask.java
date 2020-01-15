@@ -18,9 +18,7 @@ class Wr1ServerTask implements Runnable {
     @Override
     public void run() {
         // process accept event
-        if (sk.isAcceptable()) {
-            serverEventHandler.handleAccept(selector, sk);
-        } else if (sk.isReadable()) {
+        if (sk.isReadable()) {
             serverEventHandler.handleRead(selector, sk);
         } else if (sk.isWritable()) {
             serverEventHandler.handleWrite(selector, sk);

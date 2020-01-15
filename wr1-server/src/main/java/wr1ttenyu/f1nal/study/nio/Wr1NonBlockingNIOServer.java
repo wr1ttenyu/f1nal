@@ -71,8 +71,15 @@ public class Wr1NonBlockingNIOServer {
                 SelectionKey sk = iterator.next();
                 // remove select key has been processed
                 iterator.remove();
-                // TODO 这里使用线程池之后 出现了问题 就是同一个事件被多次处理
-                serverWorkerPool.execute(new Wr1ServerTask(serverEventHandler, selector, sk));
+
+                if (sk.isAcceptable()) {
+                    serverEventHandler.handleAccept(selector, sk);
+                } else {
+                    // SOLVE 这里使用线程池之后 出现了问题 就是同一个事件被多次处理
+                    // NETTY 的做法是  NioEventLoop 实际是一个单现程，我们这里如果使用线程池，无法解决这个问题
+                    // 所以可以参照netty的做法
+                    serverWorkerPool.execute(new Wr1ServerTask(serverEventHandler, selector, sk));
+                }
             }
         }
     }
