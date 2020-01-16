@@ -2,14 +2,26 @@
 
 // TODO https://www.codercto.com/a/43669.html plant uml 学习网址
 
-// TODO mysql for update 能不能锁多行数据
+// SOLVE mysql for update 能不能锁多行数据
+    可以锁多行 但是要明确一点 锁如果不是建立在有效索引之上 会造成锁表
 
 // TODO CONTINUE 画一画 jvm 内存模型图 https://blog.csdn.net/bntx2jsqfehy7/article/details/83508006
 // 堆空间的细化 以及 各部分的作用
 
 // TODO jdk 源码阅读路径 https://blog.csdn.net/weixin_40806611/article/details/82217675
 
-// TODO REDIS 压测挂了 正好学习下
+------------------------------ start ------------------------------
+// SOLVE REDIS 压测挂了 内存溢出 正好学习下
+启动命令： java -Xms20m -Xmx20m -Dspring.profiles.active=nopool -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Xloggc:logs/gc.log -jar springboot-demo-0.0.1-SNAPSHOT.jar &
+1. 首先启动时指定，jvm空间大小只有20m，这导致连接过多时堆内存溢出，报错如下：
+    java.lang.OutOfMemoryError: Java heap space
+    2020-01-13 17:58:29.703 ERROR 14193 --- [http-nio-8082-exec-139] o.a.coyote.http11.Http11NioProtocol      : Failed to complete processing of a request
+
+2. 如果不是因为启动时指定的内存太小，而是程序操作不当导致的内存溢出如何调查原因？
+    如果及时使用 jmap -histo pid 查看内存中不同类的实例数量和大小，根据前几名占用情况，应该可以大致分析出是哪个对象造成的
+    如果判断不出 也可以使用 jmap -dump:format=b,file=outOfMemory.dump pid 来生成dump文件 再使用工具 VisualVM 来分析 dump 文件
+    还可以打开gc日志，来分析gc的情况
+------------------------------ end ------------------------------
 
 // TODO Spring MVC+Spring+Mybatis实现支付宝支付功能（图文详解+完整代码） https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247488651&idx=1&sn=86fcbb597700d8df9891d0d9585ee1a6&chksm=fa496b3acd3ee22ce4adde2a13b953d200cc70e66851a81d88051e97d1f52e79a261435cfa40&mpshare=1&scene=1&srcid=&sharer_sharetime=1578532685148&sharer_shareid=979ae5c1cbc6a728f87050a8fbfbabaf&key=170ff546de852d32002295fef29561a6dc6081d1fa4c16531ece711c6db1b2f07d1bfe74ec04ec091b3d18d2ea61d017a250c6b550382648a70c34bb654dee872c9a49b87ccd4f27663a57b920fda223&ascene=1&uin=Mjc5MDg4OTE4MA%3D%3D&devicetype=Windows+10&version=62070158&lang=zh_CN&exportkey=ARn%2FwonMIeh7YziWBmMFm58%3D&pass_ticket=DDhTuFQpIHjaqohCmgG020ELJO0MIMi4NJTweHVcgGicP2DVJhUQHh%2Bqzg8F8bRl
 

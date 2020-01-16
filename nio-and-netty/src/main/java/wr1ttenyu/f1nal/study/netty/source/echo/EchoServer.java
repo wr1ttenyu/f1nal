@@ -22,6 +22,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.AbstractNioChannel;
 import io.netty.channel.nio.NioEventLoop;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -33,6 +34,8 @@ import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 import io.netty.util.concurrent.SingleThreadEventExecutor;
 
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.util.concurrent.Executor;
 
 /**
@@ -77,7 +80,8 @@ public final class EchoServer {
 
             // Start the server.
             /**
-             * Netty 的启动流程跟踪总结：
+             * ---------------- Netty 的启动流程跟踪总结： start ----------------
+             *
              * channel 注册到 selector
              * {@link io.netty.channel.AbstractChannel.AbstractUnsafe#register0(io.netty.channel.ChannelPromise)}
              * --->
@@ -87,6 +91,28 @@ public final class EchoServer {
              * 同时在这个过程中启动了 {@link NioEventLoop} 实现的 {@link NioEventLoop#run()} 方法
              *
              * TODO 分析一下 {@link NioEventLoop#run()} 方法 在做什么事情
+             *
+             * ---------------- Netty 的启动流程跟踪总结： end ----------------
+             *
+             * ---------------- Netty 接收请求过程： start ----------------
+             * 服务端启动后，阻塞在了 {@link NioEventLoop#select(long)} 中的 java NIO 的 {@link Selector#select()} 方法上
+             * 客户端连接请求到达后 {@link Selector#select()} 方法返回结果
+             * --->
+             * 到达 {@link NioEventLoop#processSelectedKey(java.nio.channels.SelectionKey, io.netty.channel.nio.AbstractNioChannel)} 方法
+             * 开始处理 {@link SelectionKey.OP_ACCEPT} 事件，调用的是 {@link AbstractNioChannel.NioUnsafe#read()} 方法
+             * --->
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
              */
             ChannelFuture f = b.bind(PORT).sync();
 
