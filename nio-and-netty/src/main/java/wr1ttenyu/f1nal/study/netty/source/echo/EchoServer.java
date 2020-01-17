@@ -17,16 +17,14 @@ package wr1ttenyu.f1nal.study.netty.source.echo;
 
 import io.netty.bootstrap.AbstractBootstrap;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.AbstractNioChannel;
+import io.netty.channel.nio.AbstractNioMessageChannel;
 import io.netty.channel.nio.NioEventLoop;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
@@ -36,6 +34,7 @@ import io.netty.util.concurrent.SingleThreadEventExecutor;
 
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
 import java.util.concurrent.Executor;
 
 /**
@@ -74,7 +73,7 @@ public final class EchoServer {
                          p.addLast(sslCtx.newHandler(ch.alloc()));
                      }
                      //p.addLast(new LoggingHandler(LogLevel.INFO));
-                     p.addLast(serverHandler);
+                     p.addLast("handler1", serverHandler).addLast("handler2", serverHandler);
                  }
              });
 
@@ -95,24 +94,55 @@ public final class EchoServer {
              * ---------------- Netty 的启动流程跟踪总结： end ----------------
              *
              * ---------------- Netty 接收请求过程： start ----------------
+             *
              * 服务端启动后，阻塞在了 {@link NioEventLoop#select(long)} 中的 java NIO 的 {@link Selector#select()} 方法上
-             * 客户端连接请求到达后 {@link Selector#select()} 方法返回结果
+             *      客户端连接请求到达后 {@link Selector#select()} 方法返回结果
              * --->
              * 到达 {@link NioEventLoop#processSelectedKey(java.nio.channels.SelectionKey, io.netty.channel.nio.AbstractNioChannel)} 方法
-             * 开始处理 {@link SelectionKey.OP_ACCEPT} 事件，调用的是 {@link AbstractNioChannel.NioUnsafe#read()} 方法
+             *      开始处理 {@link SelectionKey.OP_ACCEPT} 事件，调用的是 {@link AbstractNioMessageChannel.NioMessageUnsafe#read()} 方法
              * --->
+             * 在到 {@link NioServerSocketChannel#doReadMessages(java.util.List)} 方法，调用 {@link ServerSocketChannel#accept()} 方法
+             *      这样就完成了客户端请求的 accept 动作, 接收完之后将 {@link java.nio.channels.SocketChannel} 包装成了一个 {@link NioSocketChannel}
+             * --->
+             * 在 {@link AbstractNioMessageChannel.NioMessageUnsafe#read()} 方法中，
+             *      通过 {@link io.netty.channel.ChannelPipeline#fireChannelRead(java.lang.Object)} 方法，
+             *      在 ServerSocketChannel 的 Pipeline 中传递，调用各个 Handler 的 ChannelRead 方法
+             *      在 ServerSocketChannel 的 Pipeline 中预置了 {@link ServerBootstrap.ServerBootstrapAcceptor}
+             *      所以 会调用到 {@link ServerBootstrap.ServerBootstrapAcceptor#channelRead(io.netty.channel.ChannelHandlerContext, java.lang.Object)}
+             *      在该方法中，将 accept 获取的 SocketChannel 注册到 ChildGroup 中的某一个 EventLoop 上
+             *      注册后会触发 channelActive 事件，调用child eventLoop 的 channelActive方法
              *
+             * ---------------- Netty 接收请求过程： end ----------------
              *
+             * ---------------- Netty {@link NioSocketChannel} 注册到 workerGroup 过程： start ----------------
+             * {@link EventLoopGroup#register(io.netty.channel.Channel)} 开始注册
+             * --->
+             * 关注三个关键组件 pipeline  handler  handlerContext 创建
+             * 1. pipeline 的创建是在 {@link NioSocketChannel} 创建的时候，在父类的构造函数
+             *       {@link AbstractChannel#AbstractChannel(io.netty.channel.Channel)} 中创建了一个 {@link DefaultChannelPipeline}
+             *       初始化的 pipeline 只有 {@link DefaultChannelPipeline.TailContext} 和 {@link DefaultChannelPipeline.HeadContext}
              *
+             * 2. 自定义 Handler 添加到 Pipeline 中
+             * {@link AbstractChannel.AbstractUnsafe#register0(io.netty.channel.ChannelPromise)} 是注册的核心方法
+             *      {@link DefaultChannelPipeline#invokeHandlerAddedIfNeeded()} 将自定义的 Handler 添加到
+             *      {@link NioSocketChannel} 初始化的 pipeline 中
+             *      自定义 Handler 添加是通过
+             *      {@link ServerBootstrap.ServerBootstrapAcceptor#channelRead(io.netty.channel.ChannelHandlerContext, java.lang.Object)}
+             *      方法中，将我们自定义的 {@link ChannelInitializer} 封装成一个 {@link DefaultChannelPipeline.PendingHandlerAddedTask}
+             *      在后续 register0 方法中再调用我们自定义的
+             *      {@link io.netty.channel.ChannelInitializer#initChannel(io.netty.channel.socket.SocketChannel)}
+             *      添加到 handler 到 pipeline 中
              *
+             * 3. handlerContext创建
+             *  Handler 是包装在 HandlerContext 里面的，pipeline 的添加方法 addLast
+             *      {@link ChannelPipeline#addLast(java.lang.String, io.netty.channel.ChannelHandler)}
+             *      这个方法里面最终调用到
+             *      {@link DefaultChannelPipeline#addLast(io.netty.util.concurrent.EventExecutorGroup, java.lang.String, io.netty.channel.ChannelHandler)}
+             *      会创建 handlerContext 调用 newContext 方法
+             *      {@link DefaultChannelPipeline#newContext(io.netty.util.concurrent.EventExecutorGroup, java.lang.String, io.netty.channel.ChannelHandler)}
+             *      将 handler 包装进 {@link DefaultChannelHandlerContext} 中
              *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
+             * ---------------- Netty SocketChannel 注册到 workerGroup 过程： end ----------------
              */
             ChannelFuture f = b.bind(PORT).sync();
 

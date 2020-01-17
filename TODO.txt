@@ -34,3 +34,5 @@
 // TODO 学MySQL，这篇万字总结，真的够用了 https://mp.weixin.qq.com/s/0-wgz5EEFHPO4ncbo9rLBQ
 
 // TODO 加解签
+
+// TODO https://mp.weixin.qq.com/s/RYMx4GE-oGXH8zDDDauB9g 做一个 mybatis 代码的生成工程
