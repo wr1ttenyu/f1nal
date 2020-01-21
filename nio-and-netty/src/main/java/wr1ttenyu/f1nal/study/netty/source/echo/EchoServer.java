@@ -145,6 +145,7 @@ public final class EchoServer {
              * ---------------- Netty SocketChannel 注册到 workerGroup 过程： end ----------------
              */
             ChannelFuture f = b.bind(PORT).sync();
+            // TODO ChannelFuture cancel() 是如何实现的
 
             // Wait until the server socket is closed.
             f.channel().closeFuture().sync();

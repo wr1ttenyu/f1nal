@@ -1,5 +1,6 @@
 package wr1ttenyu.f1nal.study.netty.heartbeat;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -10,6 +11,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +29,14 @@ public class HeartBeatServer {
                 .channel(NioServerSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO)) // 在bossGroup 增加一个日志处理器
                 .childHandler(new ChannelInitializer<SocketChannel>() {
-
+                    /**
+                     * TODO
+                     * {@link IdleStateHandler#hasOutputChanged(io.netty.channel.ChannelHandlerContext, boolean)} 这个方法是干什么的
+                     *
+                     * {@link IdleStateHandler}
+                     * {@link ReadTimeoutHandler}
+                     * {@link WriteTimeoutHandler} 三个Handler的机制
+                     */
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline pipeline = ch.pipeline();
