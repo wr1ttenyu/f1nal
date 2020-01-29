@@ -28,7 +28,7 @@ public class NettyClient {
         System.out.println("client is ready ........");
 
         try {
-            ChannelFuture channelFuture = bootstrap.connect("localhost", 8989).sync();
+            ChannelFuture channelFuture = bootstrap.connect("localhost", 8888).sync();
             // 对关闭通道进行监听
             channelFuture.channel().closeFuture().sync();
         } catch (InterruptedException e) {

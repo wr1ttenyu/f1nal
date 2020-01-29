@@ -2,6 +2,7 @@ package wr1ttenyu.f1nal.study.netty.heartbeat;
 
 import com.sun.xml.internal.bind.v2.TODO;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.AbstractChannel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
@@ -30,12 +31,16 @@ public class HeartBeatServer {
                 .handler(new LoggingHandler(LogLevel.INFO)) // 在bossGroup 增加一个日志处理器
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     /**
-                     * TODO
+                     * SOLVE
                      * {@link IdleStateHandler#hasOutputChanged(io.netty.channel.ChannelHandlerContext, boolean)} 这个方法是干什么的
+                     * netty 利用 {@link IdleStateHandler#writeListener} 这个监听器来监听写完成事件来更新最后写事件的时间，
+                     * 但是可能会出现这样一个问题，当出现写空闲的时候我们就关闭和客户端的连接，当客户端接收数据缓慢的时候，我们在持续的向客户端
+                     *  写入数据，在设定的时间内一直没有写出完毕，这就导致出现写空闲，但其实是一直再写，为了避免这种情况，上述方法可以直接检测
+                     *  {@link AbstractChannel.AbstractUnsafe#outboundBuffer} 是否有变化，来监测是否有持续写出
                      *
-                     * {@link IdleStateHandler}
-                     * {@link ReadTimeoutHandler}
-                     * {@link WriteTimeoutHandler} 三个Handler的机制
+                     * {@link IdleStateHandler} 检测读空闲写空闲事件
+                     * {@link ReadTimeoutHandler}  继承自 {@link IdleStateHandler} 如果发生读空闲则关闭连接
+                     * {@link WriteTimeoutHandler} 写空闲则是监听一次向外的写事件，如果在规定事件没有完成则触发写超时，关闭连接
                      */
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
