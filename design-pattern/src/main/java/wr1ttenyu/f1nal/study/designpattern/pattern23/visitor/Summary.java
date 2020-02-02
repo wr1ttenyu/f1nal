@@ -1,5 +1,6 @@
 package wr1ttenyu.f1nal.study.designpattern.pattern23.visitor;
 
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionVisitor;
 
 /**
@@ -30,8 +31,12 @@ import org.springframework.beans.factory.config.BeanDefinitionVisitor;
 public class Summary {
 
     /**
-     * TODO 访问者模式的应用实例 https://blog.csdn.net/qq_37909508/article/details/94338760
-     * {@link BeanDefinitionVisitor}
+     * SOLVE 访问者模式的应用实例 https://blog.csdn.net/qq_37909508/article/details/94338760
+     * 将 {@link BeanDefinition} 传入 {@link BeanDefinitionVisitor} 中，
+     * 通过 {@link BeanDefinitionVisitor} 来获取 {@link BeanDefinition} 中的各种属性
+     *
+     * {@link BeanDefinition} 相当于 是 ObjectStructure 角色
+     * {@link BeanDefinitionVisitor} 相当于 Action 角色
      */
     public static void main(String[] args) {
 

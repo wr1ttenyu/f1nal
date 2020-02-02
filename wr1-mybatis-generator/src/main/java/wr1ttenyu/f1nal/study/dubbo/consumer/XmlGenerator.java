@@ -1,4 +1,4 @@
-package wr1ttenyu.f1nal.study.wr1mbgenerator;
+package wr1ttenyu.f1nal.study.dubbo.consumer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

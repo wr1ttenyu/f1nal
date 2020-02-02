@@ -13,20 +13,38 @@
     <artifactId>dubbo</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>dubbo</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>dubbo-provider</module>
+        <module>dubbo-consumer</module>
+        <module>dubbo-interface</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <dubbo.version>2.7.5</dubbo.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-bom</artifactId>
+                <version>${dubbo.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
@@ -65,10 +83,6 @@
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.7.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>3.0.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>

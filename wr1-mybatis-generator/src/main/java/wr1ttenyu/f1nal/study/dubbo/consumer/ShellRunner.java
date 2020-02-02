@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package wr1ttenyu.f1nal.study.wr1mbgenerator;
+package wr1ttenyu.f1nal.study.dubbo.consumer;
 
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 

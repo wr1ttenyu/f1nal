@@ -30,12 +30,14 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
+import io.netty.util.concurrent.DefaultPromise;
 import io.netty.util.concurrent.SingleThreadEventExecutor;
 
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 /**
  * Echoes back any received data from a client.
@@ -64,6 +66,7 @@ public final class EchoServer {
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
              .option(ChannelOption.SO_BACKLOG, 100)
+             // TODO 这里面的日志 Handler 是什么作用
              .handler(new LoggingHandler(LogLevel.INFO))
              .childHandler(new ChannelInitializer<SocketChannel>() {
                  @Override
@@ -145,7 +148,12 @@ public final class EchoServer {
              * ---------------- Netty SocketChannel 注册到 workerGroup 过程： end ----------------
              */
             ChannelFuture f = b.bind(PORT).sync();
-            // TODO ChannelFuture cancel() 是如何实现的
+            /**
+             * SOLVE ChannelFuture cancel() 是如何实现的 {@link DefaultPromise#cancel(boolean)}
+             * {@link AtomicReferenceFieldUpdater} 使用该工具类 对 promise 的 result 字段进行 CAS 更新
+             *      将结果更新为 取消状态 {@link DefaultPromise#CANCELLATION_CAUSE_HOLDER}
+             *      如果更新成功 则唤醒等待的线程
+             */
 
             // Wait until the server socket is closed.
             f.channel().closeFuture().sync();
