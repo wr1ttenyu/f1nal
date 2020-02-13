@@ -1,18 +1,14 @@
-package wr1ttenyu.study.f1nal.springboot.demo.web;
+package wr1ttenyu.study.f1nal.springboot.demo.web.controller;
 
-import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.lettuce.LettuceConnection;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 @RestController

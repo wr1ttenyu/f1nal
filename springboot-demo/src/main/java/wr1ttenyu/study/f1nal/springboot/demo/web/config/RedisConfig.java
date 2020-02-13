@@ -1,4 +1,4 @@
-package wr1ttenyu.study.f1nal.springboot.demo.web;
+package wr1ttenyu.study.f1nal.springboot.demo.web.config;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

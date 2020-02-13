@@ -1,4 +1,4 @@
-package wr1ttenyu.study.f1nal.springboot.demo.web;
+package wr1ttenyu.study.f1nal.springboot.demo.web.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/demo")
