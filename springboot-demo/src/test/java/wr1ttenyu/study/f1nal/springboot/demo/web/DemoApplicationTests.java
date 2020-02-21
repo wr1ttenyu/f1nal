@@ -19,7 +19,7 @@ class DemoApplicationTests {
 	}
 
 	public static void main(String[] args) throws JMSException {
-		/*ActiveMQConnectionFactory mqConnectionFactory = new ActiveMQConnectionFactory("admin", "admin", "tcp://122.51.219.124:61616");
+		ActiveMQConnectionFactory mqConnectionFactory = new ActiveMQConnectionFactory("admin", "admin", "tcp://122.51.219.124:61616");
 		Connection connection = mqConnectionFactory.createConnection();
 		connection.start();
 
@@ -32,19 +32,6 @@ class DemoApplicationTests {
 
 		producer.close();
 		session.close();
-		connection.close();*/
-		TestBoolean testBoolean = new TestBoolean();
-		testBoolean.setField1(false);
-	}
-}
-class TestBoolean {
-	private Boolean field1;
-
-	public Boolean getField1() {
-		return field1;
-	}
-
-	public void setField1(Boolean field1) {
-		this.field1 = field1;
+		connection.close();
 	}
 }

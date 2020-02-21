@@ -39,4 +39,6 @@
 
 // TODO spring mvc 九大组件
 
+// TODO 阿里云 Redis 开发规范深入解读，别只会 set、get！ https://mp.weixin.qq.com/s/jy5gGFmbvdVQrIAMHBfGog
+
 // TODO 面试 redis 提问 https://mp.weixin.qq.com/s?__biz=MzI4ODQ3NjE2OA==&mid=2247486359&idx=1&sn=3423ae9ce129241563864f0a47fc2c58&chksm=ec3c96f0db4b1fe614123e653a56a2771d2a01abca7e8130b85e18e3a57e92a5f92930b94e18&mpshare=1&scene=1&srcid=&sharer_sharetime=1581394068719&sharer_shareid=979ae5c1cbc6a728f87050a8fbfbabaf&key=a5258ad1500d901aef90f5c306d400ff0e450c0363c173d8ea79b2fc35c25d0b654200c4f656b06140c8ac50bd90cd92545857323884aaf5d14356f8c0e50c0ff736c942e5e6f71204aa2ae81ffaf4b9&ascene=1&uin=Mjc5MDg4OTE4MA%3D%3D&devicetype=Windows+10&version=6208006f&lang=zh_CN&exportkey=AZnSyFK6Nr1z%2B6QvAfigPNc%3D&pass_ticket=YEUCIpSEn0UEFNYBbNUnikyGyxno0N37Wf3Al2tinO2NPogGBEvKtLhAKhIuhLym
