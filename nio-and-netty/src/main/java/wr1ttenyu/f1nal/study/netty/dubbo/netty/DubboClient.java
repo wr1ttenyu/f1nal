@@ -10,30 +10,51 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import wr1ttenyu.f1nal.study.netty.dubbo.service.IHelloService;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 @Slf4j
 public class DubboClient {
 
+    private static MyDubboClientHandler dubboClientHandler;
+
+    private static ExecutorService executor = Executors.newFixedThreadPool(2);
+
+    private EventLoopGroup workerGroup = new NioEventLoopGroup();
+
     public static void main(String[] args) {
-        startServer();
+        DubboClient dubboClient = new DubboClient();
+        try {
+            dubboClient.startServer();
+
+            AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+            applicationContext.scan("wr1ttenyu.f1nal.study.netty.dubbo.spring");
+            applicationContext.refresh();
+
+            Scanner scanner = new Scanner(System.in);
+            scanner.useDelimiter("\n");
+            while (!scanner.hasNext("eof")) {
+                String name = scanner.next();
+                IHelloService helloService = applicationContext.getBean(IHelloService.class);
+                String hello = helloService.hello(name);
+                System.out.println(hello);
+            }
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }finally {
+            dubboClient.workerGroup.shutdownGracefully();
+        }
     }
 
-    private static void startServer() {
+    private void startServer() throws InterruptedException {
         Bootstrap client = new Bootstrap();
 
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-        MyDubboClientHandler dubboClientHandler = new MyDubboClientHandler();
-
-        ExecutorService executor = Executors.newFixedThreadPool(2);
+        dubboClientHandler = new MyDubboClientHandler();
 
         client.group(workerGroup)
                 .channel(NioSocketChannel.class)
@@ -46,54 +67,21 @@ public class DubboClient {
                     }
                 });
 
-        try {
-            ChannelFuture bindCf = client.connect("127.0.0.1", 8888).addListeners((future) -> {
-                if (future.isSuccess()) {
-                    log.info("连接服务器成功，ip:{} port:{}", "127.0.0.1", 8888);
-                } else {
-                    log.error("连接服务器失败，ip:{} port:{}", "127.0.0.1", 8888);
-                }
-            }).sync();
-
-            Class<IHelloService> iHelloServiceClass = IHelloService.class;
-            Class[] interfaces = {iHelloServiceClass};
-            IHelloService helloService = (IHelloService) Proxy.newProxyInstance(Thread.currentThread()
-                .getContextClassLoader(), interfaces,
-                (proxy, method, args) -> {
-                    String argsPrefix = iHelloServiceClass.getName() + "#" + iHelloServiceClass
-                        .getMethod("hello", String.class).getName() + "#";
-                    dubboClientHandler.setParam(argsPrefix + args[0]);
-                    Future<String> future = executor.submit(dubboClientHandler);
-                    return future.get();
-                });
-
-            Scanner scanner = new Scanner(System.in);
-            scanner.useDelimiter("\n");
-            while (!scanner.hasNext("eof")) {
-                String str = scanner.next();
-                String hello = helloService.hello(str);
-                System.out.println(hello);
+        ChannelFuture bindCf = client.connect("127.0.0.1", 8888).addListeners((future) -> {
+            if (future.isSuccess()) {
+                log.info("连接服务器成功，ip:{} port:{}", "127.0.0.1", 8888);
+            } else {
+                log.error("连接服务器失败，ip:{} port:{}", "127.0.0.1", 8888);
             }
-        } catch (InterruptedException e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        } finally {
-            workerGroup.shutdownGracefully();
-        }
+        }).sync();
+
     }
 
-    class ServiceProxyCreater implements InvocationHandler {
+    public static MyDubboClientHandler getDubboClientHandler() {
+        return dubboClientHandler;
+    }
 
-        private Object obj;
-
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            return method.invoke(obj, args);
-        }
-
-        public <T> T getProxy(Class[] interfaces, Object object) {
-            this.obj = object;
-            return (T) Proxy.newProxyInstance(object.getClass().getClassLoader(), interfaces, this);
-        }
+    public static ExecutorService getExecutor() {
+        return executor;
     }
 }

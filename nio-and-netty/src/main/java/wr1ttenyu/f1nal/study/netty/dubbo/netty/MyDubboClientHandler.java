@@ -1,18 +1,12 @@
 package wr1ttenyu.f1nal.study.netty.dubbo.netty;
 
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import wr1ttenyu.f1nal.study.netty.dubbo.service.HelloServiceImpl;
-import wr1ttenyu.f1nal.study.netty.dubbo.service.IHelloService;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.concurrent.Callable;
 
 public class MyDubboClientHandler extends ChannelInboundHandlerAdapter implements Callable<String> {
-
-    private IHelloService helloService = new HelloServiceImpl();
 
     private ChannelHandlerContext context;
 
