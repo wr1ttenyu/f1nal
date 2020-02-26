@@ -45,37 +45,24 @@ public class AppTest {
         s.pop();
     }
 
-    class MinStack {
-
-        private Integer minElement;
-        private Stack<Integer> s;
-
-        /** initialize your data structure here. */
-        public MinStack() {
-            s = new Stack<>();
-        }
-
-        public void push(int x) {
-            if(minElement == null || x < minElement) {
-                minElement = x;
+    class Solution {
+        public void reverseString(char[] s) {
+            if (s.length == 0 || s.length == 1) {
+                return;
             }
-            s.push(x);
-        }
 
-        public void pop() {
-            s.pop();
-            minElement = s.stream().min((x, y) -> {
-                if (x > y) return 1;
-                else return -1;
-            }).get();
-        }
+            int loopNum;
+            if(s.length%2 == 0) {
+                loopNum = s.length/2;
+            }else {
+                loopNum = (s.length-1)/2;
+            }
 
-        public int top() {
-            return s.peek();
-        }
-
-        public int getMin() {
-            return minElement;
+            for (int i = 0; i < loopNum; i++) {
+                char temp = s[i];
+                s[i] = s[s.length - i];
+                s[s.length - i] = temp;
+            }
         }
     }
 }

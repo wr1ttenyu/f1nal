@@ -1,4 +1,4 @@
-package wr1ttenyu.f1nal.study.designpattern.principle.singleresponsibility.lambda;
+package wr1ttenyu.f1nal.study.javase.lambda;
 
 import org.junit.jupiter.api.Test;
 

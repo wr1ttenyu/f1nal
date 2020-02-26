@@ -1,7 +1,6 @@
 package wr1ttenyu.f1nal.study.netty.dubbo.spring;
 
 import org.springframework.beans.factory.FactoryBean;
-import wr1ttenyu.f1nal.study.netty.dubbo.netty.MyDubboClientHandler;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;

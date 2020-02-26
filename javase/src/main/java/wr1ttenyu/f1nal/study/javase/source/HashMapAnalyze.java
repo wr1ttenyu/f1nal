@@ -1,5 +1,6 @@
-package wr1ttenyu.f1nal.study.designpattern.principle.singleresponsibility.source;
+package wr1ttenyu.f1nal.study.javase.source;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -235,14 +236,24 @@ public class HashMapAnalyze {
     public static void main(String[] args) {
         // TODO HashMap 源码学习 https://blog.csdn.net/USTC_Zn/article/details/78173217
         // https://mp.weixin.qq.com/s/SiHedmstpeA8BwCyCW9m7w
-        // TODO modCount 作用 以及 多线程时的  resize
+        /**
+         * SOLVE modCount 源码注释表明 modCount是记录涉及修改hashMap的键值对数量或者改变内部结构(理解为改变内部映射即可)
+         *      当有操作涉及遍历 HashMap 的 Node 时，如果 modCount 的值在遍历后，不符合预期值，则抛出 {@link ConcurrentModificationException}
+         */
+
         // TODO CONTINUE 红黑树
         // https://mp.weixin.qq.com/s/SiHedmstpeA8BwCyCW9m7w
         HashMap<String, String> map1 = new HashMap<>(32);
+        map1.put("123","123");
+        for (String s : map1.keySet()) {
+            map1.remove(s);
+        }
+
+       /* HashMap<String, String> map1 = new HashMap<>(32);
         for (int i = 0; i < 26; i++) {
             String key = String.valueOf(i);
             map1.put(key, key);
-        }
+        }*/
     }
 
     // SOLVE 看看这个算法怎么弄的

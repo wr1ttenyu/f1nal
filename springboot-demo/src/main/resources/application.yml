@@ -1,0 +1,26 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /wr1ttenyu
+
+
+spring:
+  redis:
+    # Redis数据库索引（默认为0）TODO REDIS 数据库索引的作用
+    database: 0
+    host: 122.51.219.124
+    port: 6379
+    password: A@awr1ttenyu
+    timeout: PT1000S
+
+  activemq:
+    broker-url: tcp://122.51.219.124:61616
+    user: admin
+    password: activemq
+    in-memory: false
+    packages:
+      trust-all: false
+    pool:
+      enabled: false
+  jms:
+    pub-sub-domain: false
