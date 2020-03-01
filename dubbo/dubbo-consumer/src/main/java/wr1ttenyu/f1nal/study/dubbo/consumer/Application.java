@@ -1,7 +1,6 @@
 package wr1ttenyu.f1nal.study.dubbo.consumer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.zookeeper.client.FourLetterWordMain;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import wr1ttenyu.f1nal.study.dubbo.service.facade.IHelloDubboService;
 
@@ -10,11 +9,19 @@ import java.util.Scanner;
 
 public class Application {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(Application.class);
+   /* private static Logger LOGGER = LoggerFactory.getLogger(Application.class);*/
 
     public static void main(String[] args) {
+        try {
+            FourLetterWordMain.main(args);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[] {"spring/dubbo-consumer.xml"});
         context.start();
+
+        /*LOGGER.info("------------------------ dubbo consumer start ------------------------");*/
 
         IHelloDubboService helloDubboService = context.getBean(IHelloDubboService.class);
 

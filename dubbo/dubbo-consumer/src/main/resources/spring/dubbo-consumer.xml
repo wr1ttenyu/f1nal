@@ -27,6 +27,6 @@
 
     <dubbo:protocol name="dubbo"/>
 
-    <dubbo:reference id="helloDubboService" interface="wr1ttenyu.f1nal.study.dubbo.service.facade.IHelloDubboService" />
+    <dubbo:reference id="helloDubboService" interface="wr1ttenyu.f1nal.study.dubbo.service.facade.IHelloDubboService" check="false"/>
 
 </beans>

@@ -42,3 +42,7 @@
 // TODO 阿里云 Redis 开发规范深入解读，别只会 set、get！ https://mp.weixin.qq.com/s/jy5gGFmbvdVQrIAMHBfGog
 
 // TODO ConcurrentHashMap
+
+// TODO spring boot start 原理 编写一个实用的 start
+
+// TODO 数据源 druid
