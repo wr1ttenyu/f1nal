@@ -14,7 +14,7 @@ spring:
     timeout: PT1000S
 
   activemq:
-    broker-url: tcp://122.51.219.124:61616
+    broker-url: nio://122.51.219.124:61616
     user: admin
     password: activemq
     in-memory: false

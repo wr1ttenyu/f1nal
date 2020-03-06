@@ -68,7 +68,7 @@ public class ShellRunner {
             return; // only to satisfy compiler, never returns
         }
 
-        if (!arguments.containsKey(CONFIG_FILE)) {
+            if (!arguments.containsKey(CONFIG_FILE)) {
             writeLine(getString("RuntimeError.0")); //$NON-NLS-1$
             return;
         }

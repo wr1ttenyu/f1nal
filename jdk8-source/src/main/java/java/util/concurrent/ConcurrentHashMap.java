@@ -76,11 +76,14 @@ import java.util.stream.Stream;
  * A hash table supporting full concurrency of retrievals and
  * high expected concurrency for updates. This class obeys the
  * same functional specification as {@link java.util.Hashtable}, and
+ *  corresponding 相当的，相应的；一致的；通信的
  * includes versions of methods corresponding to each method of
  * {@code Hashtable}. However, even though all operations are
+ *  entail 使需要，必需；承担；遗传给；蕴含
  * thread-safe, retrieval operations do <em>not</em> entail locking,
  * and there is <em>not</em> any support for locking the entire table
  * in a way that prevents all access.  This class is fully
+ *  interoperable adj. （计算机系统或软件、不同机器）可共同操作的，可互换利用信息的，可配合动作的
  * interoperable with {@code Hashtable} in programs that rely on its
  * thread safety but not on its synchronization details.
  *
@@ -89,7 +92,9 @@ import java.util.stream.Stream;
  * and {@code remove}). Retrievals reflect the results of the most
  * recently <em>completed</em> update operations holding upon their
  * onset. (More formally, an update operation for a given key bears a
+ *   happens-before 原则 ：https://www.jianshu.com/p/9464bf340234
  * <em>happens-before</em> relation with any (non-null) retrieval for
+ *   aggregate 合计；集合体；总计；集料 集合；聚集；合计 聚合的；集合的；合计的
  * that key reporting the updated value.)  For aggregate operations
  * such as {@code putAll} and {@code clear}, concurrent retrievals may
  * reflect insertion or removal of only some entries.  Similarly,
@@ -101,39 +106,55 @@ import java.util.stream.Stream;
  * Bear in mind that the results of aggregate status methods including
  * {@code size}, {@code isEmpty}, and {@code containsValue} are typically
  * useful only when a map is not undergoing concurrent updates in other threads.
+ *  transient：adj. 短暂的；路过的 n. 瞬变现象；过往旅客；候鸟
  * Otherwise the results of these methods reflect transient states
+ *  adequate: adj. 充足的；适当的；胜任的   estimation n. 估计；尊重
  * that may be adequate for monitoring or estimation purposes, but not
  * for program control.
  *
  * <p>The table is dynamically expanded when there are too many
+ *  collision: n. 碰撞；冲突；（意见，看法）的抵触；（政党等的）倾轧
  * collisions (i.e., keys that have distinct hash codes but fall into
  * the same slot modulo the table size), with the expected average
+ *  maintaining: 维护
  * effect of maintaining roughly two bins per mapping (corresponding
  * to a 0.75 load factor threshold for resizing). There may be much
+ *  variance: n. 变异；变化；不一致；分歧；[数] 方差
  * variance around this average as mappings are added and removed, but
+ *  tradeoff n. 权衡；折衷；（公平）交易（等于trade-off）
  * overall, this maintains a commonly accepted time/space tradeoff for
  * hash tables.  However, resizing this or any other kind of hash
  * table may be a relatively slow operation. When possible, it is a
  * good idea to provide a size estimate as an optional {@code
  * initialCapacity} constructor argument. An additional optional
  * {@code loadFactor} constructor argument provides a further means of
+ *  density: 密度
  * customizing initial table capacity by specifying the table density
  * to be used in calculating the amount of space to allocate for the
+ * compatibility n. [计] 兼容性
  * given number of elements.  Also, for compatibility with previous
  * versions of this class, constructors may optionally specify an
+ * hint : n. 暗示；线索
  * expected {@code concurrencyLevel} as an additional hint for
  * internal sizing.  Note that using many keys with exactly the same
  * {@code hashCode()} is a sure way to slow down performance of any
+ * ameliorate vt. 改善；减轻（痛苦等）；改良
  * hash table. To ameliorate impact, when keys are {@link Comparable},
+ * ties n. 结 v. 绑；连结
  * this class may use comparison order among keys to help break ties.
  *
+ * newKeySet 的作用
+ * https://stackoverflow.com/questions/32054517/concurrenthashmap-newkeyset-vs-collections-newsetfrommap
+ *  projection n. 投射；规划；突出；发射；推测
  * <p>A {@link Set} projection of a ConcurrentHashMap may be created
  * (using {@link #newKeySet()} or {@link #newKeySet(int)}), or viewed
  * (using {@link #keySet(Object)} when only keys are of interest, and the
  * mapped values are (perhaps transiently) not used or all take the
  * same mapping value.
  *
+ * scalable adj. 可攀登的；可去鳞的；可称量的 frequency n. 频率；频繁
  * <p>A ConcurrentHashMap can be used as scalable frequency map (a
+ * histogram or multiset 柱状图或多重集
  * form of histogram or multiset) by using {@link
  * java.util.concurrent.atomic.LongAdder} values and initializing via
  * {@link #computeIfAbsent computeIfAbsent}. For example, to add a count
@@ -144,11 +165,14 @@ import java.util.stream.Stream;
  * <em>optional</em> methods of the {@link Map} and {@link Iterator}
  * interfaces.
  *
+ * key 和 value 都不允许为 null
  * <p>Like {@link Hashtable} but unlike {@link HashMap}, this class
  * does <em>not</em> allow {@code null} to be used as a key or value.
  *
+ * parallel 平行的；类似的，相同的 使…与…平行
  * <p>ConcurrentHashMaps support a set of sequential and parallel bulk
  * operations that, unlike most {@link Stream} methods, are designed
+ * sensibly dv. 明显地；容易感知地；聪明地
  * to be safely, and often sensibly, applied even with maps that are
  * being concurrently updated by other threads; for example, when
  * computing a snapshot summary of the values in a shared registry.
@@ -594,6 +618,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     static final int MOVED     = -1; // hash for forwarding nodes
     static final int TREEBIN   = -2; // hash for roots of trees
     static final int RESERVED  = -3; // hash for transient reservations
+    // 用于和负数hash值进行 & 运算，将其转化为正数（绝对值不相等），Hashtable中定位hash桶也有使用这种方式来进行负数转正数
     static final int HASH_BITS = 0x7fffffff; // usable bits of normal node hash
 
     /** Number of CPUS, to place bounds on some sizings */
@@ -1009,23 +1034,28 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     /** Implementation for put and putIfAbsent */
     final V putVal(K key, V value, boolean onlyIfAbsent) {
         if (key == null || value == null) throw new NullPointerException();
+
         int hash = spread(key.hashCode());
         int binCount = 0;
         for (Node<K,V>[] tab = table;;) {
             Node<K,V> f; int n, i, fh;
+            // 数组初始化
             if (tab == null || (n = tab.length) == 0)
                 tab = initTable();
             else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
+                // 首节点为空
                 if (casTabAt(tab, i, null,
                              new Node<K,V>(hash, key, value, null)))
                     break;                   // no lock when adding to empty bin
             }
             else if ((fh = f.hash) == MOVED)
+                // 发现转发节点，表明此时正在进行扩容，去帮助扩容
                 tab = helpTransfer(tab, f);
             else {
                 V oldVal = null;
+                // 以首节点锁
                 synchronized (f) {
-                    if (tabAt(tab, i) == f) {
+                    if (tabAt(tab, i) == f) { // 保证锁住的是hash桶的第一个节点，这样阻止其他写操作进入，如果锁住的不是第一个节点，那么重新开始循环
                         if (fh >= 0) {
                             binCount = 1;
                             for (Node<K,V> e = f;; ++binCount) {
@@ -1035,7 +1065,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                                      (ek != null && key.equals(ek)))) {
                                     oldVal = e.val;
                                     if (!onlyIfAbsent)
-                                        e.val = value;
+                                        eval =. value;
                                     break;
                                 }
                                 Node<K,V> pred = e;
@@ -1407,7 +1437,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
 
         Node<K,V>[] t;
         if ((t = table) != null) {
-            Traverser<K,V> it = new Traverser<K,V>(t, t.length, 0, t.length);
+            Traverser<K,V> it = new <K,V>(t, t.length, 0, t.length);
             for (Node<K,V> p; (p = it.advance()) != null; ) {
                 s.writeObject(p.key);
                 s.writeObject(p.val);
@@ -1588,11 +1618,12 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
         return (v = get(key)) == null ? defaultValue : v;
     }
 
+    // TODO SOURCE -- Traverser
     public void forEach(BiConsumer<? super K, ? super V> action) {
         if (action == null) throw new NullPointerException();
         Node<K,V>[] t;
         if ((t = table) != null) {
-            Traverser<K,V> it = new Traverser<K,V>(t, t.length, 0, t.length);
+            <K,V> it = new Traverser<K,V>(t, t.length, 0, t.length);
             for (Node<K,V> p; (p = it.advance()) != null; ) {
                 action.accept(p.key, p.val);
             }
@@ -1841,6 +1872,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
         int binCount = 0;
         for (Node<K,V>[] tab = table;;) {
             Node<K,V> f; int n, i, fh;
+            // 数组初始化
             if (tab == null || (n = tab.length) == 0)
                 tab = initTable();
             else if ((f = tabAt(tab, i = (n - 1) & h)) == null) {
@@ -2232,7 +2264,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                         @SuppressWarnings("unchecked")
                         Node<K,V>[] nt = (Node<K,V>[])new Node<?,?>[n];
                         table = tab = nt;
-                        sc = n - (n >>> 2);
+                        sc = n - (n >>> 2); // sc = threshold，n - (n >>> 2) = n - n/4 = 0.75n，前面说了loadFactor没用了，这里看出，统一用0.75f了
                     }
                 } finally {
                     sizeCtl = sc;
