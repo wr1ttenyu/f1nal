@@ -544,6 +544,8 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * The largest possible (non-power of two) array size.
      * Needed by toArray and related methods.
      */
+    // 虚拟机限制的最大数组长度，在ArrayList中有说过，jdk1.8新引入的，
+    // ConcurrentHashMap的主体代码中是不使用这个的，主要用在Collection.toArray两个方法中
     static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
     /**
@@ -559,6 +561,9 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * simpler to use expressions such as {@code n - (n >>> 2)} for
      * the associated resizing threshold.
      */
+    // 加载因子，为了兼容性，保留了这个常量（名字变了），配合同样是为了兼容性的Segment使用
+    // 1.8的ConcurrentHashMap的加载因子固定为 0.75，构造方法中指定的参数是不会被用作loadFactor的，
+    // 为了计算方便，统一使用 n - (n >> 2) 代替浮点乘法 *0.75
     private static final float LOAD_FACTOR = 0.75f;
 
     /**
@@ -569,6 +574,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * tree removal about conversion back to plain bins upon
      * shrinkage.
      */
+    // 一个hash桶中hash冲突的数目大于此值时，把链表转化为红黑树，加快hash冲突时的查找速度
     static final int TREEIFY_THRESHOLD = 8;
 
     /**
@@ -576,6 +582,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * resize operation. Should be less than TREEIFY_THRESHOLD, and at
      * most 6 to mesh with shrinkage detection under removal.
      */
+    // 一个hash桶中hash冲突的数目小于等于此值时，把红黑树转化为链表，当数目比较少时，链表的实际查找速度更快，也是为了查找效率
     static final int UNTREEIFY_THRESHOLD = 6;
 
     /**
@@ -584,6 +591,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * The value should be at least 4 * TREEIFY_THRESHOLD to avoid
      * conflicts between resizing and treeification thresholds.
      */
+    // 当table数组的长度小于此值时，不会把链表转化为红黑树。所以转化为红黑树有两个条件，还有一个是 TREEIFY_THRESHOLD
     static final int MIN_TREEIFY_CAPACITY = 64;
 
     /**
@@ -593,37 +601,65 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * excessive memory contention.  The value should be at least
      * DEFAULT_CAPACITY.
      */
+    // 扩容操作中，transfer这个步骤是允许多线程的，这个常量表示一个线程执行transfer时，最少要对连续的16个hash桶进行transfer
+    //     （不足16就按16算，多控制下正负号就行）
+    // 也就是单线程执行transfer时的最小任务量，单位为一个hash桶，这就是线程的transfer的步进（stride）
+    // 最小值是DEFAULT_CAPACITY，不使用太小的值，避免太小的值引起transfer时线程竞争过多，如果计算出来的值小于此值，就使用此值
+    // 正常步骤中会根据CPU核心数目来算出实际的，一个核心允许8个线程并发执行扩容操作的transfer步骤，这个8是个经验值，不能调整的
+    // 因为transfer操作不是IO操作，也不是死循环那种100%的CPU计算，CPU计算率中等，1核心允许8个线程并发完成扩容，理想情况下也算是比较合理的值
+    // 一段代码的IO操作越多，1核心对应的线程就要相应设置多点，CPU计算越多，1核心对应的线程就要相应设置少一些
+    // 表明：默认的容量是16，也就是默认构造的实例，第一次扩容实际上是单线程执行的，看上去是可以多线程并发（方法允许多个线程进入），
+    //     但是实际上其余的线程都会被一些if判断拦截掉，不会真正去执行扩容
     private static final int MIN_TRANSFER_STRIDE = 16;
 
     /**
      * The number of bits used for generation stamp in sizeCtl.
      * Must be at least 6 for 32bit arrays.
      */
+    // 用于生成每次扩容都唯一的生成戳的数，最小是6。很奇怪，这个值不是常量，但是也不提供修改方法
     private static int RESIZE_STAMP_BITS = 16;
 
     /**
      * The maximum number of threads that can help resize.
      * Must fit in 32 - RESIZE_STAMP_BITS bits.
      */
+    // 最大的扩容线程的数量，如果上面的 RESIZE_STAMP_BITS = 32，那么此值为 0，这一点也很奇怪。
     private static final int MAX_RESIZERS = (1 << (32 - RESIZE_STAMP_BITS)) - 1;
 
     /**
      * The bit shift for recording size stamp in sizeCtl.
      */
+    // 移位量，把生成戳移位后保存在sizeCtl中当做扩容线程计数的基数，相反方向移位后能够反解出生成戳
     private static final int RESIZE_STAMP_SHIFT = 32 - RESIZE_STAMP_BITS;
 
     /*
      * Encodings for Node hash fields. See above for explanation.
      */
+
+    // 下面几个是特殊的节点的hash值，正常节点的hash值在hash函数中都处理过了，不会出现负数的情况，特殊节点在各自的实现类中有特殊的遍历方法
+    // ForwardingNode的hash值，ForwardingNode是一种临时节点，在扩容进行中才会出现，并且它不存储实际的数据
+    // 如果旧数组的一个hash桶中全部的节点都迁移到新数组中，旧数组就在这个hash桶中放置一个ForwardingNode
+    // 读操作或者迭代读时碰到ForwardingNode时，将操作转发到扩容后的新的table数组上去执行，写操作碰见它时，则尝试帮助扩容
     static final int MOVED     = -1; // hash for forwarding nodes
+
+    // TreeBin的hash值，TreeBin是ConcurrentHashMap中用于代理操作TreeNode的特殊节点，持有存储实际数据的红黑树的根节点
+    // 因为红黑树进行写入操作，整个树的结构可能会有很大的变化，这个对读线程有很大的影响，
+    //     所以TreeBin还要维护一个简单读写锁，这是相对HashMap，这个类新引入这种特殊节点的重要原因
     static final int TREEBIN   = -2; // hash for roots of trees
+
+    // ReservationNode的hash值，ReservationNode是一个保留节点，就是个占位符，不会保存实际的数据，正常情况是不会出现的，
+    // 在jdk1.8新的函数式有关的两个方法computeIfAbsent和compute中才会出现
     static final int RESERVED  = -3; // hash for transient reservations
+
     // 用于和负数hash值进行 & 运算，将其转化为正数（绝对值不相等），Hashtable中定位hash桶也有使用这种方式来进行负数转正数
     static final int HASH_BITS = 0x7fffffff; // usable bits of normal node hash
 
+    // CPU的核心数，用于在扩容时计算一个线程一次要干多少活
     /** Number of CPUS, to place bounds on some sizings */
     static final int NCPU = Runtime.getRuntime().availableProcessors();
 
+
+    // 在序列化时使用，这是为了兼容以前的版本
     /** For serialization compatibility. */
     private static final ObjectStreamField[] serialPersistentFields = {
         new ObjectStreamField("segments", Segment[].class),
@@ -800,14 +836,12 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     /**
      * The next table to use; non-null only while resizing.
      */
-    private transient volatile Node<K,V>[] nextTable;
 
-    /**
-     * Base counter value, used mainly when there is no contention,
-     * but also as a fallback during table initialization
-     * races. Updated via CAS.
-     */
-    private transient volatile long baseCount;
+    // 扩容后的新的table数组，只有在扩容时才有用
+    // nextTable != null，说明扩容方法还没有真正退出，一般可以认为是此时还有线程正在进行扩容，
+    //     极端情况需要考虑此时扩容操作只差最后给几个变量赋值（包括nextTable = null）的这个大的步骤，
+    //     这个大步骤执行时，通过sizeCtl经过一些计算得出来的扩容线程的数量是0
+    private transient volatile Node<K,V>[] nextTable;
 
     /**
      * Table initialization and resizing control.  When negative, the
@@ -817,18 +851,51 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * creation, or 0 for default. After initialization, holds the
      * next element count value upon which to resize the table.
      */
+    // 非常重要的一个属性，源码中的英文翻译，直译过来是下面的四行文字的意思
+    //     sizeCtl = -1，表示有线程正在进行真正的初始化操作
+    //     sizeCtl = -(1 + nThreads)，表示有nThreads个线程正在进行扩容操作
+    //     sizeCtl > 0，表示接下来的真正的初始化操作中使用的容量，或者初始化/扩容完成后的threshold
+    //     sizeCtl = 0，默认值，此时在真正的初始化操作中使用默认容量
+    // 但是，通过我对源码的理解，这段注释实际上是有问题的，
+    //     有问题的是第二句，sizeCtl = -(1 + nThreads)这个，网上好多都是用第二句的直接翻译去解释代码，这样理解是错误的
+    // 默认构造的16个大小的ConcurrentHashMap，只有一个线程执行扩容时，sizeCtl = -2145714174，
+    //     但是照这段英文注释的意思，sizeCtl的值应该是 -(1 + 1) = -2
+    // 为什么是-2145714174而不是-2，我研究了一下。上面你在解释 RESIZE_STAMP_SHIFT 的时候，意思是把生成戳保存在sizeCtl的高16位作为扩容线程的基数，
+    // 那么sizeCtl的低16位才是 (1+nThreads)。2145714174转化成2进制是111111111100100 1111111111111110，低16位刚好是-2的补码
+    // 1.8.0_111的源码的383-384行写了个说明：A generation stamp in field sizeCtl ensures that resizings do not overlap.
     private transient volatile int sizeCtl;
 
     /**
      * The next table index (plus one) to split while resizing.
      */
+    // 下一个transfer任务的起始下标index 加上1 之后的值，transfer时下标index从length - 1开始往0走
+    // transfer时方向是倒过来的，迭代时是下标从小往大，二者方向相反，尽量减少扩容时transefer和迭代两者同时处理一个hash桶的情况，
+    // 顺序相反时，二者相遇过后，迭代没处理的都是已经transfer的hash桶，transfer没处理的，都是已经迭代的hash桶，冲突会变少
+    // 下标在[nextIndex - 实际的stride （下界要 >= 0）, nextIndex - 1]内的hash桶，就是每个transfer的任务区间
+    // 每次接受一个transfer任务，都要CAS执行 transferIndex = transferIndex - 实际的stride，
+    //     保证一个transfer任务不会被几个线程同时获取（相当于任务队列的size减1）
+    // 当没有线程正在执行transfer任务时，一定有transferIndex <= 0，这是判断是否需要帮助扩容的重要条件（相当于任务队列为空）
     private transient volatile int transferIndex;
 
+
+    // 下面三个主要与统计数目有关，可以参考jdk1.8新引入的java.util.concurrent.atomic.LongAdder的源码，帮助理解
+    // 计数器基本值，主要在没有碰到多线程竞争时使用，需要通过CAS进行更新
+    /**
+     * Base counter value, used mainly when there is no contention,
+     * but also as a fallback during table initialization
+     * races. Updated via CAS.
+     */
+    private transient volatile long baseCount;
+
+
+    // CAS自旋锁标志位，用于初始化，或者counterCells扩容时
     /**
      * Spinlock (locked via CAS) used when resizing and/or creating CounterCells.
      */
     private transient volatile int cellsBusy;
 
+
+    // 用于高并发的计数单元，如果初始化了这些计数单元，那么跟table数组一样，长度必须是2^n的形式
     /**
      * Table of counter cells. When non-null, size is a power of 2.
      */
@@ -1056,19 +1123,21 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                 // 以首节点锁
                 synchronized (f) {
                     if (tabAt(tab, i) == f) { // 保证锁住的是hash桶的第一个节点，这样阻止其他写操作进入，如果锁住的不是第一个节点，那么重新开始循环
-                        if (fh >= 0) {
-                            binCount = 1;
+                        if (fh >= 0) { // 判断是否为 TreeNode
+                            binCount = 1; // 因为第一个节点处理了，这里赋值为1
                             for (Node<K,V> e = f;; ++binCount) {
                                 K ek;
+                                // 找到“相等”的节点，看看是否需要更新value的值
                                 if (e.hash == hash &&
                                     ((ek = e.key) == key ||
                                      (ek != null && key.equals(ek)))) {
                                     oldVal = e.val;
                                     if (!onlyIfAbsent)
-                                        eval =. value;
+                                        e.val = value;
                                     break;
                                 }
                                 Node<K,V> pred = e;
+                                // 没有后续节点  构造新节点  加入链表
                                 if ((e = e.next) == null) {
                                     pred.next = new Node<K,V>(hash, key,
                                                               value, null);
@@ -1076,7 +1145,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                                 }
                             }
                         }
-                        else if (f instanceof TreeBin) {
+                        else if (f instanceof TreeBin) { // 红黑树就使用红黑树的方式进行添加
                             Node<K,V> p;
                             binCount = 2;
                             if ((p = ((TreeBin<K,V>)f).putTreeVal(hash, key,
@@ -1088,16 +1157,16 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                         }
                     }
                 }
-                if (binCount != 0) {
+                if (binCount != 0) {  // 添加之后，一个hash桶中的节点数目达到阈值，尝试转化为红黑树保存
                     if (binCount >= TREEIFY_THRESHOLD)
                         treeifyBin(tab, i);
-                    if (oldVal != null)
+                    if (oldVal != null) // 表明实质上是replace操作，不用更改计数值
                         return oldVal;
                     break;
                 }
             }
         }
-        addCount(1L, binCount);
+        addCount(1L, binCount);  // 计数值加1
         return null;
     }
 

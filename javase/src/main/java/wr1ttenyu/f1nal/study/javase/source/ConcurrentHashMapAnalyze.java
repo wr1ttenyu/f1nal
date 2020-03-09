@@ -6,7 +6,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Unit test for simple App.
+ * https://blog.csdn.net/u011392897/article/details/60479937
+ * https://www.jianshu.com/p/5dbaa6707017
  */
 public class ConcurrentHashMapAnalyze {
 
