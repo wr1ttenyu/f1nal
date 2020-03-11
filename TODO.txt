@@ -41,7 +41,7 @@
 2.事务的传播属性
     org.springframework.transaction.annotation.Propagation
 
-// spring mvc 九大组件
+// SOLVE spring mvc 九大组件
     1. HandlerMapping 是用来查找Handler的。在SpringMVC中会有很多请求，每个请求都需要一个Handler处理，
             具体接收到一个请求之后使用哪个Handler进行处理呢？这就是HandlerMapping需要做的事。
     2. HandlerAdapter 从名字上看，它就是一个适配器。因为SpringMVC中的Handler可以是任意的形式，只要能处理请求就ok，但是Servlet需要的处理方法的结构却是固定的，都是以
@@ -90,6 +90,8 @@ https://www.jianshu.com/p/e136ec79235c
 
 // TODO 研究 alipay sdk
 
-// TODO 加入把项目部署到tomcat中  那么 项目的线程是每个请求都是新的吗
+// SOLVE 加入把项目部署到tomcat中  那么 项目的线程是每个请求都是新的吗
+// 通过实验证明 不是的 用的是线程池
 
-// TODO 异常信息到底如何打印
+// SOLVE 异常信息到底如何打印
+// 对于logback来说 直接将异常对象传给日志打印方法 logback能打印出异常信息
