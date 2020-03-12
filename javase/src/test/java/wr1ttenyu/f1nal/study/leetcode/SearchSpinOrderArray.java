@@ -12,24 +12,20 @@ public class SearchSpinOrderArray {
             if (nums[half] == target) return half;
             if (nums[half] > target) {
                 if (nums[leftIndex] > nums[rightIndex]) {
-                    if (nums[leftIndex] > target) {
-                        rightIndex = half - 1;
-                    } else if (nums[leftIndex] < target) {
+                    if (nums[rightIndex] < target && leftIndex != half) {
                         rightIndex = half - 1;
                     } else {
-                        return leftIndex;
+                        leftIndex = half + 1;
                     }
                 } else {
                     rightIndex = half - 1;
                 }
             } else {
                 if (nums[leftIndex] > nums[rightIndex]) {
-                    if (nums[leftIndex] > target) {
-                        leftIndex = half + 1;
-                    } else if (nums[leftIndex] < target) {
-                        leftIndex = half + 1;
+                    if (nums[leftIndex] >= nums[half] && leftIndex != half) {
+                        rightIndex = half - 1;
                     } else {
-                        return leftIndex;
+                        leftIndex = half + 1;
                     }
                 } else {
                     leftIndex = half + 1;
@@ -41,8 +37,8 @@ public class SearchSpinOrderArray {
     }
 
     public static void main(String[] args) {
-        int[] arr = {4,5,6,7,0,1,2};
+        int[] arr = {3, 5, 1};
         SearchSpinOrderArray searchSpinOrderArray = new SearchSpinOrderArray();
-        System.out.println(searchSpinOrderArray.search(arr, 0));
+        System.out.println(searchSpinOrderArray.search(arr, 3));
     }
 }
