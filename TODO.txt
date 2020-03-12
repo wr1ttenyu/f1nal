@@ -90,6 +90,8 @@ https://www.jianshu.com/p/e136ec79235c
 
 // TODO 研究 alipay sdk
 
+// TODO 项目骨架 错误日志分开打印
+
 // SOLVE 加入把项目部署到tomcat中  那么 项目的线程是每个请求都是新的吗
 // 通过实验证明 不是的 用的是线程池
 
