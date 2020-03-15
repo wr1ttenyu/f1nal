@@ -69,7 +69,7 @@
 
 // TODO https://mp.weixin.qq.com/s/RYMx4GE-oGXH8zDDDauB9g 做一个 mybatis 代码的生成工程
 
-// TODO redis 各种数据类型 操作api000
+// TODO redis 各种数据类型 操作api
 
 // TODO https://mp.weixin.qq.com/s/ZM4hZyJ6xoSQ6G2nBPiPgA springmvc 异常统一处理
 
@@ -97,3 +97,5 @@ https://www.jianshu.com/p/e136ec79235c
 
 // SOLVE 异常信息到底如何打印
 // 对于logback来说 直接将异常对象传给日志打印方法 logback能打印出异常信息
+
+// TODO lock 和 synchronized 的区别

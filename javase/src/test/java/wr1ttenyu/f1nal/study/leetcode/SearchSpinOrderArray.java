@@ -8,27 +8,49 @@ public class SearchSpinOrderArray {
         int rightIndex = nums.length - 1;
 
         while (rightIndex >= leftIndex) {
-            int half = (rightIndex + leftIndex) / 2;
-            if (nums[half] == target) return half;
-            if (nums[half] > target) {
-                if (nums[leftIndex] > nums[rightIndex]) {
-                    if (nums[rightIndex] < target && leftIndex != half) {
-                        rightIndex = half - 1;
+            int halfIndex = (rightIndex + leftIndex) / 2;
+            int halfValue = nums[halfIndex];
+            int leftValue = nums[leftIndex];
+            int rightValue = nums[rightIndex];
+
+            if (halfValue == target) return halfIndex;
+
+            if (halfValue > target) {
+                // 递增 + 递减序列
+                if (leftValue > rightValue) {
+                    // 递增序列
+                    if (halfValue >= leftValue) {
+                        if (leftValue > target) {
+                            leftIndex = halfIndex + 1;
+                        } else {
+                            rightIndex = halfIndex - 1;
+                        }
                     } else {
-                        leftIndex = half + 1;
+                        // 递增 + 递减序列
+                        rightIndex = halfIndex - 1;
                     }
                 } else {
-                    rightIndex = half - 1;
+                    // 递增序列
+                    rightIndex = halfIndex - 1;
                 }
             } else {
-                if (nums[leftIndex] > nums[rightIndex]) {
-                    if (nums[leftIndex] >= nums[half] && leftIndex != half) {
-                        rightIndex = half - 1;
+                // halfValue < target
+                // 递增 + 递减序列
+                if (leftValue > rightValue) {
+                    // 递增序列
+                    if (halfValue >= leftValue) {
+                        leftIndex = halfIndex + 1;
                     } else {
-                        leftIndex = half + 1;
+                        // 递增 + 递减序列
+                        if (leftValue > target) {
+                            leftIndex = halfIndex + 1;
+                        } else {
+                            rightIndex = halfIndex - 1;
+                        }
                     }
                 } else {
-                    leftIndex = half + 1;
+                    // 递增序列
+                    leftIndex = halfIndex + 1;
                 }
             }
         }
@@ -37,7 +59,7 @@ public class SearchSpinOrderArray {
     }
 
     public static void main(String[] args) {
-        int[] arr = {3, 5, 1};
+        int[] arr = {5, 1, 3};
         SearchSpinOrderArray searchSpinOrderArray = new SearchSpinOrderArray();
         System.out.println(searchSpinOrderArray.search(arr, 3));
     }
