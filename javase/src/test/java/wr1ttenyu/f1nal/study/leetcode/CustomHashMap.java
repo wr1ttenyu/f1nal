@@ -1,7 +1,5 @@
 package wr1ttenyu.f1nal.study.leetcode;
 
-import java.util.Random;
-
 public class CustomHashMap {
     /**
      * 所有的值都在 [1, 1000000]的范围内。
@@ -10,16 +8,27 @@ public class CustomHashMap {
      */
     public static void main(String[] args) {
         MyHashMap myHashMap = new MyHashMap();
-        for (int i = 0; i < 80000; i++) {
-            int i1 = new Random(3).nextInt();
-            if (i1 % 3 == 0) {
-                myHashMap.put(new Random(1000000).nextInt(), new Random(1000000).nextInt());
-            } else if (i1 % 3 == 1) {
-                myHashMap.get(new Random(1000000).nextInt());
-            } else {
-                myHashMap.remove(new Random(1000000).nextInt());
+       /* for (int j = 0; j < 100; j++) {
+            for (int i = 0; i < 10000; i++) {
+                int i1 = new Random(3).nextInt();
+                if (i1 % 3 == 0) {
+                    myHashMap.put(new Random(1000000).nextInt(), new Random(1000000).nextInt());
+                } else if (i1 % 3 == 1) {
+                    myHashMap.get(new Random(1000000).nextInt());
+                } else {
+                    myHashMap.remove(new Random(1000000).nextInt());
+                }
             }
-        }
+        }*/
+
+        myHashMap.put(1, 123);
+        myHashMap.put(1001, 123);
+        myHashMap.put(2001, 123);
+        myHashMap.put(3001, 123);
+        myHashMap.remove(1);
+        System.out.println(myHashMap.get(1));
+        System.out.println(myHashMap.get(1001));
+
     }
 
 }
@@ -47,16 +56,18 @@ class MyHashMap {
         } else {
             MyHashMapNode nodeNew = new MyHashMapNode(key, value, null);
 
+            MyHashMapNode preNode = null;
             while (node != null) {
                 if (node.getKey() == key) {
                     node.setValue(value);
                     hasSameKeyNode = true;
                     break;
                 }
+                preNode = node;
                 node = node.getNext();
             }
 
-            if (!hasSameKeyNode) node.setNext(nodeNew);
+            if (!hasSameKeyNode) preNode.setNext(nodeNew);
         }
     }
 
@@ -93,7 +104,7 @@ class MyHashMap {
             return;
         } else {
             if (node.getKey() == key) {
-                arr[hash(key)] = null;
+                arr[hash(key)] = node.getNext();
             }
 
             while (node.getNext() != null) {

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import wr1ttenyu.f1nal.study.juc.MyLock;
 
 import java.util.Stack;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,6 +34,16 @@ public class AppTest {
     @Test
     public void testMyLock2() {
         assertTrue(true);
+    }
+
+    @Test
+    public void testBlockQueue() {
+        BlockingQueue blockingQueue = new LinkedBlockingQueue();
+        blockingQueue.add("a");
+        blockingQueue.add("b");
+        blockingQueue.add("c");
+        System.out.println(blockingQueue.element());
+        System.out.println(blockingQueue.peek());
     }
 
     public static void main(String[] args) {

@@ -100,7 +100,7 @@ https://www.jianshu.com/p/e136ec79235c
 // SOLVE 异常信息到底如何打印
 // 对于logback来说 直接将异常对象传给日志打印方法 logback能打印出异常信息
 
-// TODO lock 和 synchronized 的区别
+
 
 // TODO 高频面试题：如何保证缓存与数据库的双写一致性？ https://mp.weixin.qq.com/s/Iia496FhPkPa4a4lAJQOOA
 
