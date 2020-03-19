@@ -82,7 +82,7 @@ https://www.jianshu.com/p/e136ec79235c
 
 // TODO 数据源 druid
 
-// TODO housemd Arthas
+// TODO housemd Arthas https://mp.weixin.qq.com/s/DChHUbM96Oon2WRMqPy4Cw
 
 // TODO TreeSet 为什么线程不安全
 
@@ -99,3 +99,9 @@ https://www.jianshu.com/p/e136ec79235c
 // 对于logback来说 直接将异常对象传给日志打印方法 logback能打印出异常信息
 
 // TODO lock 和 synchronized 的区别
+
+// TODO 高频面试题：如何保证缓存与数据库的双写一致性？ https://mp.weixin.qq.com/s/Iia496FhPkPa4a4lAJQOOA
+
+// SOLVE 内存的读写是串行的吗  比如对数组中一个单元的并发下改读写 会造成读出来的值是一个线程只改了一半的值吗
+    例如 多线程对int进行累加100 结果可能不是整数 引申 DoubleAccumulator 的get结果 就不会出现上述问题吗
+   解答：通过代码验证 有限次数的试验下 多线程对int进行累加100 结果是整数 那么可以假设在底层对非结构体变量值进行修改时 是排他的
