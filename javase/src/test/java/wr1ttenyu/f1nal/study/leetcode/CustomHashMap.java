@@ -1,31 +1,113 @@
 package wr1ttenyu.f1nal.study.leetcode;
 
+import java.util.Random;
+
 public class CustomHashMap {
+    /**
+     * 所有的值都在 [1, 1000000]的范围内。
+     * 操作的总数目在[1, 10000]范围内。
+     * 不要使用内建的哈希库。
+     */
+    public static void main(String[] args) {
+        MyHashMap myHashMap = new MyHashMap();
+        for (int i = 0; i < 80000; i++) {
+            int i1 = new Random(3).nextInt();
+            if (i1 % 3 == 0) {
+                myHashMap.put(new Random(1000000).nextInt(), new Random(1000000).nextInt());
+            } else if (i1 % 3 == 1) {
+                myHashMap.get(new Random(1000000).nextInt());
+            } else {
+                myHashMap.remove(new Random(1000000).nextInt());
+            }
+        }
+    }
 
 }
 
 class MyHashMap {
 
-    private String
+    private MyHashMapNode[] arr = new MyHashMapNode[1000];
 
-    /** Initialize your data structure here. */
+    /**
+     * Initialize your data structure here.
+     */
     public MyHashMap() {
 
     }
 
-    /** value will always be non-negative. */
+    /**
+     * value will always be non-negative.
+     */
     public void put(int key, int value) {
+        MyHashMapNode node = arr[hash(key)];
+        boolean hasSameKeyNode = false;
+        if (node == null) {
+            node = new MyHashMapNode(key, value, null);
+            arr[hash(key)] = node;
+        } else {
+            MyHashMapNode nodeNew = new MyHashMapNode(key, value, null);
 
+            while (node != null) {
+                if (node.getKey() == key) {
+                    node.setValue(value);
+                    hasSameKeyNode = true;
+                    break;
+                }
+                node = node.getNext();
+            }
+
+            if (!hasSameKeyNode) node.setNext(nodeNew);
+        }
     }
 
-    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    /**
+     * Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key
+     */
     public int get(int key) {
+        MyHashMapNode node = arr[hash(key)];
+        if (node == null) {
+            return -1;
+        } else {
+            if (node.getKey() == key) {
+                return node.getValue();
+            }
 
+            while (node.getNext() != null) {
+                node = node.getNext();
+                if (node.getKey() == key) {
+                    return node.getValue();
+                }
+            }
+
+            return -1;
+        }
     }
 
-    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    /**
+     * Removes the mapping of the specified value key if this map contains a mapping for the key
+     */
     public void remove(int key) {
+        MyHashMapNode nodePre;
+        MyHashMapNode node = arr[hash(key)];
+        if (node == null) {
+            return;
+        } else {
+            if (node.getKey() == key) {
+                arr[hash(key)] = null;
+            }
 
+            while (node.getNext() != null) {
+                nodePre = node;
+                node = node.getNext();
+                if (node.getKey() == key) {
+                    nodePre.setNext(node.getNext());
+                }
+            }
+        }
+    }
+
+    private int hash(int key) {
+        return key % 1000;
     }
 }
 
@@ -35,6 +117,12 @@ class MyHashMapNode {
     private int value;
 
     private MyHashMapNode next;
+
+    public MyHashMapNode(int key, int value, MyHashMapNode next) {
+        this.key = key;
+        this.value = value;
+        this.next = next;
+    }
 
     public int getKey() {
         return key;

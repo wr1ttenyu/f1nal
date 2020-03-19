@@ -29,6 +29,8 @@
 
 // TODO 19年BAT常问面试题汇总：Redis+Dubbo+Spring Boot+JVM+Spring Cloud  https://mp.weixin.qq.com/s/7UlQ0gp6PDWiFuyevxjW_A
 
+// TODO MySQL 大表优化方案 https://mp.weixin.qq.com/s/56DQk-cHBYdrne5pwbU3hg
+
 // TODO 学MySQL，这篇万字总结，真的够用了 https://mp.weixin.qq.com/s/0-wgz5EEFHPO4ncbo9rLBQ
 1.事务的隔离级别
     1.1 事务间互相影响造成的问题：脏读 不可重复读 幻读
