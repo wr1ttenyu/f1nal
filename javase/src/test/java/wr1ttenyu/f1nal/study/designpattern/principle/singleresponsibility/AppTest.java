@@ -1,9 +1,9 @@
 package wr1ttenyu.f1nal.study.designpattern.principle.singleresponsibility;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -13,54 +13,46 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class AppTest {
 
-    private static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-
     public static void main(String[] args) {
-        lock.writeLock().lock();
-        lock.writeLock().lock();
-        System.out.println(123);
+        DelayQueue delayQueue = new DelayQueue();
+        delayQueue.add(new MyTask(System.currentTimeMillis() + 2000));
+        delayQueue.add(new MyTask(System.currentTimeMillis() + 5000));
+
+        System.out.println("--------------0--------------");
         try {
-            TimeUnit.SECONDS.sleep(3);
+            System.out.println("--------------1--------------");
+            MyTask take = (MyTask)delayQueue.take();
+            System.out.println("--------------2--------------");
+            MyTask take1 = (MyTask)delayQueue.take();
+            System.out.println("--------------3--------------");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        lock.writeLock().unlock();
-        lock.writeLock().unlock();
-    }
-
-    /*public static void syncMethod1() {
-        lock.lock();
         try {
-            System.out.println("线程1进入");
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(100000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } finally {
-            lock.unlock();
         }
-    }
-
-    public static void syncMethod2() {
-        System.out.println("线程2开始");
-        lock.lock();
-        try {
-            System.out.println("线程2进入");
-            TimeUnit.SECONDS.sleep(3);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            lock.unlock();
-        }
-    }*/
-}
-
-class TestClass {
-    int num = 0;
-
-    public void setNum(int num) {
-        this.num += num;
     }
 }
 
+class MyTask implements Delayed {
 
+    private long endTime;
+
+    public MyTask(long endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
+    public long getDelay(TimeUnit unit) {
+        return endTime - System.currentTimeMillis();
+    }
+
+    @Override
+    public int compareTo(Delayed o) {
+        return Long.compare(this.endTime, o.getDelay(TimeUnit.MILLISECONDS));
+    }
+
+}
