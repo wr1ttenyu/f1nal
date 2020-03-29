@@ -101,7 +101,6 @@ https://www.jianshu.com/p/e136ec79235c
 // 对于logback来说 直接将异常对象传给日志打印方法 logback能打印出异常信息
 
 
-
 // TODO 高频面试题：如何保证缓存与数据库的双写一致性？ https://mp.weixin.qq.com/s/Iia496FhPkPa4a4lAJQOOA
 
 // SOLVE 内存的读写是串行的吗  比如对数组中一个单元的并发下改读写 会造成读出来的值是一个线程只改了一半的值吗

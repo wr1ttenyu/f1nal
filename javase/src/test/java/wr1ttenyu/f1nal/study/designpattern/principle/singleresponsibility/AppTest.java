@@ -14,26 +14,20 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class AppTest {
 
     public static void main(String[] args) {
-        DelayQueue delayQueue = new DelayQueue();
-        delayQueue.add(new MyTask(System.currentTimeMillis() + 2000));
-        delayQueue.add(new MyTask(System.currentTimeMillis() + 5000));
-
-        System.out.println("--------------0--------------");
+        Thread thread = new Thread(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
         try {
-            System.out.println("--------------1--------------");
-            MyTask take = (MyTask)delayQueue.take();
-            System.out.println("--------------2--------------");
-            MyTask take1 = (MyTask)delayQueue.take();
-            System.out.println("--------------3--------------");
+            thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        try {
-            TimeUnit.SECONDS.sleep(100000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        System.out.println("1111");
     }
 }
 
