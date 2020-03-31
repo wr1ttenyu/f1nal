@@ -4,6 +4,7 @@ package wr1ttenyu.f1nal.study.designpattern.principle.singleresponsibility;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -14,20 +15,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class AppTest {
 
     public static void main(String[] args) {
-        Thread thread = new Thread(() -> {
-            try {
-                TimeUnit.SECONDS.sleep(5);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("1111");
+        ReentrantLock reentrantLock = new ReentrantLock();
+        Condition condition = reentrantLock.newCondition();
+        condition.signal();
     }
 }
 

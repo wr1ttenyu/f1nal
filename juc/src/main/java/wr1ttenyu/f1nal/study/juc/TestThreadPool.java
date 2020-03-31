@@ -16,9 +16,20 @@ public class TestThreadPool {
          *  ThreadFactory 线程生成工厂
          *  RejectedExecutionHandler handler 超溢任务处理
          */
-        ExecutorService executorService = new ThreadPoolExecutor(2, 4, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(5), new MyThreadFactory(), new MyRejectedExecutionHandler());
+        MyThreadFactory threadFactory = new MyThreadFactory();
+        ExecutorService executorService = new ThreadPoolExecutor(1, 1, 60, TimeUnit.SECONDS, new LinkedBlockingQueue
+                <>(5), threadFactory, new MyRejectedExecutionHandler());
         for (int i = 0; i < 10; i++) {
             executorService.submit(new MyTask("任务" + i));
+        }
+
+        threadFactory.myThread.interrupt();
+
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         executorService.shutdown();
@@ -38,6 +49,7 @@ class MyTask implements Runnable {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
+            System.out.println("线程中断了。。。。。。。。");
             e.printStackTrace();
         }
         System.out.println(Thread.currentThread().getName() + "---> 工作任务名称:" + taskName + ",被执行---");
@@ -84,9 +96,12 @@ class MyThreadFactory implements ThreadFactory {
 
     private AtomicInteger threadNum = new AtomicInteger(0);
 
+    public static Thread myThread;
+
     @Override
     public Thread newThread(Runnable r) {
-        return new Thread(r, "我的线程" + threadNum.getAndIncrement() + "号");
+        myThread = new Thread(r, "我的线程" + threadNum.getAndIncrement() + "号");
+        return myThread;
     }
 }
 
