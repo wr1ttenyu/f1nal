@@ -7,6 +7,7 @@ import wr1ttenyu.f1nal.study.juc.MyLock;
 import java.util.Stack;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -38,12 +39,32 @@ public class AppTest {
 
     @Test
     public void testBlockQueue() {
-        BlockingQueue blockingQueue = new LinkedBlockingQueue();
-        blockingQueue.add("a");
-        blockingQueue.add("b");
-        blockingQueue.add("c");
-        System.out.println(blockingQueue.element());
-        System.out.println(blockingQueue.peek());
+
+        Thread thread = new Thread(() -> {
+            for (; ; ) {
+                if (Thread.currentThread().isInterrupted()) {
+                    System.out.println("收到中断了");
+                    System.out.println("在获取一次中断状态：" + Thread.currentThread().isInterrupted());
+                    return;
+                } else {
+                    System.out.println("没有中断");
+                }
+            }
+        });
+        thread.start();
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("开始中断");
+        thread.interrupt();
+
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

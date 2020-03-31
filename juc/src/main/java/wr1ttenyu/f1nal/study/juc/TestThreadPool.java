@@ -17,22 +17,29 @@ public class TestThreadPool {
          *  RejectedExecutionHandler handler 超溢任务处理
          */
         MyThreadFactory threadFactory = new MyThreadFactory();
+        System.out.println("开始执行。。。。。。。。。。。。");
         ExecutorService executorService = new ThreadPoolExecutor(1, 1, 60, TimeUnit.SECONDS, new LinkedBlockingQueue
                 <>(5), threadFactory, new MyRejectedExecutionHandler());
-        for (int i = 0; i < 10; i++) {
-            executorService.submit(new MyTask("任务" + i));
-        }
+
+
+
+        executorService.submit(new MyTask("任务" + 1));
 
         threadFactory.myThread.interrupt();
 
+        System.out.println("开始执行shutdown。。。。。。。。。。。。");
+
+        /*executorService.shutdown();*/
+
 
         try {
-            Thread.sleep(5000);
+            System.out.println("开始睡眠。。。。。。。。。。。。");
+            Thread.sleep(3000000);
+            executorService.submit(new MyTask("任务" + 1));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        executorService.shutdown();
     }
 }
 
