@@ -28,6 +28,11 @@ public class AppTest {
     }
 
     @Test
+    public void testCreateThread() {
+        assertTrue(true);
+    }
+
+    @Test
     public void testMyLock1() {
         myLock = new MyLock();
     }
@@ -96,6 +101,13 @@ public class AppTest {
                 s[i] = s[s.length - i];
                 s[s.length - i] = temp;
             }
+        }
+    }
+
+    class MyThread extends Thread {
+        @Override
+        public void run() {
+            super.run();
         }
     }
 }
