@@ -29,20 +29,6 @@
 
 // TODO 19年BAT常问面试题汇总：Redis+Dubbo+Spring Boot+JVM+Spring Cloud  https://mp.weixin.qq.com/s/7UlQ0gp6PDWiFuyevxjW_A
 
-// TODO MySQL 大表优化方案 https://mp.weixin.qq.com/s/56DQk-cHBYdrne5pwbU3hg
-
-// TODO 学MySQL，这篇万字总结，真的够用了 https://mp.weixin.qq.com/s/0-wgz5EEFHPO4ncbo9rLBQ
-1.事务的隔离级别
-    1.1 事务间互相影响造成的问题：脏读 不可重复读 幻读
-    1.2 具体隔离级别：读未提交 读已提交  可重复读 串行化 （读已提交 是常用的隔离级别）
-    1.3 mysql 是默认隔离级别为 ：可重复读
-    1.4 可重复读 解析：是在一个事务中，对相同的数据做第二次查询时，保证前后两次的值相同，其他事物可以对数据进行更新，
-            也就是不能看到其他事务对已有记录的更新，而不是加行锁阻止其他事务更新数据，InnoDB 的底层实现是
-            在RR隔离级别下为事务设置了一个“一致性读视图（即快照）”，之后读取数据，就是根据这个快照来获取，这样，
-            就不能看到他晚于本事务的事务对已有记录的更新（更新生成新版本，必然不在旧的快照所限定的范围内）。
-2.事务的传播属性
-    org.springframework.transaction.annotation.Propagation
-
 // SOLVE spring mvc 九大组件
     1. HandlerMapping 是用来查找Handler的。在SpringMVC中会有很多请求，每个请求都需要一个Handler处理，
             具体接收到一个请求之后使用哪个Handler进行处理呢？这就是HandlerMapping需要做的事。
