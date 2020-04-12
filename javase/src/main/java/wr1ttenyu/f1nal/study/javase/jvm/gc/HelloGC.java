@@ -28,7 +28,7 @@ public class HelloGC {
             e.printStackTrace();
         }*/
 
-        testStack(0);
+       /* testStack(0);*/
 
     }
 

@@ -16,9 +16,15 @@ public class App {
         // 这句将输出: hello world
         System.out.println(messageService.getMessage());
 
-        TestBean testBean = (TestBean)context.getBean("getTestBean");
+       /* TestBean testBean = (TestBean)context.getBean("getTestBean");
+        System.out.println(testBean.getBeanName());*/
+
         TestBean testBean2 = (TestBean)context.getBean("testBean");
-        System.out.println(testBean.getBeanName());
-        System.out.println(testBean.getFieldStr());
+        System.out.println(testBean2.getFieldStr());
+
+        SpringConfig bean = context.getBean(SpringConfig.class);
+        System.out.println(bean.getHelloService());
+
+        /*System.out.println(testBean == testBean2);*/
     }
 }

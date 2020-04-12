@@ -1,6 +1,7 @@
 package wr1ttenyu.study.f1nal.springboot.demo.springstudy;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.PropertyValue;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,12 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.beans.PropertyDescriptor;
+import java.util.Arrays;
 
 @Component
 public class TestBean implements /*BeanFactoryPostProcessor,*//*bean定义获取完毕，可以修改bean定义*/
@@ -40,7 +44,7 @@ public class TestBean implements /*BeanFactoryPostProcessor,*//*bean定义获取
     public void initMethod() {
         System.out.println("initMethod --> 如果fieldInt有值了，说明bean已经被创建了，fieldInt：" + fieldInt);
         System.out.println("initMethod --> helloService 有没有被注入呢：" + helloService);
-        System.out.println("postConstruct --> fieldStr 有没有被注入呢：" + fieldStr);
+        System.out.println("initMethod --> fieldStr 有没有被注入呢：" + fieldStr);
     }
 
     @PostConstruct
@@ -78,6 +82,7 @@ public class TestBean implements /*BeanFactoryPostProcessor,*//*bean定义获取
     @Override
     public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) throws
             BeansException {
+        System.out.println("注入属性 --> " + pvs);
         return pvs;
     }
 
