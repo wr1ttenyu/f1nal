@@ -1,22 +1,16 @@
-package wr1ttenyu.study.f1nal.springboot.demo.springstudy;
+package wr1ttenyu.study.f1nal.springboot.springstudy;
 
 import org.springframework.beans.BeansException;
-import org.springframework.beans.PropertyValue;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.*;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.beans.PropertyDescriptor;
-import java.util.Arrays;
 
 @Component
 public class TestBean implements /*BeanFactoryPostProcessor,*//*bean定义获取完毕，可以修改bean定义*/

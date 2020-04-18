@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="userServiceImpl" class="wr1ttenyu.study.f1nal.springboot.aoptest.configbyinterface.UserServiceImpl"/>
+
+    <!--定义两个 advice-->
+    <bean id="logArgsAdvice" class="wr1ttenyu.study.f1nal.springboot.aoptest.configbyinterface.LogArgsAdvice"/>
+    <bean id="logResultAdvice" class="wr1ttenyu.study.f1nal.springboot.aoptest.configbyinterface.LogResultAdvice"/>
+    <bean id="monitorInterceptor" class="wr1ttenyu.study.f1nal.springboot.aoptest.configbyinterface.MonitorInterceptor"/>
+
+    <bean id="logArgsAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice" ref="logArgsAdvice"></property>
+        <property name="mappedNames" value="createUser"></property>
+    </bean>
+
+    <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="interceptorNames">
+            <list>
+                <value>logArgsAdvisor</value>
+            </list>
+        </property>
+        <property name="beanNames" value="*ServiceImpl" />
+    </bean>
+
+</beans>
