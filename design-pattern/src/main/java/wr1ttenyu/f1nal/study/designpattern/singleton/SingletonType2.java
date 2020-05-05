@@ -21,7 +21,7 @@ class Singleton2 {
     // 构造器私有化
     private Singleton2() {}
 
-    private static Singleton2 instance = new Singleton2();
+    private static Singleton2 instance;
 
     static {
         instance = new Singleton2();
