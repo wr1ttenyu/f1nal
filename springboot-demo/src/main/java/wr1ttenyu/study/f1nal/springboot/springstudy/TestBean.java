@@ -32,19 +32,14 @@ public class TestBean implements /*BeanFactoryPostProcessor,*//*bean定义获取
 
     private ConfigurableListableBeanFactory beanFactory;
 
-    @Autowired
-    private HelloService helloService;
-
     public void initMethod() {
         System.out.println("initMethod --> 如果fieldInt有值了，说明bean已经被创建了，fieldInt：" + fieldInt);
-        System.out.println("initMethod --> helloService 有没有被注入呢：" + helloService);
         System.out.println("initMethod --> fieldStr 有没有被注入呢：" + fieldStr);
     }
 
     @PostConstruct
     public void postConstruct() {
         System.out.println("postConstruct --> 如果fieldInt有值了，说明bean已经被创建了，fieldInt：" + fieldInt);
-        System.out.println("postConstruct --> helloService 有没有被注入呢：" + helloService);
         System.out.println("postConstruct --> fieldStr 有没有被注入呢：" + fieldStr);
     }
 
@@ -53,6 +48,16 @@ public class TestBean implements /*BeanFactoryPostProcessor,*//*bean定义获取
         System.out.println(fieldStr);
         System.out.println("BeanNameAware回调");
         beanName = name;
+    }
+
+    @Override
+    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+        return null;
+    }
+
+    @Override
+    public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
+        return true;
     }
 
     @Override

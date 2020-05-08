@@ -4,6 +4,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
-public class SpringConfig implements BeanFactoryAware, DisposableBean {
+public class SpringConfig implements BeanFactoryAware, DisposableBean, InitializingBean {
 
     @Value("${person.nickName}")
     private String name;
@@ -73,6 +74,11 @@ public class SpringConfig implements BeanFactoryAware, DisposableBean {
 
     @Override
     public void destroy() throws Exception {
+
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
 
     }
 }

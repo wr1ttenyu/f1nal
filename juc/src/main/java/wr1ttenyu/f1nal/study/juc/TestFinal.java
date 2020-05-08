@@ -27,9 +27,6 @@ public class TestFinal {
         new Thread(() -> {
             System.out.println(123);
         });
-
-        ExecutorService executorService = new ThreadPoolExecutor(2, 5, 5, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
-        executorService.submit()
     }
 }
 

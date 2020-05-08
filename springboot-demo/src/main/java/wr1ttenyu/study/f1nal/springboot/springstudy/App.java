@@ -7,8 +7,7 @@ public class App {
 
     public static void main(String[] args) {
         // 用我们的配置文件来启动一个 ApplicationContext
-        ApplicationContext context = new AnnotationConfigApplicationContext("wr1ttenyu.study.f1nal.springboot.demo" +
-                ".springstudy");
+        ApplicationContext context = new AnnotationConfigApplicationContext("wr1ttenyu.study.f1nal.springboot.springstudy");
 
         System.out.println("context 启动成功");
         // 从 context 中取出我们的 Bean，而不是用 new HelloServiceImpl() 这种方式
