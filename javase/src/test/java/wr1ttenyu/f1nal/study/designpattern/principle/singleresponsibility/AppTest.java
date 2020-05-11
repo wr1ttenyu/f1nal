@@ -3,6 +3,7 @@ package wr1ttenyu.f1nal.study.designpattern.principle.singleresponsibility;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -15,9 +16,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class AppTest {
 
     public static void main(String[] args) {
-        ReentrantLock reentrantLock = new ReentrantLock();
-        Condition condition = reentrantLock.newCondition();
-        condition.signal();
+        int i = 1/2;
+        System.out.println(i);
     }
 }
 
