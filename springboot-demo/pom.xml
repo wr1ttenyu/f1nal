@@ -73,6 +73,13 @@
                 <configuration>
                     <mainClass>wr1ttenyu.study.f1nal.springboot.demo.web.DemoWebApplication</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

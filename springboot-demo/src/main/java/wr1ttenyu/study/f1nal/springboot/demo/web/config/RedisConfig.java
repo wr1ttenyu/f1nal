@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Component
 @Profile("pool")
 public class RedisConfig implements BeanPostProcessor {
@@ -16,4 +18,5 @@ public class RedisConfig implements BeanPostProcessor {
             ((LettuceConnectionFactory)bean).setShareNativeConnection(false);
         return bean;
     }
+
 }

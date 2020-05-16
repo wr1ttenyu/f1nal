@@ -16,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private static Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
 
-    @Override
+    /*@Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new MyHandlerInterceptor()).addPathPatterns("/demo/**");
     }
@@ -38,5 +38,5 @@ public class WebConfig implements WebMvcConfigurer {
         public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
             LOGGER.info("拦截器 afterCompletion 方法执行");
         }
-    }
+    }*/
 }
